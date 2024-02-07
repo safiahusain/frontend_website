@@ -8,12 +8,13 @@ if (!baseUrl) {
   throw new Error("NEXT_PUBLIC_BASE_URL environment variable is not defined");
 }
 
-const { hostname } = require("url").parse(baseUrl);
+// const { hostname } = require("url").parse(baseUrl);
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: [`${hostname}`],
+    // domains: [`${hostname}`],
+    domains: [baseUrl],
   },
 };
 const pwa = process.env.NEXT_PWA_STATUS;
