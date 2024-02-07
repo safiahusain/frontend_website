@@ -1,5 +1,5 @@
 // import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 // import axios from "axios";
 import { useRouter } from "next/router";
@@ -53,7 +53,7 @@ export default function SearchBox({ className }) {
     <>
       <div className="relative w-full h-full">
         <div
-          className={`w-full h-full flex items-center   border border-qborder rounded-full overflow-hidden  ${
+          className={`w-full h-full flex items-center border border-qborder rounded-lg overflow-hidden  ${
             className || ""
           }`}
         >

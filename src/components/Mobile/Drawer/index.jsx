@@ -1,15 +1,19 @@
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { RiUserLine } from "react-icons/ri";
+import { useDispatch, useSelector } from "react-redux";
+import apiRequest from "../../../../utils/apiRequest";
+import languageModel from "../../../../utils/languageModel";
+import { fetchWishlist } from "../../../store/wishlistData";
 import Compair from "../../Helpers/icons/Compair";
 import ThinLove from "../../Helpers/icons/ThinLove";
-import languageModel from "../../../../utils/languageModel";
-import React from "react";
-import Image from "next/image";
 
 export default function Drawer({ className, open, action }) {
+  const dispatch = useDispatch();
   const router = useRouter();
+  const [auth, setAuth] = useState(null);
   const [tab, setTab] = useState("category");
   const { websiteSetup } = useSelector((state) => state.websiteSetup);
   const categoryList = websiteSetup && websiteSetup.payload.productCategories;
@@ -32,12 +36,26 @@ export default function Drawer({ className, open, action }) {
   };
   const [langCntnt, setLangCntnt] = useState(null);
   useEffect(() => {
+    setAuth(JSON.parse(localStorage.getItem("auth")));
     setLangCntnt(languageModel());
   }, []);
+
+  const logout = () => {
+    if (auth) {
+      apiRequest.logout(auth.access_token);
+      localStorage.removeItem("auth");
+      localStorage.removeItem("active-user");
+      dispatch(fetchWishlist());
+      router.push("/login");
+    }
+  };
+
   return (
     <>
       <div
-        className={`drawer-wrapper w-full lg:hidden block  h-full relative  ${className || ""}`}
+        className={`drawer-wrapper w-full xl:hidden block h-full relative  ${
+          className || ""
+        }`}
       >
         {open && (
           <div
@@ -72,6 +90,15 @@ export default function Drawer({ className, open, action }) {
                   <span className="w-[18px] h-[18px] rounded-full bg-qpurple text-white absolute -top-2.5 -right-2.5 flex justify-center items-center text-[9px]">
                     {wishlists ? wishlists.data.length : 0}
                   </span>
+                </div>
+                <div className="favorite relative">
+                  <Link href="/login" passHref>
+                    <a rel="noopener noreferrer" title="Login/Register">
+                      <span className="cursor-pointer text-[#6E6D79]">
+                        <RiUserLine size={25} color="black" />
+                      </span>
+                    </a>
+                  </Link>
                 </div>
               </div>
               <button onClick={action} type="button">
@@ -460,6 +487,174 @@ export default function Drawer({ className, open, action }) {
                   </ul>
                 </li>
 
+                <li className="category-item xl:hidden lg:hidden md:hidden sm:block xsm:block xxs:block xxxs:block">
+                  {auth ? (
+                    <Link href="/profile#dashboard" passHref>
+                      <a rel="noopener noreferrer">
+                        <div className="flex justify-between items-center px-5 h-12 bg-white hover:bg-qpurple transition-all duration-300 ease-in-out cursor-pointer">
+                          <div className="flex items-center space-x-6">
+                            <span className="text-sm font-400 capitalize ">
+                              {langCntnt && langCntnt.Account}
+                            </span>
+                          </div>
+                          <div>
+                            <span>
+                              <svg
+                                width="6"
+                                height="9"
+                                viewBox="0 0 6 9"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <rect
+                                  x="1.49805"
+                                  y="0.818359"
+                                  width="5.78538"
+                                  height="1.28564"
+                                  transform="rotate(45 1.49805 0.818359)"
+                                  fill="#1D1D1D"
+                                />
+                                <rect
+                                  x="5.58984"
+                                  y="4.90918"
+                                  width="5.78538"
+                                  height="1.28564"
+                                  transform="rotate(135 5.58984 4.90918)"
+                                  fill="#1D1D1D"
+                                />
+                              </svg>
+                            </span>
+                          </div>
+                        </div>
+                      </a>
+                    </Link>
+                  ) : (
+                    <Link href="/login" passHref>
+                      <a rel="noopener noreferrer">
+                        <div className="flex justify-between items-center px-5 h-12 bg-white hover:bg-qpurple transition-all duration-300 ease-in-out cursor-pointer">
+                          <div className="flex items-center space-x-6">
+                            <span className="text-sm font-400 capitalize ">
+                              {langCntnt && langCntnt.Account}
+                            </span>
+                          </div>
+                          <div>
+                            <span>
+                              <svg
+                                width="6"
+                                height="9"
+                                viewBox="0 0 6 9"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <rect
+                                  x="1.49805"
+                                  y="0.818359"
+                                  width="5.78538"
+                                  height="1.28564"
+                                  transform="rotate(45 1.49805 0.818359)"
+                                  fill="#1D1D1D"
+                                />
+                                <rect
+                                  x="5.58984"
+                                  y="4.90918"
+                                  width="5.78538"
+                                  height="1.28564"
+                                  transform="rotate(135 5.58984 4.90918)"
+                                  fill="#1D1D1D"
+                                />
+                              </svg>
+                            </span>
+                          </div>
+                        </div>
+                      </a>
+                    </Link>
+                  )}
+                </li>
+
+                <li className="category-item xl:hidden lg:hidden md:hidden sm:block xsm:block xxs:block xxxs:block">
+                  <Link href="/tracking-order" passHref>
+                    <a rel="noopener noreferrer">
+                      <div className="flex justify-between items-center px-5 h-12 bg-white hover:bg-qpurple transition-all duration-300 ease-in-out cursor-pointer">
+                        <div className="flex items-center space-x-6">
+                          <span className="text-sm font-400 capitalize ">
+                            {langCntnt && langCntnt.Track_Order}
+                          </span>
+                        </div>
+                        <div>
+                          <span>
+                            <svg
+                              width="6"
+                              height="9"
+                              viewBox="0 0 6 9"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <rect
+                                x="1.49805"
+                                y="0.818359"
+                                width="5.78538"
+                                height="1.28564"
+                                transform="rotate(45 1.49805 0.818359)"
+                                fill="#1D1D1D"
+                              />
+                              <rect
+                                x="5.58984"
+                                y="4.90918"
+                                width="5.78538"
+                                height="1.28564"
+                                transform="rotate(135 5.58984 4.90918)"
+                                fill="#1D1D1D"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                  </Link>
+                </li>
+
+                <li className="category-item xl:hidden lg:hidden md:hidden sm:block xsm:block xxs:block xxxs:block">
+                  <Link href="/faq" passHref>
+                    <a rel="noopener noreferrer">
+                      <div className="flex justify-between items-center px-5 h-12 bg-white hover:bg-qpurple transition-all duration-300 ease-in-out cursor-pointer">
+                        <div className="flex items-center space-x-6">
+                          <span className="text-sm font-400 capitalize ">
+                            {langCntnt && langCntnt.Support}
+                          </span>
+                        </div>
+                        <div>
+                          <span>
+                            <svg
+                              width="6"
+                              height="9"
+                              viewBox="0 0 6 9"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <rect
+                                x="1.49805"
+                                y="0.818359"
+                                width="5.78538"
+                                height="1.28564"
+                                transform="rotate(45 1.49805 0.818359)"
+                                fill="#1D1D1D"
+                              />
+                              <rect
+                                x="5.58984"
+                                y="4.90918"
+                                width="5.78538"
+                                height="1.28564"
+                                transform="rotate(135 5.58984 4.90918)"
+                                fill="#1D1D1D"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                  </Link>
+                </li>
+
                 <li className="category-item">
                   <Link href="/about">
                     <div className="flex justify-between items-center px-5 h-12 bg-white hover:bg-qpurple transition-all duration-300 ease-in-out cursor-pointer">
@@ -576,6 +771,43 @@ export default function Drawer({ className, open, action }) {
                       </div>
                     </div>
                   </Link>
+                </li>
+                <li className="category-item">
+                  <div className="flex justify-between items-center px-5 h-12 bg-white hover:bg-qpurple transition-all duration-300 ease-in-out cursor-pointer">
+                    <button onClick={logout}>
+                      <span className="text-sm font-400 capitalize ">
+                        {langCntnt && langCntnt.Sign_Out}
+                      </span>
+                    </button>
+                    <div>
+                      <span>
+                        <svg
+                          width="6"
+                          height="9"
+                          viewBox="0 0 6 9"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            x="1.49805"
+                            y="0.818359"
+                            width="5.78538"
+                            height="1.28564"
+                            transform="rotate(45 1.49805 0.818359)"
+                            fill="#1D1D1D"
+                          />
+                          <rect
+                            x="5.58984"
+                            y="4.90918"
+                            width="5.78538"
+                            height="1.28564"
+                            transform="rotate(135 5.58984 4.90918)"
+                            fill="#1D1D1D"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
                 </li>
               </ul>
             </div>

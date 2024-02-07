@@ -1,25 +1,25 @@
 import axios from "axios";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import ElementOptics from "../../../../public/assets/images/Element-Optics.png";
 import apiRequest from "../../../../utils/apiRequest";
 import auth from "../../../../utils/auth";
+import languageModel from "../../../../utils/languageModel";
 import settings from "../../../../utils/settings";
 import { fetchCart } from "../../../store/Cart";
 import { fetchCompareProducts } from "../../../store/compareProduct";
 import { fetchWishlist } from "../../../store/wishlistData";
+import LoginContext from "../../Contexts/LoginContexts";
 import CheckProductIsExistsInFlashSale from "../../Shared/CheckProductIsExistsInFlashSale";
 import ProductView from "../../SingleProductPage/ProductView";
 import Compair from "../icons/Compair";
 import QuickViewIco from "../icons/QuickViewIco";
 import Star from "../icons/Star";
 import ThinLove from "../icons/ThinLove";
-import Image from "next/image";
-import languageModel from "../../../../utils/languageModel";
-import LoginContext from "../../Contexts/LoginContexts";
-
 const Redirect = ({ message, linkTxt }) => {
   return (
     <div className="flex space-x-2 items-center">
@@ -223,6 +223,7 @@ export default function ProductCardStyleOne({ datas }) {
             parseFloat(datas.offer_price)
         );
         setPrice(datas.price);
+        setAmount(datas.price);
         setOffer(sumOfferPrice);
       } else {
         const sumPrice = parseFloat(
@@ -230,9 +231,11 @@ export default function ProductCardStyleOne({ datas }) {
             parseFloat(datas.price)
         );
         setPrice(sumPrice);
+        setAmount(sumPrice);
       }
     } else {
       setPrice(datas && datas.price ? parseFloat(datas.price) : null);
+      setAmount(datas && datas.price ? parseFloat(datas.price) : null);
       setOffer(
         datas && datas.offer_price ? parseFloat(datas.offer_price) : null
       );
@@ -259,213 +262,270 @@ export default function ProductCardStyleOne({ datas }) {
   const loadImg = (value) => {
     setImgSrc(value);
   };
-  return (
-    <div
-      className="product-card-one w-full h-[445px] transition-all duration-300 ease-in-out bg-white relative group border border-transparent hover:border-qpurple overflow-hidden rounded-lg"
-      style={{ boxShadow: "0px 15px 64px 0px rgba(0, 0, 0, 0.05)" }}
-    >
-      <div className="flex flex-col h-full justify-between">
-        <div>
-          <div className="product-card-img w-full h-[313px]">
-            <div className="w-full h-full relative  flex justify-center items-center transition-all duration-700 ease-in-out transform group-hover:-scale-x-[1] scale-x-100">
-              <Image
-                layout="fill"
-                objectFit="scale-down"
-                src={`${imgSrc ? imgSrc : "/assets/images/spinner.gif"}`}
-                alt=""
-                onLoadingComplete={() => loadImg(datas.image)}
-                className="w-full h-full object-contain"
-              />
-            </div>
-          </div>
-          <div className="product-card-details relative pt-5 pl-[30px]">
-            <div className="flex justify-start  mb-1.5">
-              <div className="reviews flex space-x-[1px]">
-                {Array.from(Array(datas.review), () => (
-                  <span key={datas.review + Math.random()}>
-                    <Star />
-                  </span>
-                ))}
-                {datas.review < 5 && (
-                  <>
-                    {Array.from(Array(5 - datas.review), () => (
-                      <span
-                        key={datas.review + Math.random()}
-                        className="text-qgray"
-                      >
-                        <Star defaultValue={false} />
-                      </span>
-                    ))}
-                  </>
-                )}
-              </div>
-            </div>
 
-            <Link
-              href={{
-                pathname: "/single-product",
-                query: { slug: datas.slug },
-              }}
-              passHref
-            >
-              <a rel="noopener noreferrer">
-                <h1 className="title mb-1.5 text-[18px] font-600 text-qblack leading-[30px] line-clamp-1 hover:text-qpurple cursor-pointer text-start">
-                  {datas.title}
-                </h1>
-              </a>
-            </Link>
-            <p className="price text-start">
-              <span
-                suppressHydrationWarning
-                className={`main-price  font-500 text-[16px] ${
-                  offerPrice ? "line-through text-qgray" : "text-qpurple"
-                }`}
-              >
-                {offerPrice ? (
-                  <span>
-                    {currency_icon &&
-                      currency_icon + parseFloat(price).toFixed(2)}
-                  </span>
-                ) : (
-                  <>
-                    {isProductInFlashSale && (
+  console.log(price, "producat card price");
+  console.log(datas, "datas");
+
+  const [amount, setAmount] = useState(null);
+  const exchangeRate = JSON.parse(localStorage.getItem("selectedRate")) || 0;
+  // const exchangeRate = 0.0036;
+
+  const [convertedAmount, setConvertedAmount] = useState(0);
+  console.log(exchangeRate, "exchangeRate");
+
+  useEffect(() => {
+    setConvertedAmount(amount * exchangeRate);
+    console.log("converter is running");
+  }, [amount, exchangeRate]);
+
+  const roundedResult = Math.round(convertedAmount * 100) / 100;
+  const convertedPrice = convertedAmount.toFixed(2);
+  console.log(convertedPrice, "convertedPrice");
+
+  return (
+    <>
+      <Link
+        href={{
+          pathname: "/single-product",
+          query: { slug: datas.slug },
+        }}
+        passHref
+      >
+        <a rel="noopener noreferrer">
+          <div
+            className="product-card-one w-full h-[550px] transition-all duration-300 ease-in-out bg-white relative group border border-transparent overflow-hidden rounded-lg"
+            style={{
+              boxShadow: "0px 15px 64px 0px rgba(0, 0, 0, 0.05)",
+            }}
+          >
+            <div className="flex flex-col h-full justify-between">
+              <div>
+                <div className="product-card-img w-full h-[313px]">
+                  <div className="w-full h-full relative  flex justify-center items-center transition-all duration-700 ease-in-out transform group-hover:-scale-x-[1] scale-x-100">
+                    <Image
+                      layout="fill"
+                      objectFit="scale-down"
+                      src={`${imgSrc ? imgSrc : "/assets/images/spinner.gif"}`}
+                      alt=""
+                      onLoadingComplete={() => loadImg(datas.image)}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                </div>
+                <div className="product-card-details relative pt-5 px-[10px]">
+                  <div className="flex justify-between p-2 items-center border-t-[1px] border-[#D9D9D4] border-b-[1px]">
+                    <Image
+                      src={ElementOptics}
+                      width={"100"}
+                      height={"50"}
+                      objectFit="scale-down"
+                      alt="brand-logo"
+                    />
+                    <div className="wishlist">
+                      {!arWishlist ? (
+                        <button
+                          className="transform transition-all duration-300 ease-in-out"
+                          type="button"
+                          onClick={() => addToWishlist(datas.id)}
+                        >
+                          <span className="w-10 h-10 block text-qblack transition-all duration-300 ease-in-out bg-white rounded-full">
+                            <span className="w-full h-full flex justify-center items-center hover:bg-qpurple bg-qpurplelow/10 rounded-full">
+                              <ThinLove className="fill-current" />
+                            </span>
+                          </span>
+                        </button>
+                      ) : (
+                        <button
+                          className="transform scale-0 transition-all duration-300 ease-in-out"
+                          type="button"
+                          onClick={() =>
+                            removeToWishlist(wishlisted && wishlisted.id)
+                          }
+                        >
+                          <span className="w-10 block h-10 rounded-full overflow-hidden">
+                            <span className="flex w-full h-full justify-center items-center bg-qpurplelow/10">
+                              <ThinLove fill={true} />
+                            </span>
+                          </span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <Link
+                    href={{
+                      pathname: "/single-product",
+                      query: { slug: datas.slug },
+                    }}
+                    passHref
+                  >
+                    <a rel="noopener noreferrer">
+                      <h1 className="title mb-1.5 mt-2 text-[19px] font-600 text-qblack leading-[30px] line-clamp-2 hover:text-qpurple cursor-pointer text-start">
+                        {datas.title}
+                      </h1>
+                    </a>
+                  </Link>
+
+                  <div className="flex justify-start mb-1.5">
+                    <div className="reviews flex space-x-[1px]">
+                      {Array.from(Array(datas.review), () => (
+                        <span key={datas.review + Math.random()}>
+                          <Star />
+                        </span>
+                      ))}
+                      {datas.review < 5 && (
+                        <>
+                          {Array.from(Array(5 - datas.review), () => (
+                            <span
+                              key={datas.review + Math.random()}
+                              className="text-qgray"
+                            >
+                              <Star defaultValue={false} />
+                            </span>
+                          ))}
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <p className="price text-start">
+                    <span
+                      suppressHydrationWarning
+                      className={`main-price font-500 text-[16px]${
+                        offerPrice ? "line-through text-qgray" : "text-qpurple"
+                      }`}
+                    >
+                      {offerPrice ? (
+                        <span>
+                          {currency_icon &&
+                            currency_icon +
+                              parseFloat(
+                                convertedPrice ? convertedPrice : price
+                              ).toFixed(2)}
+                        </span>
+                      ) : (
+                        <>
+                          {isProductInFlashSale && (
+                            <span
+                              className={`line-through text-qgray font-400 text-[15px] mr-2`}
+                            >
+                              {currency_icon &&
+                                currency_icon +
+                                  parseFloat(
+                                    convertedPrice ? convertedPrice : price
+                                  ).toFixed(2)}
+                            </span>
+                          )}
+                          <CheckProductIsExistsInFlashSale
+                            id={datas.id}
+                            price={convertedPrice ? convertedPrice : price}
+                          />
+                        </>
+                      )}
+                    </span>
+                    {offerPrice && (
                       <span
-                        className={`line-through text-qgray font-500 text-[16px] mr-2`}
+                        suppressHydrationWarning
+                        className="offer-price text-qpurple font-500 text-[16px] ml-2"
                       >
-                        {currency_icon &&
-                          currency_icon + parseFloat(price).toFixed(2)}
+                        <CheckProductIsExistsInFlashSale
+                          id={datas.id}
+                          price={offerPrice}
+                        />
                       </span>
                     )}
-                    <CheckProductIsExistsInFlashSale
-                      id={datas.id}
-                      price={price}
-                    />
-                  </>
-                )}
-              </span>
-              {offerPrice && (
-                <span
-                  suppressHydrationWarning
-                  className="offer-price text-qpurple font-500 text-[16px] ml-2"
+                  </p>
+                </div>
+              </div>
+              {/* add to card button */}
+              <div className="">
+                <div
+                  onClick={() => addToCart(datas.id)}
+                  className="text-center w-full h-[48px] pl-6 pt-3 cursor-pointer bg-qpurple group-hover:bg-[#75652d] transition-all duration-300 ease-in-out"
                 >
-                  <CheckProductIsExistsInFlashSale
-                    id={datas.id}
-                    price={offerPrice}
-                  />
+                  <div className="w-full h-full space-x-3 text-qpurple group-hover:text-white text-white">
+                    <span className="text-base font-700 uppercase">
+                      Add To Cart
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* quick-access-btns */}
+            <div className="quick-access-btn">
+              <button
+                className=" absolute left-[77px] top-[243px] transform scale-0 group-hover:scale-100  transition-all ease-in-out"
+                onClick={() => quickViewHandler(datas.slug)}
+                type="button"
+              >
+                <span className="w-10 h-10 block overflow-hidden  text-qblack hover:text-white  transition-all duration-300 ease-in-out hover:bg-qpurple bg-white  rounded-full">
+                  <span className=" w-full h-full bg-qpurplelow/10 flex justify-center items-center">
+                    <QuickViewIco className="fill-current" />
+                  </span>
                 </span>
-              )}
-            </p>
-          </div>
-        </div>
-        {/* add to card button */}
-        <div className="">
-          <div
-            style={{ borderRadius: "30px 0px 0" }}
-            onClick={() => addToCart(datas.id)}
-            className="w-[135px] h-[48px] pl-6 pt-3 cursor-pointer  bg-qpurplelow/10 group-hover:bg-qpurple transition-all duration-300 absolute -bottom-1 -right-1 ease-in-out"
-          >
-            <div className="w-full h-full space-x-3 text-qpurple group-hover:text-white">
-              <span className="text-base font-semibold">Add To Cart</span>
+              </button>
+              <button
+                className=" absolute left-[160px] top-[243px] transform scale-0 group-hover:scale-100  transition-all duration-500 ease-in-out"
+                type="button"
+                onClick={() => productCompare(datas.id)}
+              >
+                <span className="w-10 h-10 block  text-qblack hover:text-white transition-all overflow-hidden duration-300 ease-in-out items-center bg-white rounded-full">
+                  <span className="w-full h-full flex justify-center items-center hover:bg-qpurple bg-qpurplelow/10 ">
+                    <Compair />
+                  </span>
+                </span>
+              </button>
             </div>
-          </div>
-        </div>
-      </div>
-      {/* quick-access-btns */}
-      <div className="quick-access-btn">
-        <button
-          className=" absolute left-[77px] top-[243px] transform scale-0 group-hover:scale-100  transition-all ease-in-out"
-          onClick={() => quickViewHandler(datas.slug)}
-          type="button"
-        >
-          <span className="w-10 h-10 block overflow-hidden  text-qblack hover:text-white  transition-all duration-300 ease-in-out hover:bg-qpurple bg-white  rounded-full">
-            <span className=" w-full h-full bg-qpurplelow/10 flex justify-center items-center">
-              <QuickViewIco className="fill-current" />
-            </span>
-          </span>
-        </button>
-        {!arWishlist ? (
-          <button
-            className=" absolute left-[134px] top-[243px] transform scale-0 group-hover:scale-100  transition-all duration-300 ease-in-out"
-            type="button"
-            onClick={() => addToWishlist(datas.id)}
-          >
-            <span className="w-10 h-10 block text-qblack overflow-hidden hover:text-white transition-all duration-300 ease-in-out bg-white rounded-full">
-              <span className="w-full h-full flex justify-center items-center hover:bg-qpurple bg-qpurplelow/10 ">
-                <ThinLove className="fill-current" />
-              </span>
-            </span>
-          </button>
-        ) : (
-          <button
-            className=" absolute  left-[134px] top-[243px] transform scale-0 group-hover:scale-100 transition-all duration-300 ease-in-out"
-            type="button"
-            onClick={() => removeToWishlist(wishlisted && wishlisted.id)}
-          >
-            <span className="w-10 block h-10 bg-white rounded-full overflow-hidden">
-              <span className="flex w-full h-full justify-center items-center bg-qpurplelow/10">
-                <ThinLove fill={true} />
-              </span>
-            </span>
-          </button>
-        )}
-
-        <button
-          className=" absolute left-[195px] top-[243px] transform scale-0 group-hover:scale-100  transition-all duration-500 ease-in-out"
-          type="button"
-          onClick={() => productCompare(datas.id)}
-        >
-          <span className="w-10 h-10 block  text-qblack hover:text-white transition-all overflow-hidden duration-300 ease-in-out items-center bg-white rounded-full">
-            <span className="w-full h-full flex justify-center items-center hover:bg-qpurple bg-qpurplelow/10 ">
-              <Compair />
-            </span>
-          </span>
-        </button>
-      </div>
-      {quickViewModal && quickViewData && (
-        <div className="quicke-view-wrapper w-full h-full flex fixed left-0 top-0 justify-center z-50 items-center ">
-          <div
-            onClick={() => setQuickView(!quickViewModal)}
-            className="w-full h-full fixed left-0 right-0 bg-black  bg-opacity-25"
-          ></div>
-          <div
-            data-aos="fade-up"
-            className="md:mx-10 xl:mt-[100px] rounded w-full bg-white relative lg:py-[40px] pt-[80px] pb-[40px] sm:px-[38px] px-3 relative md:mt-12 h-full overflow-y-scroll xl:overflow-hidden  xl:mt-0"
-            style={{ zIndex: "999" }}
-          >
-            <div className="w-full h-full overflow-y-scroll overflow-style-none">
-              <ProductView
-                images={
-                  quickViewData.gellery.length > 0 ? quickViewData.gellery : []
-                }
-                product={quickViewData.product}
-              />
-            </div>
-
-            <button
-              onClick={() => setQuickView(!quickViewModal)}
-              type="button"
-              className="absolute right-3 top-3"
-            >
-              <span className="text-red-500 w-12 h-12 flex justify-center items-center rounded border border-qred">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  className="w-10 h-10"
+            {quickViewModal && quickViewData && (
+              <div className="quicke-view-wrapper w-full h-full flex fixed left-0 top-0 justify-center z-50 items-center ">
+                <div
+                  onClick={() => setQuickView(!quickViewModal)}
+                  className="w-full h-full fixed left-0 right-0 bg-black  bg-opacity-25"
+                ></div>
+                <div
+                  data-aos="fade-up"
+                  className="md:mx-10 xl:mt-[100px] rounded w-full bg-white relative lg:py-[40px] pt-[80px] pb-[40px] sm:px-[38px] px-3 relative md:mt-12 h-full overflow-y-scroll xl:overflow-hidden  xl:mt-0"
+                  style={{ zIndex: "999" }}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  ></path>
-                </svg>
-              </span>
-            </button>
+                  <div className="w-full h-full overflow-y-scroll overflow-style-none">
+                    <ProductView
+                      images={
+                        quickViewData.gellery.length > 0
+                          ? quickViewData.gellery
+                          : []
+                      }
+                      product={quickViewData.product}
+                    />
+                  </div>
+
+                  <button
+                    onClick={() => setQuickView(!quickViewModal)}
+                    type="button"
+                    className="absolute right-3 top-3"
+                  >
+                    <span className="text-red-500 w-12 h-12 flex justify-center items-center rounded border border-qred">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-10 h-10"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 18L18 6M6 6l12 12"
+                        ></path>
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      )}
-    </div>
+        </a>
+      </Link>
+    </>
   );
 }

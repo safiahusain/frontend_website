@@ -3,13 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import isMultivendor from "../../../Middleware/isMultivendor";
 import auth from "../../../utils/auth";
+import languageModel from "../../../utils/languageModel";
 import InputCom from "../Helpers/InputCom";
 import PageTitle from "../Helpers/PageTitle";
-import languageModel from "../../../utils/languageModel";
-import { useSelector } from "react-redux";
 function BecomeSaller() {
   const router = useRouter();
   const [logoImg, setLogoImg] = useState(null);

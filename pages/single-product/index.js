@@ -9,7 +9,7 @@ const SingleProduct = ({ data }) => {
       router.push("*");
     }
   });
-
+  console.log(router.query.slug, "router.query.slug");
   return (
     <>
       <PageHead

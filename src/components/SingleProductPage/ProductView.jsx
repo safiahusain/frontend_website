@@ -1,21 +1,21 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FacebookShareButton, TwitterShareButton } from "react-share";
 import { toast } from "react-toastify";
 import apiRequest from "../../../utils/apiRequest";
 import auth from "../../../utils/auth";
+import languageModel from "../../../utils/languageModel";
 import settings from "../../../utils/settings";
 import { fetchCart } from "../../store/Cart";
 import { fetchWishlist } from "../../store/wishlistData";
+import LoginContext from "../Contexts/LoginContexts";
+import Selectbox from "../Helpers/Selectbox";
 import Star from "../Helpers/icons/Star";
 import ThinLove from "../Helpers/icons/ThinLove";
-import Selectbox from "../Helpers/Selectbox";
 import CheckProductIsExistsInFlashSale from "../Shared/CheckProductIsExistsInFlashSale";
-import languageModel from "../../../utils/languageModel";
-import LoginContext from "../Contexts/LoginContexts";
 const Redirect = ({ message, linkTxt }) => {
   return (
     <div className="flex space-x-2 items-center">
@@ -33,6 +33,7 @@ export default function ProductView({
   reportHandler,
   images = [],
   product,
+  ReadMoreHandler,
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -56,7 +57,7 @@ export default function ProductView({
   const [offerPrice, setOffer] = useState(null);
   const [src, setSrc] = useState(product.thumb_image);
   useEffect(() => {
-   setSrc(product.thumb_image)
+    setSrc(product.thumb_image);
   }, [product]);
 
   const changeImgHandler = (current) => {
@@ -292,6 +293,8 @@ export default function ProductView({
       }
     }
   }, [websiteSetup]);
+
+  console.log(product.brand);
   return (
     <>
       <div
@@ -360,13 +363,18 @@ export default function ProductView({
         <div className="flex-1">
           <div className="product-details w-full mt-10 lg:mt-0">
             {product.brand && (
-              <span
-                data-aos="fade-up"
-                className="text-qgray text-xs font-normal uppercase tracking-wider mb-2 inline-block"
-              >
-                {product.brand.name}
-              </span>
+              <div className="text-qgray text-xs font-normal mb-2 inline-block">
+                <img
+                  src={`${
+                    process.env.NEXT_PUBLIC_BASE_URL + product.brand.logo
+                  }`}
+                  alt=""
+                  className="w-[100%] object-cover"
+                />
+              </div>
             )}
+            <div className="w-full h-[1px] bg-qpurplelow/10 mb-[10px]"></div>
+
             <h1
               data-aos="fade-up"
               className="text-xl font-medium text-qblack mb-4"
@@ -403,6 +411,54 @@ export default function ProductView({
                 {parseInt(product.averageRating)} Reviews
               </span>
             </div>
+            <div data-aos="fade-up" className="mb-[30px]">
+              <div className={`text-qgray text-sm text-normal leading-7`}>
+                {product.short_description}
+                <button
+                  onClick={ReadMoreHandler}
+                  type="button"
+                  className="ml-1 text-[#03a84e] text-xs font-bold underline"
+                >
+                  {"Read more"}
+                </button>
+              </div>
+            </div>
+
+            <div className="w-full h-[1px] bg-qpurplelow/10 mb-[20px]"></div>
+            <div
+              data-aos="fade-up"
+              className="flex gap-3 items-center mb-[40px]"
+            >
+              <div
+                className={
+                  parseInt(product.qty) !== 0 && parseInt(product.qty) > 0
+                    ? `bg-[#007957] pb-[2px] px-[5px] rounded`
+                    : `bg-[#bb2124] pb-[2px] px-[5px] rounded`
+                }
+              >
+                <span
+                  style={{
+                    backgroundImage: `url(./assets/images/STOCK.png)`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPositionX: "left 5px",
+                    paddingLeft: "30px",
+                    fontWeight: "500",
+                  }}
+                >
+                  <span className="uppercase text-white text-[12px]">
+                    {parseInt(product.qty) !== 0 && parseInt(product.qty) > 0
+                      ? `${product.qty} ${langCntnt && "in stock"} `
+                      : `${langCntnt && "out of stock"}`}
+                  </span>
+                </span>
+              </div>
+              <div className="bg-[#1a3336] px-[10px] pb-[2px] rounded">
+                <span className="capitalize text-white text-[12px]">
+                  {langCntnt && langCntnt.SKU}:&nbsp;{product.sku}
+                </span>
+              </div>
+            </div>
+
             <div
               data-aos="fade-up"
               className="flex space-x-2 items-baseline mb-7"
@@ -445,22 +501,6 @@ export default function ProductView({
               )}
             </div>
 
-            <div data-aos="fade-up" className="mb-[30px]">
-              <div
-                className={`text-qgray text-sm text-normal leading-7 ${
-                  more ? "" : "line-clamp-2"
-                }`}
-              >
-                {product.short_description}
-              </div>
-              <button
-                onClick={() => setMore(!more)}
-                type="button"
-                className="text-[#03a84e] text-xs font-bold"
-              >
-                {more ? "See Less" : "See More"}
-              </button>
-            </div>
             <div className="w-full h-[1px] bg-qpurplelow/10 mb-[30px]"></div>
             <div className="p-3 bg-qpurplelow/10 flex items-center space-x-2 mb-[30px] rounded-lg w-fit">
               <span className="text-base font-bold text-qblack">
@@ -576,34 +616,35 @@ export default function ProductView({
                 <button
                   onClick={addToCard}
                   type="button"
-                  className="bg-qpurple hover:bg-qpurplelow/10 hover:text-qpurple border border-transparent hover:border-qpurple transition-common text-white rounded-full text-sm font-semibold w-full h-full"
+                  className="bg-qpurple hover:bg-qpurplelow/10 hover:text-qpurple border border-transparent hover:border-qpurple transition-common text-white rounded text-sm font-semibold w-full h-full"
                 >
                   {langCntnt && langCntnt.Add_To_Cart}
                 </button>
               </div>
             </div>
+            <div className="w-full h-[1px] bg-qpurplelow/10 mb-[30px]"></div>
 
-            <div data-aos="fade-up" className="mb-[20px]">
-              <p className="text-base text-qpurple leading-7">
-                <span className="text-qblack">
-                  {langCntnt && langCntnt.category} :
-                </span>{" "}
-                {product.category.name}
-              </p>
-              <p className="text-base text-qpurple leading-7">
-                <span className="text-qblack uppercase">
-                  {langCntnt && langCntnt.SKU}:
-                </span>{" "}
-                {product.sku}
-              </p>
+            <div
+              data-aos="fade-up"
+              className="mb-[20px] flex gap-3 items-center"
+            >
+              <div className="bg-[#1a3336] px-[10px] pb-[2px] rounded">
+                <span className="capitalize text-white text-[13px]">
+                  {langCntnt && langCntnt.category}:&nbsp;
+                  {product.category.name}
+                </span>
+              </div>
+
               {tags && (
-                <p className="text-base text-qpurple leading-7">
-                  <span className="text-qblack">Tags:</span>{" "}
-                  {tags.length > 0 &&
-                    tags.map((item, i) => (
-                      <span key={i}>{item.value + ", "}</span>
-                    ))}
-                </p>
+                <div className="bg-[#1a3336] px-[10px] pb-[2px] rounded">
+                  <span className="capitalize text-white text-[13px]">
+                    Tags:&nbsp;
+                    {tags.length > 0 &&
+                      tags.map((item, i) => (
+                        <span key={i}>{item.value + ", "}</span>
+                      ))}
+                  </span>
+                </div>
               )}
             </div>
 

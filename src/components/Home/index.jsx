@@ -1,22 +1,18 @@
 import { useEffect, useState } from "react";
 import settings from "../../../utils/settings";
-import SectionStyleFour from "../Helpers/SectionStyleFour";
-import SectionStyleOne from "../Helpers/SectionStyleOne";
-import SectionStyleThree from "../Helpers/SectionStyleThree";
-import SectionStyleTwo from "../Helpers/SectionStyleTwo";
-import ViewMoreTitle from "../Helpers/ViewMoreTitle";
+import MainPageBlogs from "../Blogs/MainPageBlogs";
 import Layout from "../Partials/Layout";
+import Ads from "./Ads";
 import Banner from "./Banner";
 import BrandSection from "./BrandSection";
-import CampaignCountDown from "./CampaignCountDown";
 import CategorySection from "./CategorySection";
-import TwoColumnAds from "./ProductAds/TwoColumnAds";
-import BestSellers from "./BestSellers";
-import Ads from "./Ads";
+import TreeCategory from "./TreeCategory";
+
 export default function Home({ homepageData }) {
   const [homepage] = useState(homepageData);
   const getsectionTitles = homepageData.section_title;
   const [sectionTitles, setSectionTitles] = useState(null);
+
   useEffect(() => {
     if (!sectionTitles) {
       let tem =
@@ -44,12 +40,19 @@ export default function Home({ homepageData }) {
         {homepage && homepage.sliders.length > 0 && (
           <Banner sliders={homepage.sliders} className="banner-wrapper" />
         )}
+        {homepage && (
+          <TreeCategory
+            products={homepage.popularCategoryProducts}
+            categories={homepage.popularCategories}
+          />
+        )}
         <CategorySection
           categories={homepage.homepage_categories}
           adsOne={homepage.banner_one}
           adsTwo={homepage.banner_two}
           sectionTitle={sectionTitles && sectionTitles.My_Market_Category}
         />
+        <MainPageBlogs />
         {homepage && (
           <BrandSection
             brands={homepage.brands.length > 0 ? homepage.brands : []}
@@ -57,7 +60,7 @@ export default function Home({ homepageData }) {
             className="brand-section-wrapper md:mb-[60px] mb-[30px]"
           />
         )}
-        <div className="md:py-[60px] py-[30px] bg-qpurplelow/10">
+        {/* <div className="md:py-[60px] py-[30px] bg-qpurplelow/10">
           {homepage && (
             <SectionStyleThree
               products={
@@ -75,15 +78,15 @@ export default function Home({ homepageData }) {
               className="new-products"
             />
           )}
-        </div>
-        {homepage && (
+        </div> */}
+        {/* {homepage && (
           <CampaignCountDown
             className="md:mb-[60px] mb-[30px]"
             datas={homepage.flashSale}
             products={homepage.flashsale_products.slice(0, 4)}
           />
-        )}
-        {homepage && (
+        )} */}
+        {/* {homepage && (
           <ViewMoreTitle
             className="top-selling-product md:mb-[60px] mb-[30px]"
             seeMoreUrl={`/products?highlight=top_product`}
@@ -97,8 +100,8 @@ export default function Home({ homepageData }) {
               }
             />
           </ViewMoreTitle>
-        )}
-        {homepage && isMultivendor === 1 && (
+        )} */}
+        {/* {homepage && isMultivendor === 1 && (
           <div className="container-x mx-auto ">
             <div
               style={{
@@ -122,9 +125,9 @@ export default function Home({ homepageData }) {
               </div>
             </div>
           </div>
-        )}
+        )} */}
 
-        {homepage && (
+        {/* {homepage && (
           <SectionStyleOne
             products={homepage.popularCategoryProducts}
             categories={homepage.popularCategories}
@@ -136,12 +139,22 @@ export default function Home({ homepageData }) {
             seeMoreUrl={`/products?highlight=popular_category`}
             className="category-products"
           />
-        )}
-        <div className="bg-qpurplelow/10">
+        )} */}
+        {/* <div className="bg-qpurplelow/10">
           {homepage && (
             <TwoColumnAds
-              bannerOne={homepage.banner_three && parseInt(homepage.banner_three.status)===1?homepage.banner_three:null }
-              bannerTwo={homepage.banner_four && parseInt(homepage.banner_four.status)===1?homepage.banner_four:null}
+              bannerOne={
+                homepage.banner_three &&
+                parseInt(homepage.banner_three.status) === 1
+                  ? homepage.banner_three
+                  : null
+              }
+              bannerTwo={
+                homepage.banner_four &&
+                parseInt(homepage.banner_four.status) === 1
+                  ? homepage.banner_four
+                  : null
+              }
             />
           )}
 
@@ -155,7 +168,7 @@ export default function Home({ homepageData }) {
               className="category-products md:pt-[60px] pt-[30px] pb-[114px]"
             />
           )}
-        </div>
+        </div> */}
       </Layout>
     </>
   );

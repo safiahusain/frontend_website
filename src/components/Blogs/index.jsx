@@ -1,11 +1,11 @@
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import languageModel from "../../../utils/languageModel";
 import BlogCard from "../Helpers/Cards/BlogCard";
 import DataIteration from "../Helpers/DataIteration";
+import LoaderStyleOne from "../Helpers/Loaders/LoaderStyleOne";
 import PageTitle from "../Helpers/PageTitle";
 import Layout from "../Partials/Layout";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import LoaderStyleOne from "../Helpers/Loaders/LoaderStyleOne";
-import languageModel from "../../../utils/languageModel";
 
 export default function Blogs({ blogs, nextPageUrl }) {
   const [getBlogs, setGetBlogs] = useState([]);

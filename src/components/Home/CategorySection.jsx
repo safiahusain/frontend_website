@@ -1,95 +1,94 @@
-import React from "react";
-import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 import ShopNowBtn from "../Helpers/Buttons/ShopNowBtn";
 
 function CategorySection({ sectionTitle, categories, adsOne, adsTwo }) {
   return (
     <div className="category-section-wrapper w-full">
-      <div className="container-x mx-auto md:py-[60px] py-[30px]">
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-[30px] lg:mb-[60px] mb-[30px]">
-          {adsOne && parseInt(adsOne.status)===1 && (
-              <div
-                  data-aos="fade-right"
-                  className="item w-full rounded-2xl overflow-hidden"
-              >
+      <div className="w-full mx-auto md:py-[60px] py-[30px]">
+        <div className="grid lg:grid-cols-2 grid-cols-1 lg:mb-[60px] mb-[30px]">
+          {adsOne && parseInt(adsOne.status) === 1 && (
+            <div data-aos="fade-right" className="item w-full overflow-hidden">
+              <div className="ads-category-container">
                 <div
-                    className="w-full  h-[453px] rounded bg-center"
-                    style={{
-                      backgroundImage: `url(${
-                          process.env.NEXT_PUBLIC_BASE_URL + adsOne.image
-                      })`,
-                      backgroundRepeat: `no-repeat`,
-                      backgroundSize: "cover",
+                  className="w-full h-[500px] bg-center overly-category"
+                  style={{
+                    backgroundImage: `url(${
+                      process.env.NEXT_PUBLIC_BASE_URL + adsOne.image
+                    })`,
+                    backgroundRepeat: `no-repeat`,
+                    backgroundSize: "cover",
+                  }}
+                ></div>
+              </div>
+              <div className=" relative">
+                <div className="ads-category-position">
+                  <span className="text-sm text-white mb-2 inline-block uppercase font-medium">
+                    {adsOne.title_one}
+                  </span>
+                  <h1 className="text-[34px] leading-[38px] font-semibold text-white mb-[20px] w-[277px]">
+                    {adsOne.title_two}
+                  </h1>
+                  <Link
+                    href={{
+                      pathname: "/products",
+                      query: { category: adsOne.product_slug },
                     }}
-                >
-                  <div className="px-[40px] pt-[40px]">
-                <span className="text-sm text-qblack mb-2 inline-block uppercase font-medium">
-                  {adsOne.title_one}
-                </span>
-                    <h1 className="text-[34px] leading-[38px] font-semibold text-qblack mb-[20px] w-[277px]">
-                      {adsOne.title_two}
-                    </h1>
-                    <Link
-                        href={{
-                          pathname: "/products",
-                          query: { category: adsOne.product_slug },
-                        }}
-                        passHref
-                    >
-                      <a rel="noopener noreferrer">
-                        <ShopNowBtn
-                            className="w-[128px] h-[40px] bg-qyellow"
-                            textColor="text-qblack group-hover:text-white"
-                        />
-                      </a>
-                    </Link>
-                  </div>
+                    passHref
+                  >
+                    <a rel="noopener noreferrer">
+                      <ShopNowBtn
+                        className="w-[128px] h-[40px] bg-qyellow"
+                        textColor="text-qblack group-hover:text-white"
+                      />
+                    </a>
+                  </Link>
                 </div>
               </div>
+            </div>
           )}
-          {adsTwo && parseInt(adsTwo.status)===1 && (
-              <div
-                  data-aos="fade-up"
-                  className="item w-full rounded-2xl  overflow-hidden"
-              >
+          {adsTwo && parseInt(adsTwo.status) === 1 && (
+            <div data-aos="fade-up" className="item w-full overflow-hidden">
+              <div className="ads-category-container">
                 <div
-                    className="w-full  h-[453px] rounded bg-center"
-                    style={{
-                      backgroundImage: `url(${
-                          process.env.NEXT_PUBLIC_BASE_URL + adsTwo.image
-                      })`,
-                      backgroundRepeat: `no-repeat`,
-                      backgroundSize: "cover",
+                  className="w-full h-[500px] bg-center overly-category"
+                  style={{
+                    backgroundImage: `url(${
+                      process.env.NEXT_PUBLIC_BASE_URL + adsTwo.image
+                    })`,
+                    backgroundRepeat: `no-repeat`,
+                    backgroundSize: "cover",
+                  }}
+                ></div>
+              </div>
+              <div className="relative">
+                <div className="ads-category-position">
+                  <span className="text-sm text-white mb-2 inline-block uppercase font-medium">
+                    {adsTwo.title_one}
+                  </span>
+                  <h1 className="text-[34px] leading-[38px] font-semibold text-white mb-[20px] w-[277px]">
+                    {adsTwo.title_two}
+                  </h1>
+                  <Link
+                    href={{
+                      pathname: "/products",
+                      query: { category: adsTwo.product_slug },
                     }}
-                >
-                  <div className="px-[40px] pt-[40px]">
-                <span className="text-sm text-qblack mb-2 inline-block uppercase font-medium">
-                  {adsTwo.title_one}
-                </span>
-                    <h1 className="text-[34px] leading-[38px] font-semibold text-qblack mb-[20px] w-[277px]">
-                      {adsTwo.title_two}
-                    </h1>
-                    <Link
-                        href={{
-                          pathname: "/products",
-                          query: { category: adsTwo.product_slug },
-                        }}
-                        passhref
-                    >
-                      <a rel="noopener noreferrer">
-                        <ShopNowBtn
-                            className="w-[128px] h-[40px] bg-qpurple"
-                            textColor="text-white group-hover:text-white"
-                        />
-                      </a>
-                    </Link>
-                  </div>
+                    passhref
+                  >
+                    <a rel="noopener noreferrer">
+                      <ShopNowBtn
+                        className="w-[128px] h-[40px] bg-qpurple"
+                        textColor="text-white group-hover:text-white"
+                      />
+                    </a>
+                  </Link>
                 </div>
               </div>
+            </div>
           )}
         </div>
-        <div>
+        {/* <div className="container-x mx-auto">
           <div className="section-title flex justify-between items-center mb-5">
             <div>
               <h1 className="sm:text-3xl text-xl font-600 text-qblack">
@@ -136,7 +135,7 @@ function CategorySection({ sectionTitle, categories, adsOne, adsTwo }) {
                   </div>
                 ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

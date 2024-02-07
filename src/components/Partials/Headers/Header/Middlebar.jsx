@@ -1,16 +1,19 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
+import { BsHandbag } from "react-icons/bs";
+import { PiHeart } from "react-icons/pi";
+import { RiUserLine } from "react-icons/ri";
 import { useDispatch, useSelector } from "react-redux";
 import apiRequest from "../../../../../utils/apiRequest";
-import { fetchWishlist } from "../../../../store/wishlistData";
-import Cart from "../../../Cart";
-import ThinBag from "../../../Helpers/icons/ThinBag";
-import ThinPeople from "../../../Helpers/icons/ThinPeople";
-import SearchBox from "../../../Helpers/SearchBox";
 import languageModel from "../../../../../utils/languageModel";
 import DefaultUser from "../../../../contexts/DefaultUser";
+import { fetchWishlist } from "../../../../store/wishlistData";
+import Cart from "../../../Cart";
+import SearchBox from "../../../Helpers/SearchBox";
+
 export default function Middlebar({ className, settings }) {
   const { websiteSetup } = useSelector((state) => state.websiteSetup);
   const router = useRouter();
@@ -61,18 +64,19 @@ export default function Middlebar({ className, settings }) {
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
+
   return (
-    <div className={`w-full h-[86px] bg-white ${className}`}>
-      <div className="container-x mx-auto h-full">
+    <div className={`w-full h-[150px] bg-white ${className}`}>
+      <div className="xl:max-w-[1350px] lg:max-w-[1190px] md:max-w-[1190px] mx-auto h-full">
         <div className="relative h-full">
           <div className="flex justify-between items-center h-full">
-            <div className="relative">
+            <div className="relative overflow-hidden">
               <Link href="/" passHref>
                 <a rel="noopener noreferrer">
                   {settings && (
                     <Image
-                      width="153"
-                      height="44"
+                      width="250"
+                      height="150"
                       objectFit="scale-down"
                       src={`${
                         process.env.NEXT_PUBLIC_BASE_URL + settings.logo
@@ -83,7 +87,11 @@ export default function Middlebar({ className, settings }) {
                 </a>
               </Link>
             </div>
-            <div
+            {/* <SearchBox /> */}
+            <div className="w-1/2 h-[55px]">
+              <SearchBox />
+            </div>
+            {/* <div
               className={`w-full h-[240px] bg-white delay-300 shadow transition-all duration-300 ease-in-out fixed -left-0 top-0 transform ${
                 searchToogle ? `translate-y-0` : "-translate-y-[100vh]"
               }`}
@@ -114,15 +122,219 @@ export default function Middlebar({ className, settings }) {
                   </svg>
                 </button>
               </div>
-            </div>
-            <div
+            </div> */}
+            {/* <div
               onClick={() => setToggle(!searchToogle)}
               className={`w-full delay-50 h-screen transition-all duration-300 ease-in-out bg-black bg-opacity-50 fixed -left-0 top-0 z-40 transform ${
                 searchToogle ? `translate-y-0` : "-translate-y-[100vh]"
               }`}
-            ></div>
-            <div className="flex space-x-6 items-center relative">
-              <div
+            ></div> */}
+            <div className="relative">
+              <ul className="flex gap-4 items-center">
+                <li>
+                  <div className="flex items-end">
+                    <FontAwesomeIcon
+                      icon="fa-solid fa-mobile-screen-button"
+                      className="w-[30px] h-[30px] text-[#6E6D79]"
+                    />
+                    <div style={{ lineHeight: "16px" }}>
+                      <span
+                        className="text-[12px] font-normal"
+                        style={{ lineHeight: "0px" }}
+                      >
+                        Order Now
+                        <br />
+                        <b className="text-[18px] font-[700]">
+                          {websiteSetup?.payload?.footer?.phone}
+                        </b>
+                      </span>
+                    </div>
+                  </div>
+                </li>
+                <li>
+                  <div className="favorite relative pr-[18px]">
+                    <Link href="/wishlist" passHref>
+                      <a
+                        title={langCntnt?.Wishlist}
+                        rel="noopener noreferrer"
+                        className="flex space-x-4 items-center"
+                      >
+                        <span className="cursor-pointer text-[#6E6D79]">
+                          {/* <svg
+                        width="30"
+                        height="30"
+                        viewBox="0 0 23 22"
+                        className="fill-current"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M11.4048 3.54989C11.6188 3.30247 11.807 3.07783 12.0028 2.86001C15.0698 -0.54838 20.3879 0.51717 22.1581 4.60443C23.4189 7.5161 22.8486 10.213 20.9966 12.6962C19.6524 14.498 17.95 15.9437 16.2722 17.4108C15.0308 18.4964 13.7741 19.5642 12.5247 20.6408C11.6987 21.3523 11.1109 21.3607 10.2924 20.6397C8.05184 18.6657 5.79232 16.7125 3.59037 14.6964C2.35873 13.5686 1.33274 12.2553 0.638899 10.7086C-0.626827 7.88722 0.0325472 4.41204 2.22314 2.41034C4.84019 0.0185469 8.81764 0.369176 11.1059 3.19281C11.1968 3.30475 11.2908 3.41404 11.4048 3.54989Z" />
+                      </svg> */}
+                          <PiHeart size={35} />
+                        </span>
+                        {/* <span className="text-base text-qgray font-medium capitalize">
+                      {langCntnt && langCntnt.Wishlist}
+                    </span> */}
+                      </a>
+                    </Link>
+                    <span
+                      style={{
+                        background: websiteSetup.payload.setting.theme_one,
+                      }}
+                      className="w-[18px] h-[18px] rounded-full absolute -top-1.5 left-6 flex justify-center items-center text-[10px] text-white"
+                    >
+                      {wishlists ? wishlists.data.length : 0}
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div className="cart-wrapper group relative border-r-2 border-[#6E6D79] pr-[22px]">
+                    <div className="cart relative cursor-pointer">
+                      <Link href="/cart" passHref>
+                        <a
+                          title={langCntnt?.Cart}
+                          rel="noopener noreferrer"
+                          className="flex space-x-4 items-center"
+                        >
+                          <span className="cursor-pointer text-[#6E6D79]">
+                            <BsHandbag size={35} />
+                          </span>
+                          {/* <span className="text-base text-qgray font-medium">
+                        {langCntnt && langCntnt.Cart}
+                      </span> */}
+                        </a>
+                      </Link>
+                      <span
+                        style={{
+                          background: websiteSetup.payload.setting.theme_one,
+                        }}
+                        className="w-[18px] h-[18px] rounded-full  absolute -top-1.5 left-6 flex justify-center items-center text-[10px] text-white"
+                      >
+                        {cartItems ? cartItems.length : 0}
+                      </span>
+                    </div>
+
+                    <Cart className="absolute -right-[45px] top-14 z-50 hidden group-hover:block rounded" />
+                  </div>
+                </li>
+                <li>
+                  <div>
+                    {auth ? (
+                      <>
+                        {user && (
+                          <button onClick={profilehandler} type="button">
+                            <div className="flex space-x-4 items-center">
+                              <div className="w-[52px] h-[52px] rounded-full bg-qyellow relative overflow-hidden">
+                                {user && user.image ? (
+                                  <Image
+                                    layout="fill"
+                                    objectFit="cover"
+                                    src={
+                                      process.env.NEXT_PUBLIC_BASE_URL +
+                                      user.image
+                                    }
+                                    alt="user"
+                                  />
+                                ) : (
+                                  <Image
+                                    layout="fill"
+                                    objectFit="cover"
+                                    src={
+                                      process.env.NEXT_PUBLIC_BASE_URL +
+                                      defaultImage
+                                    }
+                                    alt="user"
+                                  />
+                                )}
+                              </div>
+                              {/* <div className="flex flex-col space-y-3">
+                            <h3 className="text-md text-qblack font-semibold text-start leading-none">
+                              {user.name}
+                            </h3>
+                            <p className="text-sm text-start text-qgray leading-none">
+                              {user.phone}
+                            </p>
+                          </div> */}
+                            </div>
+                          </button>
+                        )}
+                      </>
+                    ) : (
+                      <Link href="/login" passHref>
+                        <a rel="noopener noreferrer" title="Login/Register">
+                          <span className="cursor-pointer text-[#6E6D79]">
+                            <RiUserLine size={35} />
+                          </span>
+                        </a>
+                      </Link>
+                    )}
+                  </div>
+
+                  {profile && (
+                    <>
+                      <div
+                        onClick={() => setProfile(false)}
+                        className="w-full h-full fixed top-0 left-0 z-30"
+                        style={{ zIndex: "35", margin: "0" }}
+                      ></div>
+                      <div
+                        className="w-[208px] h-[267px] bg-white absolute xl:-right-[60px] lg:right-0 top-14 z-40 border-t-[3px] border-qpurple flex flex-col justify-between rounded"
+                        style={{
+                          boxShadow: " 0px 15px 50px 0px rgba(0, 0, 0, 0.14)",
+                        }}
+                      >
+                        <div className="menu-item-area w-full  p-5">
+                          <ul className="w-full  flex flex-col space-y-7">
+                            <li className="text-base text-qgray">
+                              <span className="line-clamp-1">
+                                {langCntnt && langCntnt.Hi},{" "}
+                                {auth && auth.user.name}{" "}
+                              </span>
+                            </li>
+                            <li className="text-base text-qgray cursor-pointer hover:text-qblack hover:font-semibold">
+                              <Link href="/profile#dashboard" passHref>
+                                <a rel="noopener noreferrer">
+                                  <span className="capitalize">
+                                    {langCntnt && langCntnt.profile}
+                                  </span>
+                                </a>
+                              </Link>
+                            </li>
+                            <li className="text-base text-qgray cursor-pointer hover:text-qblack hover:font-semibold">
+                              <Link href="/contact" passHref>
+                                <a rel="noopener noreferrer">
+                                  <span className="capitalize">
+                                    {langCntnt && langCntnt.Support}
+                                  </span>
+                                </a>
+                              </Link>
+                            </li>
+                            <li className="text-base text-qgray cursor-pointer hover:text-qblack hover:font-semibold">
+                              <Link href="/faq" passHref>
+                                <a rel="noopener noreferrer">
+                                  <span className="capitalize">
+                                    {langCntnt && langCntnt.FAQ}
+                                  </span>
+                                </a>
+                              </Link>
+                            </li>
+                          </ul>
+                        </div>
+                        <div className="w-full h-10 flex justify-center items-center border-t border-qborder">
+                          <button
+                            onClick={logout}
+                            type="button"
+                            className="text-qblack text-base font-semibold"
+                          >
+                            {langCntnt && langCntnt.Sign_Out}
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </li>
+              </ul>
+              {/* <div
                 onClick={() => setToggle(!searchToogle)}
                 className="w-[52px] h-[52px] bg-qyellow flex justify-center items-center rounded-full cursor-pointer"
               >
@@ -140,18 +352,19 @@ export default function Middlebar({ className, settings }) {
                     />
                   </svg>
                 </span>
-              </div>
-              <div className="compaire relative">
+              </div> */}
+              {/* <div className="compaire relative border-r-2 border-[#6E6D79] pr-[22px]">
                 {auth ? (
                   <Link href="/products-compaire" passHref>
                     <a
+                      title={langCntnt?.compare}
                       rel="noopener noreferrer"
                       className="flex space-x-4 items-center"
                     >
                       <span className="cursor-pointer text-[#6E6D79]">
                         <svg
-                          width="22"
-                          height="22"
+                          width="30"
+                          height="30"
                           viewBox="0 0 22 22"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
@@ -178,13 +391,14 @@ export default function Middlebar({ className, settings }) {
                 ) : (
                   <Link href="/login" passHref>
                     <a
+                      title={langCntnt?.compare}
                       rel="noopener noreferrer"
                       className="flex space-x-4 items-center"
                     >
                       <span className="cursor-pointer text-[#6E6D79]">
                         <svg
-                          width="22"
-                          height="22"
+                          width="30"
+                          height="30"
                           viewBox="0 0 22 22"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
@@ -213,169 +427,7 @@ export default function Middlebar({ className, settings }) {
                 <span className="w-[18px] h-[18px] rounded-full  absolute -top-1.5 left-4 flex justify-center items-center text-[9px]">
                   {compareProducts ? compareProducts.products.length : 0}
                 </span>
-              </div>
-              <div className="favorite relative">
-                <Link href="/wishlist" passHref>
-                  <a
-                    rel="noopener noreferrer"
-                    className="flex space-x-4 items-center"
-                  >
-                    <span className="cursor-pointer text-[#6E6D79]">
-                      <svg
-                        width="23"
-                        height="22"
-                        viewBox="0 0 23 22"
-                        className="fill-current"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M11.4048 3.54989C11.6188 3.30247 11.807 3.07783 12.0028 2.86001C15.0698 -0.54838 20.3879 0.51717 22.1581 4.60443C23.4189 7.5161 22.8486 10.213 20.9966 12.6962C19.6524 14.498 17.95 15.9437 16.2722 17.4108C15.0308 18.4964 13.7741 19.5642 12.5247 20.6408C11.6987 21.3523 11.1109 21.3607 10.2924 20.6397C8.05184 18.6657 5.79232 16.7125 3.59037 14.6964C2.35873 13.5686 1.33274 12.2553 0.638899 10.7086C-0.626827 7.88722 0.0325472 4.41204 2.22314 2.41034C4.84019 0.0185469 8.81764 0.369176 11.1059 3.19281C11.1968 3.30475 11.2908 3.41404 11.4048 3.54989Z" />
-                      </svg>
-                    </span>
-                    <span className="text-base text-qgray font-medium capitalize">
-                      {langCntnt && langCntnt.Wishlist}
-                    </span>
-                  </a>
-                </Link>
-                <span className="w-[18px] h-[18px] rounded-full  absolute -top-1.5 left-4 flex justify-center items-center text-[9px]">
-                  {wishlists ? wishlists.data.length : 0}
-                </span>
-              </div>
-              <div className="cart-wrapper group relative py-4">
-                <div className="cart relative cursor-pointer">
-                  <Link href="/cart" passHref>
-                    <a
-                      rel="noopener noreferrer"
-                      className="flex space-x-4 items-center"
-                    >
-                      <span className="cursor-pointer text-[#6E6D79]">
-                        <ThinBag className="fill-current" />
-                      </span>
-                      <span className="text-base text-qgray font-medium">
-                        {langCntnt && langCntnt.Cart}
-                      </span>
-                    </a>
-                  </Link>
-                  <span className="w-[18px] h-[18px] rounded-full  absolute -top-1.5 left-4 flex justify-center items-center text-[9px]">
-                    {cartItems ? cartItems.length : 0}
-                  </span>
-                </div>
-
-                <Cart className="absolute -right-[45px] top-14 z-50 hidden group-hover:block rounded" />
-              </div>
-              <div>
-                {auth ? (
-                  <>
-                    {user && (
-                      <button onClick={profilehandler} type="button">
-                        <div className="flex space-x-4 items-center">
-                          <div className="w-[52px] h-[52px] rounded-full bg-qyellow relative overflow-hidden">
-                            {user && user.image ? (
-                              <Image
-                                layout="fill"
-                                objectFit="cover"
-                                src={
-                                  process.env.NEXT_PUBLIC_BASE_URL + user.image
-                                }
-                                alt="user"
-                              />
-                            ) : (
-                              <Image
-                                layout="fill"
-                                objectFit="cover"
-                                src={
-                                  process.env.NEXT_PUBLIC_BASE_URL +
-                                  defaultImage
-                                }
-                                alt="user"
-                              />
-                            )}
-                          </div>
-                          <div className="flex flex-col space-y-3">
-                            <h3 className="text-md text-qblack font-semibold text-start leading-none">
-                              {user.name}
-                            </h3>
-                            <p className="text-sm text-start text-qgray leading-none">
-                              {user.phone}
-                            </p>
-                          </div>
-                        </div>
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  <Link href="/login" passHref>
-                    <a rel="noopener noreferrer">
-                      <span className="cursor-pointer text-[#6E6D79]">
-                        <ThinPeople className="fill-current" />
-                      </span>
-                    </a>
-                  </Link>
-                )}
-              </div>
-
-              {profile && (
-                <>
-                  <div
-                    onClick={() => setProfile(false)}
-                    className="w-full h-full fixed top-0 left-0 z-30"
-                    style={{ zIndex: "35", margin: "0" }}
-                  ></div>
-                  <div
-                    className="w-[208px] h-[267px] bg-white absolute right-0 top-14 z-40 border-t-[3px] border-qpurple flex flex-col justify-between rounded"
-                    style={{
-                      boxShadow: " 0px 15px 50px 0px rgba(0, 0, 0, 0.14)",
-                    }}
-                  >
-                    <div className="menu-item-area w-full  p-5">
-                      <ul className="w-full  flex flex-col space-y-7">
-                        <li className="text-base text-qgray">
-                          <span className="line-clamp-1">
-                            {langCntnt && langCntnt.Hi},{" "}
-                            {auth && auth.user.name}{" "}
-                          </span>
-                        </li>
-                        <li className="text-base text-qgray cursor-pointer hover:text-qblack hover:font-semibold">
-                          <Link href="/profile#dashboard" passHref>
-                            <a rel="noopener noreferrer">
-                              <span className="capitalize">
-                                {langCntnt && langCntnt.profile}
-                              </span>
-                            </a>
-                          </Link>
-                        </li>
-                        <li className="text-base text-qgray cursor-pointer hover:text-qblack hover:font-semibold">
-                          <Link href="/contact" passHref>
-                            <a rel="noopener noreferrer">
-                              <span className="capitalize">
-                                {langCntnt && langCntnt.Support}
-                              </span>
-                            </a>
-                          </Link>
-                        </li>
-                        <li className="text-base text-qgray cursor-pointer hover:text-qblack hover:font-semibold">
-                          <Link href="/faq" passHref>
-                            <a rel="noopener noreferrer">
-                              <span className="capitalize">
-                                {langCntnt && langCntnt.FAQ}
-                              </span>
-                            </a>
-                          </Link>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="w-full h-10 flex justify-center items-center border-t border-qborder">
-                      <button
-                        onClick={logout}
-                        type="button"
-                        className="text-qblack text-base font-semibold"
-                      >
-                        {langCntnt && langCntnt.Sign_Out}
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
+              </div> */}
             </div>
           </div>
         </div>

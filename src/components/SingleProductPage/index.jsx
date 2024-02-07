@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import apiRequest from "../../../utils/apiRequest";
 import auth from "../../../utils/auth";
+import languageModel from "../../../utils/languageModel";
 import BreadcrumbCom from "../BreadcrumbCom";
 import ProductCardStyleOne from "../Helpers/Cards/ProductCardStyleOne";
 import DataIteration from "../Helpers/DataIteration";
@@ -13,7 +14,6 @@ import Multivendor from "../Shared/Multivendor";
 import ProductView from "./ProductView";
 import Reviews from "./Reviews";
 import SallerInfo from "./SallerInfo";
-import languageModel from "../../../utils/languageModel";
 
 export default function SingleProductPage({ details }) {
   const router = useRouter();
@@ -30,6 +30,13 @@ export default function SingleProductPage({ details }) {
       setReport(!report);
     } else {
       router.push("/login");
+    }
+  };
+  const ReadMoreHandler = () => {
+    const descriptionElement = document.getElementById("description");
+
+    if (descriptionElement) {
+      descriptionElement.scrollIntoView({ behavior: "smooth" });
     }
   };
   const [reportLoading, setReportLoading] = useState(false);
@@ -136,12 +143,14 @@ export default function SingleProductPage({ details }) {
                     product={details.product}
                     images={details.gellery}
                     reportHandler={ReportHandler}
+                    ReadMoreHandler={ReadMoreHandler}
                   />
                 </div>
               </div>
             </div>
 
             <div
+              id="description"
               className={`product-des-wrapper w-full relative pt-[45px]  bg-qpurplelow/10 ${
                 relatedProducts.length === 0 ? "pb-[109px]" : "pb-[45px]"
               }`}
@@ -264,11 +273,12 @@ export default function SingleProductPage({ details }) {
                 </div>
               </div>
             </div>
+
             {relatedProducts.length > 0 && (
               <div className="related-product w-full relative">
                 <div className="container-x mx-auto relative z-10">
-                  <div className="w-full pt-[60px] pb-[114px]">
-                    <h1 className="sm:text-3xl text-xl font-600 text-qblack leading-none mb-[30px]">
+                  <div className="w-full pt-[60px] pb-[115px]">
+                    <h1 className="sm:text-3xl text-xl font-700 text-qblack leading-none mb-[30px] text-center">
                       {langCntnt && langCntnt.Related_Product}
                     </h1>
                     <div

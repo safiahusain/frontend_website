@@ -1,13 +1,15 @@
 /* eslint-disable import/no-anonymous-default-export */
 import axios from "axios";
+// process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL + "api/",
   headers: {
     "content-Type": "application/json",
     Accept: "application/json",
-  "X-Requested-With": 'XMLHttpRequest'
+    // "X-Requested-With": "XMLHttpRequest",
   },
 });
+
 export default {
   //authentication
   signup: (data) =>

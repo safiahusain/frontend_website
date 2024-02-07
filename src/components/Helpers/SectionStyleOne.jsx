@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import CategoryCard from "./Cards/CategoryCard";
+import { useEffect, useState } from "react";
 import ProductCardStyleOne from "./Cards/ProductCardStyleOne";
 import DataIteration from "./DataIteration";
 import LoaderStyleTwo from "./Loaders/LoaderStyleTwo";
@@ -33,6 +32,7 @@ export default function SectionStyleOne({
         variants: item.active_variants ? item.active_variants : [],
       };
     });
+
   const [filterProducts, setProducts] = useState(
     cp && cp.filter((item) => item.category_id === selectedId)
   );
@@ -43,6 +43,7 @@ export default function SectionStyleOne({
       setLoad(false);
     }, 500);
   };
+
   useEffect(() => {
     if (cp) {
       const products = cp.filter(
