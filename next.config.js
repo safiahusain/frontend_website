@@ -8,7 +8,7 @@ if (!baseUrl) {
   throw new Error("NEXT_PUBLIC_BASE_URL environment variable is not defined");
 }
 
-const { hostname } = new URL(baseUrl);
+const { hostname } = require("url").parse(baseUrl);
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
