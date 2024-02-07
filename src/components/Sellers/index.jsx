@@ -34,7 +34,7 @@ function Sallers({ sellersData }) {
                   {sellers &&
                     sellers.data.length > 0 &&
                     sellers.data.map((seller, i) => (
-                      <div className="store-box mb-4">
+                      <div key={i} className="store-box mb-4">
                         <div
                           className="w-full sm:h-[328px] sm:p-[30px] p-5 rounded"
                           style={{
