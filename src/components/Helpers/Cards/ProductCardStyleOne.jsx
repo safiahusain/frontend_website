@@ -20,6 +20,7 @@ import Compair from "../icons/Compair";
 import QuickViewIco from "../icons/QuickViewIco";
 import Star from "../icons/Star";
 import ThinLove from "../icons/ThinLove";
+
 const Redirect = ({ message, linkTxt }) => {
   return (
     <div className="flex space-x-2 items-center">
@@ -268,19 +269,19 @@ export default function ProductCardStyleOne({ datas }) {
 
   const [amount, setAmount] = useState(null);
   const exchangeRate = JSON.parse(localStorage.getItem("selectedRate")) || 0;
-  // const exchangeRate = 0.0036;
-
   const [convertedAmount, setConvertedAmount] = useState(0);
-  console.log(exchangeRate, "exchangeRate");
+  const [forceUpdate, setForceUpdate] = useState(false);
+
+  console.log(exchangeRate.code, "exchangeRate");
 
   useEffect(() => {
-    setConvertedAmount(amount * exchangeRate);
-    console.log("converter is running");
-  }, [amount, exchangeRate]);
+    setConvertedAmount(amount * exchangeRate.rate);
+  }, [amount, exchangeRate.rate]);
 
   const roundedResult = Math.round(convertedAmount * 100) / 100;
   const convertedPrice = convertedAmount.toFixed(2);
-  console.log(convertedPrice, "convertedPrice");
+  // console.log(convertedPrice, "convertedPrice");
+  // console.log(forceUpdate, "forceUpdate");
 
   return (
     <>
@@ -397,8 +398,8 @@ export default function ProductCardStyleOne({ datas }) {
                     >
                       {offerPrice ? (
                         <span>
-                          {currency_icon &&
-                            currency_icon +
+                          {exchangeRate &&
+                            exchangeRate.code +
                               parseFloat(
                                 convertedPrice ? convertedPrice : price
                               ).toFixed(2)}
@@ -409,8 +410,8 @@ export default function ProductCardStyleOne({ datas }) {
                             <span
                               className={`line-through text-qgray font-400 text-[15px] mr-2`}
                             >
-                              {currency_icon &&
-                                currency_icon +
+                              {exchangeRate &&
+                                exchangeRate.code +
                                   parseFloat(
                                     convertedPrice ? convertedPrice : price
                                   ).toFixed(2)}
@@ -419,6 +420,7 @@ export default function ProductCardStyleOne({ datas }) {
                           <CheckProductIsExistsInFlashSale
                             id={datas.id}
                             price={convertedPrice ? convertedPrice : price}
+                            exchangeRate={exchangeRate.code}
                           />
                         </>
                       )}

@@ -16,7 +16,7 @@ export default function TopBar({ className, contact }) {
   }, []);
 
   const savedSelectedOption =
-    JSON.parse(localStorage.getItem("selectedRate")) || null;
+    JSON.parse(localStorage.getItem("selectedCode")) || null;
 
   const [selectedOption, setSelectedOption] = useState(savedSelectedOption);
 
@@ -25,9 +25,14 @@ export default function TopBar({ className, contact }) {
   }, []);
 
   const handleCurrencychange = (e) => {
+    let filterCurrencies;
     if (e.target.value) {
+      filterCurrencies = Currencies.filter((item) =>
+        item.rate == e.target.value ? item : ""
+      );
       setSelectedOption(e.target.value);
-      localStorage.setItem("selectedRate", JSON.stringify(e.target.value));
+      localStorage.setItem("selectedCode", JSON.stringify(e.target.value));
+      localStorage.setItem("selectedRate", JSON.stringify(filterCurrencies[0]));
     }
   };
 
@@ -138,7 +143,7 @@ export default function TopBar({ className, contact }) {
                     {Currencies &&
                       Currencies.map((option, index) => (
                         <option key={index} value={(option.code, option.rate)}>
-                          <spna>{option.code}</spna>
+                          <span>{option.code}</span>
                         </option>
                       ))}
                   </select>

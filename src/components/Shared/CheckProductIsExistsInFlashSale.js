@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import settings from "../../../utils/settings";
 
@@ -7,6 +7,7 @@ function CheckProductIsExistsInFlashSale({
   price,
   sign = true,
   className,
+  exchangeRate,
 }) {
   const { websiteSetup } = useSelector((state) => state.websiteSetup);
   const [flashSale, setData] = useState(null);
@@ -46,8 +47,8 @@ function CheckProductIsExistsInFlashSale({
   });
   const { currency_icon } = settings();
   if (sign) {
-    return currency_icon
-      ? currency_icon + parseFloat(calPrice).toFixed(2)
+    return exchangeRate
+      ? exchangeRate + parseFloat(calPrice).toFixed(2)
       : "$" + parseFloat(calPrice).toFixed(2);
   } else {
     return parseFloat(calPrice).toFixed(2);
