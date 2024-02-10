@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import languageModel from "../../../../../utils/languageModel";
 import Multivendor from "../../../Shared/Multivendor";
 // import FontAwesomeCom from "../../../Helpers/icons/FontAwesomeCom";
-import Image from "next/image";
 
 export default function Navbar({ className }) {
   const { websiteSetup } = useSelector((state) => state.websiteSetup);
@@ -19,15 +18,17 @@ export default function Navbar({ className }) {
     setToggle(!categoryToggle);
   };
 
-  useEffect(() => {
-    let categorySelector = document.querySelector(".category-dropdown");
-    setHeight(categorySelector.offsetHeight);
-  }, [categoryToggle]);
+  // useEffect(() => {
+  //   let categorySelector = document.querySelector(".category-dropdown");
+  //   setHeight(categorySelector.offsetHeight);
+  // }, [categoryToggle]);
 
   const [langCntnt, setLangCntnt] = useState(null);
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
+
+  console.log(websiteSetup, "websiteSetup");
 
   return (
     <div
@@ -38,7 +39,7 @@ export default function Navbar({ className }) {
       <div className="xl:max-w-[1350px] lg:max-w-[1190px] md:max-w-[1190px] mx-auto h-full">
         <div className="w-full h-full relative">
           <div className="w-full h-full flex justify-between items-center">
-            <div className="category-and-nav flex xl:space-x-7 space-x-3 items-center">
+            {/* <div className="category-and-nav flex xl:space-x-7 space-x-3 items-center">
               <div className="category rounded-t-md relative">
                 <button
                   onClick={handler}
@@ -99,10 +100,6 @@ export default function Navbar({ className }) {
                               <div className=" flex justify-between items-center px-5 h-10 cursor-pointer">
                                 <div className="flex items-center space-x-6">
                                   <span className="icon">
-                                    {/*<FontAwesomeCom*/}
-                                    {/*  className="w-4 h-4"*/}
-                                    {/*  icon={item.icon}*/}
-                                    {/*/>*/}
                                     <Image
                                       width="20px"
                                       height="20px"
@@ -259,10 +256,10 @@ export default function Navbar({ className }) {
                   </ul>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="nav">
               <ul className="nav-wrapper flex xl:space-x-10 space-x-5">
-                {mageMenuList.slice(0, 8).map((megaItem) => {
+                {categoryList.slice(0, 10).map((megaItem) => {
                   return (
                     <li
                       key={megaItem.id}
@@ -271,17 +268,15 @@ export default function Navbar({ className }) {
                       <Link
                         href={{
                           pathname: "/products",
-                          query: {
-                            category: megaItem.category.slug,
-                          },
+                          query: { category: megaItem.slug },
                         }}
                       >
                         <span className="flex items-center text-sm font-600 cursor-pointer ">
-                          {megaItem.category.name}
+                          {megaItem.name}
                         </span>
                       </Link>
                       {megaItem.id == isHovered &&
-                      megaItem.sub_categories.length > 0 ? (
+                      megaItem.active_sub_categories.length > 0 ? (
                         <div className="sub-menu w-full absolute left-0 top-[70px]">
                           <div
                             className="mega-menu-wrapper w-full bg-white rounded p-[30px] flex justify-between items-start"
@@ -291,63 +286,64 @@ export default function Navbar({ className }) {
                                 "0px 15px 50px 0px rgba(0, 0, 0, 0.14)",
                             }}
                           >
-                            <div className="categories-wrapper h-full flex justify-start">
-                              {mageMenuList &&
-                                mageMenuList.slice(0, 3).map((megaItem) => (
-                                  <div key={megaItem.id}>
-                                    {/* <div className="category">
-                                    <Link
-                                      href={{
-                                        pathname: "/products",
-                                        query: {
-                                          category: megaItem.category.slug,
-                                        },
-                                      }}
-                                    >
-                                      <h1 className="text-sm font-700 text-qblack uppercase mb-[13px] cursor-pointer">
-                                        {megaItem.category.name}
-                                      </h1>
-                                    </Link>
-                                  </div> */}
-
-                                    {megaItem.id == isHovered &&
-                                    megaItem.sub_categories.length > 0 ? (
-                                      <div className="category-items">
-                                        <ul className="flex gap-8 items-center">
-                                          {megaItem.sub_categories.length > 0 &&
-                                            megaItem.sub_categories.map(
-                                              (subItem) => (
-                                                <li key={subItem.id}>
-                                                  <Link
-                                                    href={{
-                                                      pathname: "/products",
-                                                      query: {
-                                                        sub_category:
-                                                          subItem.sub_category &&
-                                                          subItem.sub_category
-                                                            .slug,
-                                                      },
-                                                    }}
-                                                    passHref
-                                                  >
-                                                    <a rel="noopener noreferrer">
-                                                      <span className="text-qgray text-sm font-400 border-b border-transparent hover:border-qpurple hover:text-qpurple cursor-pointer cursor-pointer">
-                                                        {subItem.sub_category &&
-                                                          subItem.sub_category
-                                                            .name}
-                                                      </span>
-                                                    </a>
-                                                  </Link>
-                                                </li>
-                                              )
-                                            )}
-                                        </ul>
+                            <div className="categories-wrapper flex-1 h-full flex justify-around -ml-[70px] pt-8">
+                              {megaItem &&
+                                megaItem.active_sub_categories
+                                  .slice(0, 4)
+                                  .map((item) => (
+                                    <div key={item.id}>
+                                      <div className="category">
+                                        <Link
+                                          href={{
+                                            pathname: "/products",
+                                            query: {
+                                              child_category: item.slug,
+                                            },
+                                          }}
+                                          passHref
+                                        >
+                                          <h1 className="text-sm font-700 text-qblack uppercase mb-[13px] cursor-pointer border-b border-transparent hover:border-qpurple hover:text-qpurple">
+                                            {item.name}
+                                          </h1>
+                                        </Link>
                                       </div>
-                                    ) : (
-                                      ""
-                                    )}
-                                  </div>
-                                ))}
+
+                                      {megaItem.id == isHovered &&
+                                      megaItem.active_sub_categories.length >
+                                        0 ? (
+                                        <div className="category-items">
+                                          <ul className=" gap-8 items-center">
+                                            {item.active_child_categories
+                                              .length > 0 &&
+                                              item.active_child_categories.map(
+                                                (subItem) => (
+                                                  <li key={subItem.id}>
+                                                    <Link
+                                                      href={{
+                                                        pathname: "/products",
+                                                        query: {
+                                                          child_category:
+                                                            subItem.slug,
+                                                        },
+                                                      }}
+                                                      passHref
+                                                    >
+                                                      <a rel="noopener noreferrer">
+                                                        <span className="text-qgray text-sm font-400 border-b border-transparent hover:border-qpurple hover:text-qpurple cursor-pointer">
+                                                          {subItem.name}
+                                                        </span>
+                                                      </a>
+                                                    </Link>
+                                                  </li>
+                                                )
+                                              )}
+                                          </ul>
+                                        </div>
+                                      ) : (
+                                        ""
+                                      )}
+                                    </div>
+                                  ))}
                             </div>
                             {megaMenuBanner &&
                               parseInt(megaMenuBanner.status) === 1 && (
@@ -365,12 +361,12 @@ export default function Navbar({ className }) {
                                   <div className="flex flex-col justify-between">
                                     <div>
                                       <div className=" mb-[10px]">
-                                        <span className="text-qblack uppercase text-xs font-semibold">
+                                        <span className="text-qpurple uppercase text-xs font-semibold">
                                           {megaMenuBanner.title_one}
                                         </span>
                                       </div>
                                       <div className="mb-[30px]">
-                                        <h1 className="w-[160px] text-[24px] leading-[32px] text-qblack font-semibold">
+                                        <h1 className="w-[160px] text-[24px] leading-[32px] text-qpurple font-semibold">
                                           {megaMenuBanner.title_two}
                                         </h1>
                                       </div>
@@ -437,7 +433,7 @@ export default function Navbar({ className }) {
                   );
                 })}
 
-                <li>
+                {/* <li>
                   <span className="flex items-center text-sm font-600 cursor-pointer ">
                     <span>{langCntnt && langCntnt.Shop}</span>
                   </span>
@@ -576,7 +572,7 @@ export default function Navbar({ className }) {
                         )}
                     </div>
                   </div>
-                </li>
+                </li> */}
                 {/* <li className="relative">
                   <span className="flex items-center text-sm font-600 cursor-pointer ">
                     <span>{langCntnt && langCntnt.Pages}</span>

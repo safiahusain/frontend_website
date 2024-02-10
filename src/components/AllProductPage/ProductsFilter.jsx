@@ -1,9 +1,9 @@
-import Checkbox from "../Helpers/Checkbox";
 import { useEffect, useState } from "react";
+import RangeSlider from "react-range-slider-input";
+import "react-range-slider-input/dist/style.css";
 import languageModel from "../../../utils/languageModel";
-import RangeSlider from 'react-range-slider-input';
-import 'react-range-slider-input/dist/style.css';
 import settings from "../../../utils/settings";
+import Checkbox from "../Helpers/Checkbox";
 export default function ProductsFilter({
   categories,
   categoryHandler,
@@ -24,6 +24,11 @@ export default function ProductsFilter({
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
+
+  const exchangeRate = JSON.parse(localStorage.getItem("selectedRate")) || 0;
+  const convertAmount = (amount, rate) => {
+    return amount * rate;
+  };
   return (
     <>
       <div
@@ -83,10 +88,30 @@ export default function ProductsFilter({
                 {/*  value={volume}*/}
                 {/*  onChange={volumeHandler}*/}
                 {/*/>*/}
-                <RangeSlider value={volume} onInput={volumeHandler} min={priceMin} max={priceMax} />
+                <RangeSlider
+                  value={volume}
+                  onInput={volumeHandler}
+                  min={
+                    exchangeRate.rate
+                      ? convertAmount(priceMin, exchangeRate.rate)
+                      : priceMin
+                  }
+                  max={
+                    exchangeRate.rate
+                      ? convertAmount(priceMax, exchangeRate.rate)
+                      : priceMax
+                  }
+                />
               </div>
               <p className="text-xs text-qblack font-400">
-                {langCntnt && langCntnt.Price}: {currency_icon + volume[0]} - {currency_icon + volume[1]}
+                {langCntnt && langCntnt.Price}:{" "}
+                {exchangeRate.code
+                  ? exchangeRate.code + volume[0]
+                  : currency_icon + volume[0]}{" "}
+                -{" "}
+                {exchangeRate.code
+                  ? exchangeRate.code + volume[1]
+                  : currency_icon + volume[1]}
               </p>
             </>
           )}

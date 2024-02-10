@@ -3,7 +3,6 @@ import PageHead from "../src/components/Helpers/PageHead";
 import Layout from "../src/components/Partials/Layout";
 import Sallers from "../src/components/Sellers/index";
 export default function SallersPage(data) {
-  console.log(data, "seller data");
   const { seoSetting } = data.data;
   return (
     <>

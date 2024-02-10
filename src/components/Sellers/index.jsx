@@ -7,6 +7,7 @@ import Star from "../Helpers/icons/Star";
 function Sallers({ sellersData }) {
   const { sellers } = sellersData;
   const [langCntnt, setLangCntnt] = useState(null);
+
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
@@ -18,7 +19,7 @@ function Sallers({ sellersData }) {
       <div className="w-full bg-white">
         <div className="sallers-page-wrapper w-full pb-[60px]">
           <PageTitle
-            title="All Seller "
+            title={langCntnt && langCntnt.All_Seller}
             breadcrumb={[
               { name: langCntnt && langCntnt.home, path: "/" },
               { name: langCntnt && langCntnt.Sellers, path: "/sellers" },

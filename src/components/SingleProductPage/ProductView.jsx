@@ -294,7 +294,12 @@ export default function ProductView({
     }
   }, [websiteSetup]);
 
-  console.log(product.brand);
+  const exchangeRate = JSON.parse(localStorage.getItem("selectedRate")) || 0;
+  const convertAmount = (amount, rate) => {
+    return amount * rate;
+  };
+
+  console.log(product, "product");
   return (
     <>
       <div
@@ -472,13 +477,24 @@ export default function ProductView({
                 }`}
               >
                 {offerPrice ? (
-                  <span>{currency_icon + price}</span>
+                  <span>
+                    {exchangeRate.rate
+                      ? exchangeRate.code +
+                        parseFloat(
+                          convertAmount(price, exchangeRate.rate)
+                        ).toFixed(2)
+                      : currency_icon + parseFloat(price).toFixed(2)}
+                  </span>
                 ) : (
                   <>
                     {isProductInFlashSale && (
                       <span className="main-price  font-600 line-through text-qgray text-[15px] mr-2">
-                        {currency_icon &&
-                          currency_icon + parseFloat(price).toFixed(2)}
+                        {exchangeRate.rate
+                          ? exchangeRate.code +
+                            parseFloat(
+                              convertAmount(price, exchangeRate.rate)
+                            ).toFixed(2)
+                          : currency_icon + parseFloat(price).toFixed(2)}
                       </span>
                     )}
                     <CheckProductIsExistsInFlashSale
@@ -502,7 +518,7 @@ export default function ProductView({
             </div>
 
             <div className="w-full h-[1px] bg-qpurplelow/10 mb-[30px]"></div>
-            <div className="p-3 bg-qpurplelow/10 flex items-center space-x-2 mb-[30px] rounded-lg w-fit">
+            {/* <div className="p-3 bg-qpurplelow/10 flex items-center space-x-2 mb-[30px] rounded-lg w-fit">
               <span className="text-base font-bold text-qblack">
                 {langCntnt && langCntnt.Availability} :
               </span>
@@ -513,7 +529,7 @@ export default function ProductView({
                     } `
                   : `${langCntnt && langCntnt.Products_not_Available}`}
               </span>
-            </div>
+            </div> */}
             {varients.length > 0 &&
               varients.map((item) => (
                 <div
@@ -573,17 +589,35 @@ export default function ProductView({
               <div className="w-[120px] h-full px-[26px] flex items-center border border-qpurplelow/10 rounded-md">
                 <div className="flex justify-between items-center w-full">
                   <button
+                    disabled={
+                      parseInt(product.qty) !== 0 && parseInt(product.qty) > 0
+                        ? false
+                        : true
+                    }
                     onClick={decrement}
                     type="button"
-                    className="text-lg font-medium text-qgray"
+                    className={
+                      parseInt(product.qty) !== 0 && parseInt(product.qty) > 0
+                        ? "text-lg font-medium text-qgray"
+                        : "cursor-not-allowed text-lg font-medium text-qgray"
+                    }
                   >
                     -
                   </button>
                   <span className="text-qblack">{quantity}</span>
                   <button
+                    disabled={
+                      parseInt(product.qty) !== 0 && parseInt(product.qty) > 0
+                        ? false
+                        : true
+                    }
                     onClick={increment}
                     type="button"
-                    className="text-lg font-medium text-qgray"
+                    className={
+                      parseInt(product.qty) !== 0 && parseInt(product.qty) > 0
+                        ? "text-lg font-medium text-qgray"
+                        : "cursor-not-allowed text-lg font-medium text-qgray"
+                    }
                   >
                     +
                   </button>

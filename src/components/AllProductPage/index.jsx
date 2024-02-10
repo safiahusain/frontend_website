@@ -356,6 +356,7 @@ export default function AllProductPage({ response, sellerInfo }) {
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
+
   return (
     <>
       <Layout childrenClasses="pt-0 pb-0">

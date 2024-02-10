@@ -7,8 +7,8 @@ function CheckProductIsExistsInFlashSale({
   price,
   sign = true,
   className,
-  exchangeRate,
 }) {
+  console.log(price);
   const { websiteSetup } = useSelector((state) => state.websiteSetup);
   const [flashSale, setData] = useState(null);
   const [calPrice, setPrice] = useState(null);
@@ -45,13 +45,27 @@ function CheckProductIsExistsInFlashSale({
       calcProductPrice(id, price);
     }
   });
+
+  const exchangeRate = JSON.parse(localStorage.getItem("selectedRate")) || 0;
+  const convertAmount = (amount, rate) => {
+    return amount * rate;
+  };
+
   const { currency_icon } = settings();
   if (sign) {
-    return exchangeRate
-      ? exchangeRate + parseFloat(calPrice).toFixed(2)
-      : "$" + parseFloat(calPrice).toFixed(2);
+    if (exchangeRate) {
+      return exchangeRate.code
+        ? exchangeRate.code +
+            parseFloat(convertAmount(calPrice, exchangeRate.rate)).toFixed(2)
+        : "$" +
+            parseFloat(convertAmount(calPrice, exchangeRate.rate)).toFixed(2);
+    } else {
+      return currency_icon
+        ? currency_icon + parseFloat(calPrice).toFixed(2)
+        : "$" + parseFloat(calPrice).toFixed(2);
+    }
   } else {
-    return parseFloat(calPrice).toFixed(2);
+    return parseFloat(convertAmount(calPrice, exchangeRate.rate)).toFixed(2);
   }
 }
 

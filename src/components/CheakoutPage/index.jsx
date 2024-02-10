@@ -3,23 +3,21 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import isAuth from "../../../Middleware/isAuth";
+import DateFormat from "../../../utils/DateFormat";
 import apiRequest from "../../../utils/apiRequest";
 import auth from "../../../utils/auth";
+import languageModel from "../../../utils/languageModel";
+import settings from "../../../utils/settings";
 import wordCount from "../../../utils/wordCount";
 import { fetchCart } from "../../store/Cart";
+import EmptyCardError from "../EmptyCardError";
 import InputCom from "../Helpers/InputCom";
 import LoaderStyleOne from "../Helpers/Loaders/LoaderStyleOne";
 import PageTitle from "../Helpers/PageTitle";
 import Selectbox from "../Helpers/Selectbox";
-import isAuth from "../../../Middleware/isAuth";
-import DateFormat from "../../../utils/DateFormat";
-import settings from "../../../utils/settings";
 import Sslcommerce from "../Helpers/icons/Sslcommerce";
 import CheckProductIsExistsInFlashSale from "../Shared/CheckProductIsExistsInFlashSale";
-import languageModel from "../../../utils/languageModel";
-import Link from "next/link";
-import ShopNowBtn from "../Helpers/Buttons/ShopNowBtn";
-import EmptyCardError from "../EmptyCardError";
 
 function CheakoutPage() {
   const { websiteSetup } = useSelector((state) => state.websiteSetup);
@@ -145,7 +143,7 @@ function CheakoutPage() {
           !!(
             res.data &&
             res.data.sslcommerz &&
-            parseInt( res.data.sslcommerz.status) === 1
+            parseInt(res.data.sslcommerz.status) === 1
           )
         );
         setPaypalStatus(
@@ -810,6 +808,10 @@ function CheakoutPage() {
         }
       }
     }
+  };
+  const exchangeRate = JSON.parse(localStorage.getItem("selectedRate")) || 0;
+  const convertAmount = (amount, rate) => {
+    return amount * rate;
   };
 
   if (carts && carts.length > 0) {
@@ -1552,8 +1554,17 @@ function CheakoutPage() {
                         suppressHydrationWarning
                         className="text-[15px] font-bold text-qblack uppercase"
                       >
-                        {currency_icon
-                          ? currency_icon + parseFloat(totalPrice).toFixed(2)
+                        {exchangeRate || currency_icon
+                          ? exchangeRate
+                            ? exchangeRate.code +
+                              parseFloat(
+                                convertAmount(totalPrice, exchangeRate.rate)
+                              ).toFixed(2)
+                            : currency_icon + parseFloat(totalPrice).toFixed(2)
+                          : exchangeRate
+                          ? parseFloat(
+                              convertAmount(totalPrice, exchangeRate.rate)
+                            ).toFixed(2)
                           : parseFloat(totalPrice).toFixed(2)}
                       </p>
                     </div>
@@ -1565,9 +1576,18 @@ function CheakoutPage() {
                         suppressHydrationWarning
                         className="text-[15px] font-bold text-qblack uppercase"
                       >
-                        {currency_icon
-                          ? currency_icon +
-                            parseFloat(discountCoupon).toFixed(2)
+                        {exchangeRate || currency_icon
+                          ? exchangeRate
+                            ? exchangeRate.code +
+                              parseFloat(
+                                convertAmount(discountCoupon, exchangeRate.rate)
+                              ).toFixed(2)
+                            : currency_icon +
+                              parseFloat(discountCoupon).toFixed(2)
+                          : exchangeRate.rate
+                          ? parseFloat(
+                              convertAmount(discountCoupon, exchangeRate.rate)
+                            ).toFixed(2)
                           : parseFloat(discountCoupon).toFixed(2)}
                       </p>
                     </div>
@@ -1612,8 +1632,24 @@ function CheakoutPage() {
                                           suppressHydrationWarning
                                           className="text-[15px] text-normal text-qgray"
                                         >
-                                          {currency_icon
-                                            ? currency_icon + rule.shipping_fee
+                                          {exchangeRate || currency_icon
+                                            ? exchangeRate.rate
+                                              ? exchangeRate.code +
+                                                parseFloat(
+                                                  convertAmount(
+                                                    rule.shipping_fee,
+                                                    exchangeRate.rate
+                                                  )
+                                                ).toFixed(2)
+                                              : currency_icon +
+                                                rule.shipping_fee
+                                            : exchangeRate.rate
+                                            ? parseFloat(
+                                                convertAmount(
+                                                  rule.shipping_fee,
+                                                  exchangeRate.rate
+                                                )
+                                              ).toFixed(2)
                                             : rule.shipping_fee}
                                         </span>
                                       </div>
@@ -1642,8 +1678,24 @@ function CheakoutPage() {
                                           suppressHydrationWarning
                                           className="text-[15px] text-normal text-qgray"
                                         >
-                                          {currency_icon
-                                            ? currency_icon + rule.shipping_fee
+                                          {exchangeRate || currency_icon
+                                            ? exchangeRate.rate
+                                              ? exchangeRate.code +
+                                                parseFloat(
+                                                  convertAmount(
+                                                    rule.shipping_fee,
+                                                    exchangeRate.rate
+                                                  )
+                                                ).toFixed(2)
+                                              : currency_icon +
+                                                rule.shipping_fee
+                                            : exchangeRate.rate
+                                            ? parseFloat(
+                                                convertAmount(
+                                                  rule.shipping_fee,
+                                                  exchangeRate.rate
+                                                )
+                                              ).toFixed(2)
                                             : rule.shipping_fee}
                                         </span>
                                       </div>
@@ -1684,8 +1736,24 @@ function CheakoutPage() {
                                           suppressHydrationWarning
                                           className="text-[15px] text-normal text-qgray"
                                         >
-                                          {currency_icon
-                                            ? currency_icon + rule.shipping_fee
+                                          {exchangeRate || currency_icon
+                                            ? exchangeRate.rate
+                                              ? exchangeRate.code +
+                                                parseFloat(
+                                                  convertAmount(
+                                                    rule.shipping_fee,
+                                                    exchangeRate.rate
+                                                  )
+                                                ).toFixed(2)
+                                              : currency_icon +
+                                                rule.shipping_fee
+                                            : exchangeRate.rate
+                                            ? parseFloat(
+                                                convertAmount(
+                                                  rule.shipping_fee,
+                                                  exchangeRate.rate
+                                                )
+                                              ).toFixed(2)
                                             : rule.shipping_fee}
                                         </span>
                                       </div>
@@ -1714,8 +1782,24 @@ function CheakoutPage() {
                                           suppressHydrationWarning
                                           className="text-[15px] text-normal text-qgray"
                                         >
-                                          {currency_icon
-                                            ? currency_icon + rule.shipping_fee
+                                          {exchangeRate || currency_icon
+                                            ? exchangeRate.rate
+                                              ? exchangeRate.code +
+                                                parseFloat(
+                                                  convertAmount(
+                                                    rule.shipping_fee,
+                                                    exchangeRate.rate
+                                                  )
+                                                ).toFixed(2)
+                                              : currency_icon +
+                                                rule.shipping_fee
+                                            : exchangeRate.rate
+                                            ? parseFloat(
+                                                convertAmount(
+                                                  rule.shipping_fee,
+                                                  exchangeRate.rate
+                                                )
+                                              ).toFixed(2)
                                             : rule.shipping_fee}
                                         </span>
                                       </div>
@@ -1754,8 +1838,24 @@ function CheakoutPage() {
                                           suppressHydrationWarning
                                           className="text-[15px] text-normal text-qgray"
                                         >
-                                          {currency_icon
-                                            ? currency_icon + rule.shipping_fee
+                                          {exchangeRate || currency_icon
+                                            ? exchangeRate.rate
+                                              ? exchangeRate.code +
+                                                parseFloat(
+                                                  convertAmount(
+                                                    rule.shipping_fee,
+                                                    exchangeRate.rate
+                                                  )
+                                                ).toFixed(2)
+                                              : currency_icon +
+                                                rule.shipping_fee
+                                            : exchangeRate.rate
+                                            ? parseFloat(
+                                                convertAmount(
+                                                  rule.shipping_fee,
+                                                  exchangeRate.rate
+                                                )
+                                              ).toFixed(2)
                                             : rule.shipping_fee}
                                         </span>
                                       </div>
@@ -1784,8 +1884,24 @@ function CheakoutPage() {
                                           suppressHydrationWarning
                                           className="text-[15px] text-normal text-qgray"
                                         >
-                                          {currency_icon
-                                            ? currency_icon + rule.shipping_fee
+                                          {exchangeRate || currency_icon
+                                            ? exchangeRate.rate
+                                              ? exchangeRate.code +
+                                                parseFloat(
+                                                  convertAmount(
+                                                    rule.shipping_fee,
+                                                    exchangeRate.rate
+                                                  )
+                                                ).toFixed(2)
+                                              : currency_icon +
+                                                rule.shipping_fee
+                                            : exchangeRate.rate
+                                            ? parseFloat(
+                                                convertAmount(
+                                                  rule.shipping_fee,
+                                                  exchangeRate.rate
+                                                )
+                                              ).toFixed(2)
                                             : rule.shipping_fee}
                                         </span>
                                       </div>
@@ -1811,9 +1927,24 @@ function CheakoutPage() {
                         suppressHydrationWarning
                         className="text-2xl font-medium text-qred"
                       >
-                        {currency_icon
-                          ? currency_icon +
-                            (mainTotalPrice - discountCoupon).toFixed(2)
+                        {currency_icon || exchangeRate
+                          ? exchangeRate.rate
+                            ? exchangeRate.code +
+                              parseFloat(
+                                convertAmount(
+                                  mainTotalPrice - discountCoupon,
+                                  exchangeRate.rate
+                                )
+                              ).toFixed(2)
+                            : currency_icon +
+                              (mainTotalPrice - discountCoupon).toFixed(2)
+                          : exchangeRate.rate
+                          ? parseFloat(
+                              convertAmount(
+                                mainTotalPrice - discountCoupon,
+                                exchangeRate.rate
+                              )
+                            ).toFixed(2)
                           : (mainTotalPrice - discountCoupon).toFixed(2)}
                       </p>
                     </div>

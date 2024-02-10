@@ -8,8 +8,11 @@ import { GetAllCurrencies } from "../../../../store/Currencies";
 export default function TopBar({ className, contact }) {
   const dispatch = useDispatch();
   const { Currencies } = useSelector((state) => state.Currencies);
+  const { websiteSetup } = useSelector((state) => state.websiteSetup);
+
   const [auth, setAuth] = useState(null);
   const [langCntnt, setLangCntnt] = useState(null);
+
   useEffect(() => {
     setAuth(JSON.parse(localStorage.getItem("auth")));
     setLangCntnt(languageModel());
@@ -32,7 +35,13 @@ export default function TopBar({ className, contact }) {
       );
       setSelectedOption(e.target.value);
       localStorage.setItem("selectedCode", JSON.stringify(e.target.value));
-      localStorage.setItem("selectedRate", JSON.stringify(filterCurrencies[0]));
+      localStorage.setItem(
+        "selectedRate",
+        JSON.stringify(
+          e.target.value == "default-Currency" ? 0 : filterCurrencies[0]
+        )
+      );
+      window.location.reload();
     }
   };
 
@@ -44,7 +53,7 @@ export default function TopBar({ className, contact }) {
             <div className="topbar-nav">
               <ul className="flex space-x-6 items-center">
                 <li>
-                  <Link href="/findstore" passHref>
+                  <Link href="/sellers" passHref>
                     <a
                       rel="noopener noreferrer"
                       className="flex items-center gap-1"
@@ -97,7 +106,7 @@ export default function TopBar({ className, contact }) {
             </div>
             <div className="topbar-nav-2">
               <ul className="flex items-center">
-                <li className="border-r-2 border-black pr-3 xl:block lg:block md:block sm:hidden xsm:hidden xxs:hidden xxxs:hidden">
+                {/* <li className="border-r-2 border-black pr-3 xl:block lg:block md:block sm:hidden xsm:hidden xxs:hidden xxxs:hidden">
                   <Link href="/sellers" passHref>
                     <a
                       rel="noopener noreferrer"
@@ -108,7 +117,7 @@ export default function TopBar({ className, contact }) {
                       </span>
                     </a>
                   </Link>
-                </li>
+                </li> */}
                 <li className="pl-3 border-r-2 border-black pr-3 xl:block lg:block md:block sm:hidden xsm:hidden xxs:hidden xxxs:hidden">
                   <Link href="/blogs" passHref>
                     <a
@@ -135,11 +144,14 @@ export default function TopBar({ className, contact }) {
                 </li>
                 <li className="pl-3">
                   <select
-                    className="bg-transparent text-[13px] font-[500] cursor-pointer focus:outline-none focus-visible:outline-none"
+                    className={`!block bg-transparent text-[13px] font-[500] cursor-pointer focus:outline-none focus-visible:outline-none`}
                     value={selectedOption}
                     onChange={handleCurrencychange}
                     style={{ textDecoration: "underline" }}
                   >
+                    <option value="default-Currency" selected>
+                      {websiteSetup.payload.setting.currency_icon}
+                    </option>
                     {Currencies &&
                       Currencies.map((option, index) => (
                         <option key={index} value={(option.code, option.rate)}>

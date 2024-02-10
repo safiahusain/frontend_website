@@ -272,16 +272,17 @@ export default function ProductCardStyleOne({ datas }) {
   const [convertedAmount, setConvertedAmount] = useState(0);
   const [forceUpdate, setForceUpdate] = useState(false);
 
-  console.log(exchangeRate.code, "exchangeRate");
+  const convertAmount = (amount, rate) => {
+    return amount * rate;
+  };
 
   useEffect(() => {
-    setConvertedAmount(amount * exchangeRate.rate);
+    setConvertedAmount(convertAmount(amount, exchangeRate.rate));
   }, [amount, exchangeRate.rate]);
 
   const roundedResult = Math.round(convertedAmount * 100) / 100;
   const convertedPrice = convertedAmount.toFixed(2);
-  // console.log(convertedPrice, "convertedPrice");
-  // console.log(forceUpdate, "forceUpdate");
+  console.log(convertedPrice, "convertedPrice");
 
   return (
     <>
@@ -393,34 +394,31 @@ export default function ProductCardStyleOne({ datas }) {
                     <span
                       suppressHydrationWarning
                       className={`main-price font-500 text-[16px]${
-                        offerPrice ? "line-through text-qgray" : "text-qpurple"
+                        offerPrice ? " line-through text-qgray" : "text-qpurple"
                       }`}
                     >
                       {offerPrice ? (
                         <span>
-                          {exchangeRate &&
-                            exchangeRate.code +
-                              parseFloat(
-                                convertedPrice ? convertedPrice : price
-                              ).toFixed(2)}
+                          {exchangeRate.code && exchangeRate.rate
+                            ? exchangeRate.code +
+                              parseFloat(convertedPrice).toFixed(2)
+                            : currency_icon + parseFloat(price).toFixed(2)}
                         </span>
                       ) : (
                         <>
                           {isProductInFlashSale && (
                             <span
-                              className={`line-through text-qgray font-400 text-[15px] mr-2`}
+                              className={` line-through text-qgray font-400 text-[15px] mr-2`}
                             >
-                              {exchangeRate &&
-                                exchangeRate.code +
-                                  parseFloat(
-                                    convertedPrice ? convertedPrice : price
-                                  ).toFixed(2)}
+                              {exchangeRate.code && exchangeRate.rate
+                                ? exchangeRate.code +
+                                  parseFloat(convertedPrice).toFixed(2)
+                                : currency_icon + parseFloat(price).toFixed(2)}
                             </span>
                           )}
                           <CheckProductIsExistsInFlashSale
                             id={datas.id}
-                            price={convertedPrice ? convertedPrice : price}
-                            exchangeRate={exchangeRate.code}
+                            price={price}
                           />
                         </>
                       )}
