@@ -35,6 +35,7 @@ function TreeCategory({ categories = [], products = [] }) {
         campaingn_product: null,
         review: parseInt(item.averageRating),
         variants: item.active_variants ? item.active_variants : [],
+        brand: item.brand,
       };
     });
 
@@ -92,6 +93,7 @@ function TreeCategory({ categories = [], products = [] }) {
       },
     ],
   };
+  console.log(products, "products....");
 
   return (
     <>

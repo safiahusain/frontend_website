@@ -5,10 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import apiRequest from "../../../utils/apiRequest";
 import auth from "../../../utils/auth";
+import languageModel from "../../../utils/languageModel";
 import settings from "../../../utils/settings";
 import { fetchCart } from "../../store/Cart";
 import CheckProductIsExistsInFlashSale from "../Shared/CheckProductIsExistsInFlashSale";
-import languageModel from "../../../utils/languageModel";
 
 export default function Cart({ className }) {
   const { websiteSetup } = useSelector((state) => state.websiteSetup);
@@ -134,6 +134,12 @@ export default function Cart({ className }) {
     }
   };
   const { currency_icon } = settings();
+
+  const exchangeRate = JSON.parse(localStorage.getItem("selectedRate")) || 0;
+  const convertAmount = (amount, rate) => {
+    return amount * rate;
+  };
+
   return (
     <>
       <div
@@ -216,7 +222,10 @@ export default function Cart({ className }) {
                   suppressHydrationWarning
                   className="text-[15px] font-500 text-qred "
                 >
-                  {currency_icon + (totalPrice ? totalPrice.toFixed(2) : 0)}
+                  {exchangeRate
+                    ? exchangeRate.code +
+                      convertAmount(totalPrice, exchangeRate.rate).toFixed(2)
+                    : currency_icon + (totalPrice ? totalPrice.toFixed(2) : 0)}
                 </span>
               </div>
               <div className="product-action-btn">

@@ -1034,6 +1034,19 @@ h6 span {
     color: transparent !important;
 }
 
+.goog-te-combo {
+    border: 2px solid #000;
+    border-radius: 5px;
+}
+
+.goog-logo-link {
+    display: none !important;
+}
+
+.goog-te-gadget {
+    font-size: 0px !important;
+}
+
 /* TODO: ===============flash sale */
 
 .campaign-countdown {

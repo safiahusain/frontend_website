@@ -88,6 +88,9 @@ export default function TabsSlider({ className, data }) {
       },
     ],
   };
+
+  console.log(data, "data...");
+
   return (
     <>
       <div className={`w-full ${className || ""}`}>

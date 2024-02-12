@@ -1,18 +1,18 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
 import { SlLocationPin } from "react-icons/sl";
 import { useDispatch, useSelector } from "react-redux";
 import languageModel from "../../../../../utils/languageModel";
-
 import { GetAllCurrencies } from "../../../../store/Currencies";
 export default function TopBar({ className, contact }) {
   const dispatch = useDispatch();
   const { Currencies } = useSelector((state) => state.Currencies);
   const { websiteSetup } = useSelector((state) => state.websiteSetup);
-
+  const googleDivRef = useRef(null);
   const [auth, setAuth] = useState(null);
   const [langCntnt, setLangCntnt] = useState(null);
-
+  const { isFallback, events } = useRouter();
   useEffect(() => {
     setAuth(JSON.parse(localStorage.getItem("auth")));
     setLangCntnt(languageModel());
@@ -45,6 +45,60 @@ export default function TopBar({ className, contact }) {
     }
   };
 
+  const googleTranslateElementInit = () => {
+    new window.google.translate.TranslateElement(
+      { pageLanguage: "en" },
+      "google_translate_element"
+    );
+    const googleDiv = googleDivRef.current;
+    if (googleDiv) {
+      const googleDivChild = googleDiv.querySelector(".skiptranslate div");
+      if (googleDivChild) {
+        googleDivChild.nextElementSibling.remove();
+      }
+
+      Array.from(googleDiv.childNodes).forEach((child) => {
+        if (child.nodeType === 3 && child.nodeValue.trim() !== "") {
+          googleDiv.removeChild(child);
+        }
+      });
+    }
+  };
+
+  useEffect(() => {
+    const id = "google-translate-script";
+
+    const addScript = () => {
+      const s = document.createElement("script");
+      s.setAttribute(
+        "src",
+        "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+      );
+      s.setAttribute("id", id);
+      const q = document.getElementById(id);
+      if (!q) {
+        document.body.appendChild(s);
+        window.googleTranslateElementInit = googleTranslateElementInit;
+      }
+    };
+
+    const removeScript = () => {
+      const q = document.getElementById(id);
+      if (q) q.remove();
+      const w = document.getElementById("google_translate_element");
+      if (w) w.innerHTML = "";
+    };
+
+    isFallback || addScript();
+
+    events.on("routeChangeStart", removeScript);
+    events.on("routeChangeComplete", addScript);
+
+    return () => {
+      events.off("routeChangeStart", removeScript);
+      events.off("routeChangeComplete", addScript);
+    };
+  }, []);
   return (
     <>
       <div className={`w-full bg-qpurplelow/10 h-12 ${className || ""}`}>
@@ -104,7 +158,7 @@ export default function TopBar({ className, contact }) {
                 </li>
               </ul>
             </div>
-            <div className="topbar-nav-2">
+            <div className="topbar-nav-2 flex">
               <ul className="flex items-center">
                 {/* <li className="border-r-2 border-black pr-3 xl:block lg:block md:block sm:hidden xsm:hidden xxs:hidden xxxs:hidden">
                   <Link href="/sellers" passHref>
@@ -142,7 +196,7 @@ export default function TopBar({ className, contact }) {
                     </a>
                   </Link>
                 </li>
-                <li className="pl-3">
+                <li className="pl-3 border-r-2 border-black pr-3">
                   <select
                     className={`!block bg-transparent text-[13px] font-[500] cursor-pointer focus:outline-none focus-visible:outline-none`}
                     value={selectedOption}
@@ -159,6 +213,11 @@ export default function TopBar({ className, contact }) {
                         </option>
                       ))}
                   </select>
+                </li>
+                <li className="pl-3 xl:block lg:block md:block sm:hidden xsm:hidden xxs:hidden xxxs:hidden">
+                  <div className="h-[30px]">
+                    <div id="google_translate_element" ref={googleDivRef}></div>
+                  </div>
                 </li>
               </ul>
             </div>

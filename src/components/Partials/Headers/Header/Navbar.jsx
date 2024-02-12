@@ -28,8 +28,6 @@ export default function Navbar({ className }) {
     setLangCntnt(languageModel());
   }, []);
 
-  console.log(websiteSetup, "websiteSetup");
-
   return (
     <div
       className={`nav-widget-wrapper w-full  h-[70px] relative z-30  ${

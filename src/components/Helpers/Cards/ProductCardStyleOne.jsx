@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import ElementOptics from "../../../../public/assets/images/Element-Optics.png";
 import apiRequest from "../../../../utils/apiRequest";
 import auth from "../../../../utils/auth";
 import languageModel from "../../../../utils/languageModel";
@@ -264,9 +263,6 @@ export default function ProductCardStyleOne({ datas }) {
     setImgSrc(value);
   };
 
-  console.log(price, "producat card price");
-  console.log(datas, "datas");
-
   const [amount, setAmount] = useState(null);
   const exchangeRate = JSON.parse(localStorage.getItem("selectedRate")) || 0;
   const [convertedAmount, setConvertedAmount] = useState(0);
@@ -282,7 +278,9 @@ export default function ProductCardStyleOne({ datas }) {
 
   const roundedResult = Math.round(convertedAmount * 100) / 100;
   const convertedPrice = convertedAmount.toFixed(2);
-  console.log(convertedPrice, "convertedPrice");
+
+  const { logo } = settings();
+  let logosrc = datas.brand ? datas.brand.logo : logo;
 
   return (
     <>
@@ -317,7 +315,7 @@ export default function ProductCardStyleOne({ datas }) {
                 <div className="product-card-details relative pt-5 px-[10px]">
                   <div className="flex justify-between p-2 items-center border-t-[1px] border-[#D9D9D4] border-b-[1px]">
                     <Image
-                      src={ElementOptics}
+                      src={`${process.env.NEXT_PUBLIC_BASE_URL + logosrc}`}
                       width={"100"}
                       height={"50"}
                       objectFit="scale-down"
