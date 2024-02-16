@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import apiRequest from "../../../../utils/apiRequest";
 import languageModel from "../../../../utils/languageModel";
+import { postCart } from "../../../store/Cart";
 import { fetchWishlist } from "../../../store/wishlistData";
 import LoginContext from "../../Contexts/LoginContexts";
 import InputCom from "../../Helpers/InputCom";
@@ -62,6 +63,7 @@ function LoginWidget({ redirect = true, loginActionPopup, notVerifyHandler }) {
         console.log(err);
       });
   };
+
   const doLogin = async () => {
     setLoading(true);
     await apiRequest
@@ -87,6 +89,22 @@ function LoginWidget({ redirect = true, loginActionPopup, notVerifyHandler }) {
           localStorage.setItem("active-user", JSON.stringify(activeUser));
         }
         dispatch(fetchWishlist());
+        let prev_data = JSON.parse(localStorage.getItem("data-hold"));
+        if (prev_data) {
+          let data_hold = [];
+          prev_data?.forEach((item) => {
+            data_hold.push({
+              id: item?.id,
+              type: item?.type,
+              product_id: item?.product?.id,
+              token: item.token,
+              quantity: item.quantity,
+              variants: item?.variants,
+              items: item?.variantItems,
+            });
+          });
+          dispatch(postCart(data_hold));
+        }
         if (redirect) {
           router.push("/");
         } else {

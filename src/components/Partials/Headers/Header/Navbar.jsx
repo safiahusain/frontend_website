@@ -284,64 +284,62 @@ export default function Navbar({ className }) {
                                 "0px 15px 50px 0px rgba(0, 0, 0, 0.14)",
                             }}
                           >
-                            <div className="categories-wrapper flex-1 h-full flex justify-around -ml-[70px] pt-8">
+                            <div className="categories-wrapper grid grid-cols-4 gap-8 gap-x-28 h-full pt-8">
                               {megaItem &&
-                                megaItem.active_sub_categories
-                                  .slice(0, 4)
-                                  .map((item) => (
-                                    <div key={item.id}>
-                                      <div className="category">
-                                        <Link
-                                          href={{
-                                            pathname: "/products",
-                                            query: {
-                                              child_category: item.slug,
-                                            },
-                                          }}
-                                          passHref
-                                        >
-                                          <h1 className="text-sm font-700 text-qblack uppercase mb-[13px] cursor-pointer border-b border-transparent hover:border-qpurple hover:text-qpurple">
-                                            {item.name}
-                                          </h1>
-                                        </Link>
-                                      </div>
-
-                                      {megaItem.id == isHovered &&
-                                      megaItem.active_sub_categories.length >
-                                        0 ? (
-                                        <div className="category-items">
-                                          <ul className=" gap-8 items-center">
-                                            {item.active_child_categories
-                                              .length > 0 &&
-                                              item.active_child_categories.map(
-                                                (subItem) => (
-                                                  <li key={subItem.id}>
-                                                    <Link
-                                                      href={{
-                                                        pathname: "/products",
-                                                        query: {
-                                                          child_category:
-                                                            subItem.slug,
-                                                        },
-                                                      }}
-                                                      passHref
-                                                    >
-                                                      <a rel="noopener noreferrer">
-                                                        <span className="text-qgray text-sm font-400 border-b border-transparent hover:border-qpurple hover:text-qpurple cursor-pointer">
-                                                          {subItem.name}
-                                                        </span>
-                                                      </a>
-                                                    </Link>
-                                                  </li>
-                                                )
-                                              )}
-                                          </ul>
-                                        </div>
-                                      ) : (
-                                        ""
-                                      )}
+                                megaItem.active_sub_categories.map((item) => (
+                                  <div key={item.id}>
+                                    <div className="category">
+                                      <Link
+                                        href={{
+                                          pathname: "/products",
+                                          query: {
+                                            child_category: item.slug,
+                                          },
+                                        }}
+                                        passHref
+                                      >
+                                        <h1 className="text-sm font-700 text-qblack uppercase mb-[13px] cursor-pointer hover:text-qpurple">
+                                          {item.name}
+                                        </h1>
+                                      </Link>
                                     </div>
-                                  ))}
+
+                                    {megaItem.id == isHovered &&
+                                    megaItem.active_sub_categories.length >
+                                      0 ? (
+                                      <div className="category-items">
+                                        <ul className=" gap-8 items-center">
+                                          {item.active_child_categories.length >
+                                            0 &&
+                                            item.active_child_categories.map(
+                                              (subItem) => (
+                                                <li key={subItem.id}>
+                                                  <Link
+                                                    href={{
+                                                      pathname: "/products",
+                                                      query: {
+                                                        child_category:
+                                                          subItem.slug,
+                                                      },
+                                                    }}
+                                                    passHref
+                                                  >
+                                                    <a rel="noopener noreferrer">
+                                                      <span className="text-qgray text-sm font-400 border-b border-transparent hover:border-qpurple hover:text-qpurple cursor-pointer">
+                                                        {subItem.name}
+                                                      </span>
+                                                    </a>
+                                                  </Link>
+                                                </li>
+                                              )
+                                            )}
+                                        </ul>
+                                      </div>
+                                    ) : (
+                                      ""
+                                    )}
+                                  </div>
+                                ))}
                             </div>
                             {megaMenuBanner &&
                               parseInt(megaMenuBanner.status) === 1 && (

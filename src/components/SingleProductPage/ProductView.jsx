@@ -172,6 +172,7 @@ export default function ProductView({
     };
     if (!haveInCart(data, cart)) {
       cart.push(data);
+      toast.success("Item added to cart!");
     }
     if (auth()) {
       if (varients) {
@@ -240,6 +241,7 @@ export default function ProductView({
     if (cart.length > 0) {
       for (let x of cart) {
         if (x.id == data.id) {
+          toast.success("Item already added to cart!");
           return true;
         }
       }

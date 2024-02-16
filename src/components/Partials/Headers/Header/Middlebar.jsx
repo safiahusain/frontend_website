@@ -57,6 +57,7 @@ export default function Middlebar({ className, settings }) {
   //cart
   const { cart } = useSelector((state) => state.cart);
   const [cartItems, setCartItem] = useState(null);
+  const [cartdrop, setCartDrop] = useState(false);
   useEffect(() => {
     cart && setCartItem(cart.cartProducts);
   }, [cart]);
@@ -64,13 +65,17 @@ export default function Middlebar({ className, settings }) {
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
-
+  const handleDropdown = () => {
+    setCartDrop(!cartdrop);
+    let prev_data = JSON.parse(localStorage.getItem("data-hold"));
+  };
   let prev_data = JSON.parse(localStorage.getItem("data-hold"));
   const [unCart, setUnCart] = useState(prev_data);
+  console.log(unCart, "unCart...");
 
   useEffect(() => {
     setUnCart(prev_data);
-    console.log("middlebar....");
+    console.log(unCart, "middlebar....");
   }, [prev_data && prev_data.length]);
 
   return (
@@ -187,7 +192,7 @@ export default function Middlebar({ className, settings }) {
                     </Link>
                     <span
                       style={{
-                        background: websiteSetup.payload.setting.theme_one,
+                        background: websiteSetup?.payload?.setting?.theme_one,
                       }}
                       className="w-[18px] h-[18px] rounded-full absolute -top-1.5 left-6 flex justify-center items-center text-[10px] text-white"
                     >
@@ -198,31 +203,40 @@ export default function Middlebar({ className, settings }) {
                 <li>
                   <div className="cart-wrapper group relative border-r-2 border-[#6E6D79] pr-[22px]">
                     <div className="cart relative cursor-pointer">
-                      <Link href="/cart" passHref>
-                        <a
-                          title={langCntnt?.Cart}
-                          rel="noopener noreferrer"
-                          className="flex space-x-4 items-center"
-                        >
-                          <span className="cursor-pointer text-[#6E6D79]">
-                            <BsHandbag size={35} />
-                          </span>
-                          {/* <span className="text-base text-qgray font-medium">
+                      <button
+                        onClick={handleDropdown}
+                        title={langCntnt?.Cart}
+                        // rel="noopener noreferrer"
+                        className="flex space-x-4 items-center"
+                      >
+                        <span className="cursor-pointer text-[#6E6D79]">
+                          <BsHandbag size={35} />
+                        </span>
+                        {/* <span className="text-base text-qgray font-medium">
                         {langCntnt && langCntnt.Cart}
                       </span> */}
-                        </a>
-                      </Link>
+                      </button>
                       <span
                         style={{
                           background: websiteSetup.payload.setting.theme_one,
                         }}
                         className="w-[18px] h-[18px] rounded-full  absolute -top-1.5 left-6 flex justify-center items-center text-[10px] text-white"
                       >
-                        {cartItems ? cartItems.length : unCart?.length}
+                        {cartItems
+                          ? cartItems.length
+                          : unCart
+                          ? unCart?.length
+                          : 0}
                       </span>
                     </div>
 
-                    <Cart className="absolute -right-[45px] top-14 z-50 hidden group-hover:block rounded" />
+                    <Cart
+                      className={
+                        cartdrop == true
+                          ? `block absolute -right-[45px] top-14 z-50 rounded`
+                          : `hidden`
+                      }
+                    />
                   </div>
                 </li>
                 <li>

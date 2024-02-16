@@ -145,7 +145,6 @@ export default function Cart({ className }) {
 
   useEffect(() => {
     setDataArray(prev_data);
-    console.log("cart page");
   }, [prev_data?.length]);
 
   const handleRemoveItem = (indexToRemove) => {
@@ -155,6 +154,7 @@ export default function Cart({ className }) {
     ];
     setDataArray(updatedArray);
     localStorage.setItem("data-hold", JSON.stringify(updatedArray));
+    toast.warning("Item removed from cart!");
   };
 
   return (
@@ -288,7 +288,9 @@ export default function Cart({ className }) {
                             layout="fill"
                             src={`${
                               process.env.NEXT_PUBLIC_BASE_URL +
-                              item.product.image?.image_1
+                              (item.product.image
+                                ? item.product.image?.image_1
+                                : JSON.parse(item.product.thumb_image)?.image_1)
                             }`}
                             alt=""
                             className="w-full h-full object-contain"
@@ -296,7 +298,9 @@ export default function Cart({ className }) {
                         </div>
                         <div className="flex-1 h-full flex flex-col justify-center ">
                           <h3 className="title mb-2 text-[13px] font-600 text-qblack leading-4 line-clamp-2 hover:text-qpurple">
-                            {item.product.title}
+                            {item.product.title
+                              ? item.product.title
+                              : item.product.name}
                           </h3>
 
                           <p className="price">

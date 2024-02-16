@@ -1,4 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { toast } from "react-toastify";
 import auth from "../../utils/auth";
 //constant
 const CART = "CART";
@@ -26,21 +28,66 @@ export const fetchCart = createAsyncThunk("CART/fetchCart", async () => {
   }
   return false;
 });
+
+export const postCart = createAsyncThunk("CART/postCart", async (holddata) => {
+  if (auth()) {
+    try {
+      await axios
+        .post(`${process.env.NEXT_PUBLIC_BASE_URL}api/add/cart`, holddata, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer${auth().access_token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res, "cart data add");
+          if (res.status == 200) {
+            toast.success(res?.data?.message);
+            localStorage.removeItem("data-hold");
+          }
+          return {
+            data: res.data,
+            message: "success",
+          };
+        })
+        .catch((err) => {
+          console.log(err, "cart error");
+        });
+    } catch (error) {
+      console.log("Error:", error);
+    }
+  }
+  return false;
+});
 //create action and reducer
 export const cart = createSlice({
   name: CART,
   initialState,
-  extraReducers: {
-    [fetchCart.pending]: (state, action) => {
+  extraReducers: (builder) => {
+    builder.addCase(fetchCart.pending, (state) => {
       state.status = "loading";
-    },
-    [fetchCart.fulfilled]: (state, { payload }) => {
-      state.cart = payload;
+    });
+
+    builder.addCase(fetchCart.fulfilled, (state, action) => {
+      state.cart = action.payload;
       state.status = "success";
-    },
-    [fetchCart.rejected]: (state, action) => {
+    });
+
+    builder.addCase(fetchCart.rejected, (state, action) => {
       state.status = "failed";
-    },
+    });
+
+    builder.addCase(postCart.pending, (state) => {
+      state.status = "loading";
+    });
+
+    builder.addCase(postCart.fulfilled, (state, action) => {
+      state.status = "success";
+    });
+
+    builder.addCase(postCart.rejected, (state, action) => {
+      state.status = "failed";
+    });
   },
 });
 export default cart.reducer;

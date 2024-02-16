@@ -122,6 +122,7 @@ export default function ProductCardRowStyleOne({ className, datas }) {
     };
     if (!haveInCart(data, cart)) {
       cart.push(data);
+      toast.success("Item added to cart!");
     }
 
     if (auth()) {
@@ -191,6 +192,7 @@ export default function ProductCardRowStyleOne({ className, datas }) {
     if (cart.length > 0) {
       for (let x of cart) {
         if (x.id == data.id) {
+          toast.success("Item already added to cart!");
           return true;
         }
       }

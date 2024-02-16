@@ -225,4 +225,10 @@ export default {
       method: "GET",
       url: `blog/${slug}`,
     }),
+  unAuthCartData: (data) =>
+    instance({
+      method: "POST",
+      url: `add/cart`,
+      data,
+    }),
 };

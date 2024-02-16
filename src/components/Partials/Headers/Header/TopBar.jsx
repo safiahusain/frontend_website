@@ -204,7 +204,7 @@ export default function TopBar({ className, contact }) {
                     style={{ textDecoration: "underline" }}
                   >
                     <option value="default-Currency" selected>
-                      {websiteSetup.payload.setting.currency_icon}
+                      {websiteSetup?.payload?.setting?.currency_icon}
                     </option>
                     {Currencies &&
                       Currencies.map((option, index) => (
