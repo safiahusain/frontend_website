@@ -2,23 +2,23 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import apiRequest from "../../../../utils/apiRequest";
 import auth from "../../../../utils/auth";
+import languageModel from "../../../../utils/languageModel";
 import settings from "../../../../utils/settings";
 import { fetchCart } from "../../../store/Cart";
 import { fetchCompareProducts } from "../../../store/compareProduct";
 import { fetchWishlist } from "../../../store/wishlistData";
+import LoginContext from "../../Contexts/LoginContexts";
 import CheckProductIsExistsInFlashSale from "../../Shared/CheckProductIsExistsInFlashSale";
 import ProductView from "../../SingleProductPage/ProductView";
 import Compair from "../icons/Compair";
 import QuickViewIco from "../icons/QuickViewIco";
 import Star from "../icons/Star";
 import ThinLove from "../icons/ThinLove";
-import languageModel from "../../../../utils/languageModel";
-import LoginContext from "../../Contexts/LoginContexts";
 const Redirect = ({ message, linkTxt }) => {
   return (
     <div className="flex space-x-2 items-center">
@@ -92,9 +92,21 @@ export default function ProductCardRowStyleOne({ className, datas }) {
   );
   const [price, setPrice] = useState(null);
   const [offerPrice, setOffer] = useState(null);
-  const addToCart = (id) => {
+  const addToCart = (id, holddata) => {
+    let cart = [];
+    let prev_data = localStorage.getItem("data-hold");
+
+    if (prev_data) {
+      let array = JSON.parse(prev_data);
+      if (array?.length > 0) {
+        cart = array;
+      }
+    }
+
     const data = {
       id: id,
+      type: "add-to-cart",
+      product: holddata,
       token: auth() && auth().access_token,
       quantity: 1,
       variants:
@@ -108,6 +120,10 @@ export default function ProductCardRowStyleOne({ className, datas }) {
         getFirstVarients.length > 0 &&
         getFirstVarients.map((v) => (v ? v.id : null)),
     };
+    if (!haveInCart(data, cart)) {
+      cart.push(data);
+    }
+
     if (auth()) {
       if (varients) {
         const variantQuery = data.variants.map((value, index) => {
@@ -166,13 +182,24 @@ export default function ProductCardRowStyleOne({ className, datas }) {
         dispatch(fetchCart());
       }
     } else {
-      localStorage.setItem(
-        "data-hold",
-        JSON.stringify({ type: "add-to-cart", ...data })
-      );
-      loginPopupBoard.handlerPopup(true);
+      localStorage.setItem("data-hold", JSON.stringify(cart));
+      loginPopupBoard.handlerPopup(false);
     }
   };
+
+  function haveInCart(data, cart) {
+    if (cart.length > 0) {
+      for (let x of cart) {
+        if (x.id == data.id) {
+          return true;
+        }
+      }
+      return false;
+    } else {
+      return false;
+    }
+  }
+
   useEffect(() => {
     if (varients) {
       const prices = varients.map((v) =>
@@ -250,6 +277,7 @@ export default function ProductCardRowStyleOne({ className, datas }) {
       document.body.style.overflow = "unset";
     };
   }, [quickViewModal]);
+
   return (
     <div
       style={{ boxShadow: `0px 15px 64px rgba(0, 0, 0, 0.05)` }}
@@ -264,7 +292,7 @@ export default function ProductCardRowStyleOne({ className, datas }) {
             <Image
               layout="fill"
               objectFit="scale-down"
-              src={`${datas.image}`}
+              src={`${process.env.NEXT_PUBLIC_BASE_URL + datas.image?.image_1}`}
               alt=""
               className="w-full h-full object-contain"
             />
@@ -349,7 +377,7 @@ export default function ProductCardRowStyleOne({ className, datas }) {
           <div className="w-full h-[48px]">
             <div
               style={{ borderRadius: "30px 0px 0" }}
-              onClick={() => addToCart(datas.id)}
+              onClick={() => addToCart(datas.id, datas)}
               className="w-[135px] h-[48px] pl-6 pt-3 cursor-pointer bg-qpurplelow/10 group-hover:bg-qpurple absolute -bottom-1 -right-1  rounded transition-all duration-300 ease-in-out"
             >
               <div className="w-full h-full text-qpurple group-hover:text-white">
@@ -380,8 +408,8 @@ export default function ProductCardRowStyleOne({ className, datas }) {
           >
             <span className="w-10 h-10 block overflow-hidden text-qblack hover:text-white justify-center items-center transition-all duration-300 ease-in-out bg-white rounded">
               <span className="w-full h-full flex justify-center items-center hover:bg-qpurple bg-qpurplelow/10">
-               <ThinLove className="fill-current" />
-            </span>
+                <ThinLove className="fill-current" />
+              </span>
             </span>
           </button>
         ) : (
@@ -392,8 +420,8 @@ export default function ProductCardRowStyleOne({ className, datas }) {
           >
             <span className="w-10 h-10 block bg-white overflow-hidden rounded">
               <span className="w-full h-full flex justify-center items-center hover:bg-qpurple bg-qpurplelow/10">
-               <ThinLove fill={true} />
-            </span>
+                <ThinLove fill={true} />
+              </span>
             </span>
           </button>
         )}
@@ -403,9 +431,8 @@ export default function ProductCardRowStyleOne({ className, datas }) {
           onClick={() => productCompare(datas.id)}
         >
           <span className="w-10 h-10 block overflow-hidden justify-center text-qblack hover:text-white transition-all duration-300 ease-in-out items-center bg-white rounded">
-
-             <span className="w-full h-full flex justify-center items-center hover:bg-qpurple bg-qpurplelow/10">
-               <Compair />
+            <span className="w-full h-full flex justify-center items-center hover:bg-qpurple bg-qpurplelow/10">
+              <Compair />
             </span>
           </span>
         </button>

@@ -1,5 +1,5 @@
-import React from "react";
 import Link from "next/link";
+import React from "react";
 import ShopNowBtn from "../../Helpers/Buttons/ShopNowBtn";
 
 function OneColumnAdsTwo({ data }) {

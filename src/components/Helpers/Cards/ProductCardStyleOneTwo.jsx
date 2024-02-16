@@ -223,7 +223,9 @@ export default function ProductCardStyleOneTwo({ datas }) {
       <div
         className="product-card-img w-full h-[322px] mt-4"
         style={{
-          background: `url(${datas.image}) no-repeat center`,
+          background: `url(${
+            process.env.NEXT_PUBLIC_BASE_URL + datas.image?.image_1
+          }) no-repeat center`,
           backgroundSize: "contain",
         }}
       ></div>

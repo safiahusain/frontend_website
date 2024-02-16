@@ -21,6 +21,21 @@ function TreeCategory({ categories = [], products = [] }) {
   const [selectedId, setId] = useState(
     categories.length > 0 && parseInt(categories[0].category_id)
   );
+
+  const isValidURL = (url) => {
+    const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlPattern.test(url);
+  };
+
+  const parseThumbImage = (thumbImage) => {
+    if (isValidURL(thumbImage)) {
+      return JSON.parse(thumbImage);
+    } else {
+      return JSON.parse(thumbImage);
+      // return process.env.NEXT_PUBLIC_BASE_URL + thumbImage;
+    }
+  };
+
   const cp =
     products.length > 0 &&
     products?.map((item) => {
@@ -29,7 +44,7 @@ function TreeCategory({ categories = [], products = [] }) {
         category_id: item.category_id,
         title: item.name,
         slug: item.slug,
-        image: process.env.NEXT_PUBLIC_BASE_URL + item.thumb_image,
+        image: parseThumbImage(item.thumb_image),
         price: item.price,
         offer_price: item.offer_price,
         campaingn_product: null,
@@ -93,7 +108,6 @@ function TreeCategory({ categories = [], products = [] }) {
       },
     ],
   };
-  console.log(products, "products....");
 
   return (
     <>

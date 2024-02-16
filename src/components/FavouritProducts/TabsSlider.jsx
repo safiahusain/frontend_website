@@ -39,7 +39,7 @@ export default function TabsSlider({ className, data }) {
     arrows: true,
     dots: true,
     slidesToShow: 4,
-    slidesToScroll: 4,
+    slidesToScroll: 1,
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
     appendDots: (dots) => (
@@ -88,8 +88,6 @@ export default function TabsSlider({ className, data }) {
       },
     ],
   };
-
-  console.log(data, "data...");
 
   return (
     <>

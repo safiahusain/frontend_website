@@ -65,6 +65,14 @@ export default function Middlebar({ className, settings }) {
     setLangCntnt(languageModel());
   }, []);
 
+  let prev_data = JSON.parse(localStorage.getItem("data-hold"));
+  const [unCart, setUnCart] = useState(prev_data);
+
+  useEffect(() => {
+    setUnCart(prev_data);
+    console.log("middlebar....");
+  }, [prev_data && prev_data.length]);
+
   return (
     <div className={`w-full h-[150px] bg-white ${className}`}>
       <div className="xl:max-w-[1350px] lg:max-w-[1190px] md:max-w-[1190px] mx-auto h-full">
@@ -210,7 +218,7 @@ export default function Middlebar({ className, settings }) {
                         }}
                         className="w-[18px] h-[18px] rounded-full  absolute -top-1.5 left-6 flex justify-center items-center text-[10px] text-white"
                       >
-                        {cartItems ? cartItems.length : 0}
+                        {cartItems ? cartItems.length : unCart?.length}
                       </span>
                     </div>
 

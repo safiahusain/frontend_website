@@ -16,7 +16,6 @@ import InputCom from "../Helpers/InputCom";
 import LoaderStyleOne from "../Helpers/Loaders/LoaderStyleOne";
 import PageTitle from "../Helpers/PageTitle";
 import Selectbox from "../Helpers/Selectbox";
-import Sslcommerce from "../Helpers/icons/Sslcommerce";
 import CheckProductIsExistsInFlashSale from "../Shared/CheckProductIsExistsInFlashSale";
 
 function CheakoutPage() {
@@ -2038,7 +2037,7 @@ function CheakoutPage() {
                             )}
                           </div>
                         )}
-                        {rezorPayStatue && (
+                        {/* {rezorPayStatue && (
                           <div
                             onClick={() => setPaymentMethod("razorpay")}
                             className={`payment-item text-center bg-[#F8F8F8] relative w-full h-[50px] font-bold text-sm text-white text-qpurple  rounded flex justify-center items-center px-3 uppercase rounded cursor-pointer ${
@@ -2430,7 +2429,7 @@ function CheakoutPage() {
                               </span>
                             )}
                           </div>
-                        )}
+                        )} */}
                       </div>
                     </div>
                     {/*stripe*/}
@@ -2560,7 +2559,7 @@ function CheakoutPage() {
                       </>
                     )}
                   </div>
-                  {selectPayment === "bankpayment" && (
+                  {/* {selectPayment === "bankpayment" && (
                     <div className="w-full bank-inputs mt-5">
                       <div className="input-item mb-5">
                         <div className="bank-info-alert w-full p-5 bg-amber-100 rounded mb-4 overflow-x-scroll">
@@ -2583,7 +2582,7 @@ function CheakoutPage() {
                         ></textarea>
                       </div>
                     </div>
-                  )}
+                  )} */}
                   <button
                     type="button"
                     onClick={placeOrderHandler}

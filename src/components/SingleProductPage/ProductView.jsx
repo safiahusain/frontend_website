@@ -34,13 +34,16 @@ export default function ProductView({
   images = [],
   product,
   ReadMoreHandler,
+  newImages,
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const loginPopupBoard = useContext(LoginContext);
   const tags = product.tags && JSON.parse(product.tags);
   const [more, setMore] = useState(false);
-  const productsImg = images && images.length > 0 && images;
+  // const productsImg = images && images.length > 0 && images;
+  const productsImg = product && JSON.parse(product.thumb_image);
+
   const varients =
     product && product.active_variants.length > 0 && product.active_variants;
   const [getFirstVarients, setFirstVarients] = useState(
@@ -55,9 +58,9 @@ export default function ProductView({
   }, []);
   const [price, setPrice] = useState(null);
   const [offerPrice, setOffer] = useState(null);
-  const [src, setSrc] = useState(product.thumb_image);
+  const [src, setSrc] = useState(productsImg?.image_1);
   useEffect(() => {
-    setSrc(product.thumb_image);
+    setSrc(productsImg?.image_1);
   }, [product]);
 
   const changeImgHandler = (current) => {
@@ -66,6 +69,8 @@ export default function ProductView({
   const [quantity, setQuantity] = useState(1);
   const increment = () => {
     setQuantity((prev) => prev + 1);
+    // if (product.qty > quantity) {
+    // }
   };
   const decrement = () => {
     if (quantity > 1) {
@@ -144,15 +149,30 @@ export default function ProductView({
   }, [product, varients]);
 
   const addToCard = () => {
+    let cart = [];
+    let prev_data = localStorage.getItem("data-hold");
+
+    if (prev_data) {
+      let array = JSON.parse(prev_data);
+      if (array?.length > 0) {
+        cart = array;
+      }
+    }
+
     const data = {
       id: product.id,
       token: auth() && auth().access_token,
+      type: "add-to-cart",
+      product: product,
       quantity: quantity,
       variants:
         getFirstVarients &&
         getFirstVarients.map((v) => parseInt(v.product_variant_id)),
       variantItems: getFirstVarients && getFirstVarients.map((v) => v.id),
     };
+    if (!haveInCart(data, cart)) {
+      cart.push(data);
+    }
     if (auth()) {
       if (varients) {
         const variantQuery = data.variants.map((value, index) => {
@@ -211,14 +231,23 @@ export default function ProductView({
         dispatch(fetchCart());
       }
     } else {
-      localStorage.setItem(
-        "data-hold",
-        JSON.stringify({ type: "add-to-cart", ...data })
-      );
-      loginPopupBoard.handlerPopup(true);
+      localStorage.setItem("data-hold", JSON.stringify(cart));
+      loginPopupBoard.handlerPopup(false);
     }
   };
 
+  function haveInCart(data, cart) {
+    if (cart.length > 0) {
+      for (let x of cart) {
+        if (x.id == data.id) {
+          return true;
+        }
+      }
+      return false;
+    } else {
+      return false;
+    }
+  }
   //wishlist
 
   const { wishlistData } = useSelector((state) => state.wishlistData);
@@ -299,7 +328,6 @@ export default function ProductView({
     return amount * rate;
   };
 
-  console.log(product, "product");
   return (
     <>
       <div
@@ -327,41 +355,48 @@ export default function ProductView({
               )}
             </div>
             <div className="flex gap-2 flex-wrap">
-              <div
-                onClick={() => changeImgHandler(product.thumb_image)}
-                className="w-[110px] h-[110px] p-[15px] border border-qpurplelow/10 cursor-pointer relative rounded"
-              >
-                <Image
-                  layout="fill"
-                  objectFit="scale-down"
-                  src={`${
-                    process.env.NEXT_PUBLIC_BASE_URL + product.thumb_image
-                  }`}
-                  alt=""
-                  className={`w-full h-full object-contain transform scale-110 ${
-                    src !== product.thumb_image ? "opacity-50" : ""
-                  } `}
-                />
-              </div>
-              {productsImg &&
-                productsImg.length > 0 &&
-                productsImg.map((img, i) => (
-                  <div
-                    onClick={() => changeImgHandler(img.image)}
-                    key={i}
-                    className="w-[110px] h-[110px] p-[15px] border border-qborder cursor-pointer relative"
-                  >
-                    <Image
-                      layout="fill"
-                      objectFit="scale-down"
-                      src={`${process.env.NEXT_PUBLIC_BASE_URL + img.image}`}
-                      alt=""
-                      className={`w-full h-full object-contain ${
-                        src !== img.image ? "opacity-50" : ""
-                      } `}
-                    />
-                  </div>
-                ))}
+              {productsImg && Object.entries(productsImg).length > 0 ? (
+                ""
+              ) : (
+                <div
+                  onClick={() => changeImgHandler(productsImg?.image_1)}
+                  className="w-[110px] h-[110px] p-[15px] border border-qpurplelow/10 cursor-pointer relative rounded"
+                >
+                  <Image
+                    layout="fill"
+                    objectFit="scale-down"
+                    src={`${
+                      process.env.NEXT_PUBLIC_BASE_URL + productsImg?.image_1
+                    }`}
+                    alt=""
+                    className={`w-full h-full object-contain transform scale-110 ${
+                      src !== productsImg.image_1 ? "opacity-50" : ""
+                    } `}
+                  />
+                </div>
+              )}
+
+              {productsImg && Object.entries(productsImg).length > 0
+                ? Object.keys(productsImg).map((img, i) => (
+                    <div
+                      onClick={() => changeImgHandler(productsImg[img])}
+                      key={i}
+                      className="w-[110px] h-[110px] p-[15px] border border-qborder cursor-pointer relative"
+                    >
+                      <Image
+                        layout="fill"
+                        objectFit="scale-down"
+                        src={`${
+                          process.env.NEXT_PUBLIC_BASE_URL + productsImg[img]
+                        }`}
+                        alt=""
+                        className={`w-full h-full object-contain ${
+                          src !== productsImg[img] ? "opacity-50" : ""
+                        } `}
+                      />
+                    </div>
+                  ))
+                : ""}
             </div>
           </div>
         </div>

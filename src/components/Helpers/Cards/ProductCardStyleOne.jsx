@@ -124,9 +124,23 @@ export default function ProductCardStyleOne({ datas }) {
   );
   const [price, setPrice] = useState(null);
   const [offerPrice, setOffer] = useState(null);
-  const addToCart = (id) => {
+  const [holditem, setHolditem] = useState([]);
+
+  const addToCart = (id, holddata) => {
+    let cart = [];
+    let prev_data = localStorage.getItem("data-hold");
+
+    if (prev_data) {
+      let array = JSON.parse(prev_data);
+      if (array?.length > 0) {
+        cart = array;
+      }
+    }
+
     const data = {
       id: id,
+      type: "add-to-cart",
+      product: holddata,
       token: auth() && auth().access_token,
       quantity: 1,
       variants:
@@ -140,6 +154,11 @@ export default function ProductCardStyleOne({ datas }) {
         getFirstVarients.length > 0 &&
         getFirstVarients.map((v) => (v ? v.id : null)),
     };
+
+    if (!haveInCart(data, cart)) {
+      cart.push(data);
+    }
+
     if (auth()) {
       if (varients) {
         const variantQuery = data.variants.map((value, index) => {
@@ -201,13 +220,23 @@ export default function ProductCardStyleOne({ datas }) {
         dispatch(fetchCart());
       }
     } else {
-      localStorage.setItem(
-        "data-hold",
-        JSON.stringify({ type: "add-to-cart", ...data })
-      );
-      loginPopupBoard.handlerPopup(true);
+      localStorage.setItem("data-hold", JSON.stringify(cart));
+      loginPopupBoard.handlerPopup(false);
     }
   };
+
+  function haveInCart(data, cart) {
+    if (cart.length > 0) {
+      for (let x of cart) {
+        if (x.id == data.id) {
+          return true;
+        }
+      }
+      return false;
+    } else {
+      return false;
+    }
+  }
 
   useEffect(() => {
     if (varients) {
@@ -259,8 +288,9 @@ export default function ProductCardStyleOne({ datas }) {
   };
   const { currency_icon } = settings();
   const [imgSrc, setImgSrc] = useState(null);
+
   const loadImg = (value) => {
-    setImgSrc(value);
+    setImgSrc(process.env.NEXT_PUBLIC_BASE_URL + value?.image_1);
   };
 
   const [amount, setAmount] = useState(null);
@@ -307,7 +337,7 @@ export default function ProductCardStyleOne({ datas }) {
                       objectFit="scale-down"
                       src={`${imgSrc ? imgSrc : "/assets/images/spinner.gif"}`}
                       alt=""
-                      onLoadingComplete={() => loadImg(datas.image)}
+                      onLoadingComplete={() => loadImg(datas?.image)}
                       className="w-full h-full object-contain"
                     />
                   </div>
@@ -438,7 +468,7 @@ export default function ProductCardStyleOne({ datas }) {
               {/* add to card button */}
               <div className="">
                 <div
-                  onClick={() => addToCart(datas.id)}
+                  onClick={() => addToCart(datas.id, datas)}
                   className="text-center w-full h-[48px] pl-6 pt-3 cursor-pointer bg-qpurple group-hover:bg-[#75652d] transition-all duration-300 ease-in-out"
                 >
                   <div className="w-full h-full space-x-3 text-qpurple group-hover:text-white text-white">

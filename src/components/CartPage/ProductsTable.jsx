@@ -1,10 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import languageModel from "../../../utils/languageModel";
 import settings from "../../../utils/settings";
 import InputQuantityCom from "../Helpers/InputQuantityCom";
 import CheckProductIsExistsInFlashSale from "../Shared/CheckProductIsExistsInFlashSale";
-import languageModel from "../../../utils/languageModel";
-import Link from "next/link";
 
 export default function ProductsTable({
   className,
@@ -102,7 +102,7 @@ export default function ProductsTable({
                           layout="fill"
                           src={`${
                             process.env.NEXT_PUBLIC_BASE_URL +
-                            item.product.thumb_image
+                            JSON.parse(item.product.thumb_image)?.image_1
                           }`}
                           alt="product"
                           className="w-full h-full object-contain"

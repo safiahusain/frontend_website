@@ -1,17 +1,32 @@
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import languageModel from "../../../utils/languageModel";
+import ShopNowBtn from "../Helpers/Buttons/ShopNowBtn";
 import ProductCardStyleOne from "../Helpers/Cards/ProductCardStyleOne";
 import DataIteration from "../Helpers/DataIteration";
 import Star from "../Helpers/icons/Star";
-import Link from "next/link";
-import languageModel from "../../../utils/languageModel";
-import { useEffect, useState } from "react";
-import ShopNowBtn from "../Helpers/Buttons/ShopNowBtn";
 export default function SallerInfo({ products, sellerInfo }) {
   const { seller } = sellerInfo;
   const [langCntnt, setLangCntnt] = useState(null);
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
+
+  const isValidURL = (url) => {
+    const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlPattern.test(url);
+  };
+
+  const parseThumbImage = (thumbImage) => {
+    if (isValidURL(thumbImage)) {
+      return JSON.parse(thumbImage);
+    } else {
+      return JSON.parse(thumbImage);
+      // return process.env.NEXT_PUBLIC_BASE_URL + thumbImage;
+    }
+  };
+
   const rs =
     products.length > 0 &&
     products.map((item) => {
@@ -19,7 +34,7 @@ export default function SallerInfo({ products, sellerInfo }) {
         id: item.id,
         title: item.name,
         slug: item.slug,
-        image: process.env.NEXT_PUBLIC_BASE_URL + item.thumb_image,
+        image: parseThumbImage(item.thumb_image),
         price: item.price,
         offer_price: item.offer_price,
         campaingn_product: null,

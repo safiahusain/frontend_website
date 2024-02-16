@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import apiRequest from "../../../../utils/apiRequest";
 import auth from "../../../../utils/auth";
+import languageModel from "../../../../utils/languageModel";
 import settings from "../../../../utils/settings";
 import { fetchCart } from "../../../store/Cart";
 import { fetchCompareProducts } from "../../../store/compareProduct";
@@ -16,7 +17,6 @@ import ProductView from "../../SingleProductPage/ProductView";
 import Compair from "../icons/Compair";
 import QuickViewIco from "../icons/QuickViewIco";
 import ThinLove from "../icons/ThinLove";
-import languageModel from "../../../../utils/languageModel";
 const Redirect = ({ message, linkTxt }) => {
   return (
     <div className="flex space-x-2 items-center">
@@ -223,6 +223,7 @@ export default function ProductCardRowStyleOneTwo({ className, datas }) {
       router.push("/login");
     }
   };
+
   return (
     <div
       data-aos="fade-left"
@@ -235,7 +236,7 @@ export default function ProductCardRowStyleOneTwo({ className, datas }) {
           <Image
             layout="fill"
             objectFit="scale-down"
-            src={`${datas.image}`}
+            src={`${process.env.NEXT_PUBLIC_BASE_URL + datas.image?.image_1}`}
             alt=""
             className="w-full h-full object-contain"
           />

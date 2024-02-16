@@ -140,6 +140,23 @@ export default function Cart({ className }) {
     return amount * rate;
   };
 
+  let prev_data = JSON.parse(localStorage.getItem("data-hold"));
+  const [dataArray, setDataArray] = useState(prev_data);
+
+  useEffect(() => {
+    setDataArray(prev_data);
+    console.log("cart page");
+  }, [prev_data?.length]);
+
+  const handleRemoveItem = (indexToRemove) => {
+    const updatedArray = [
+      ...dataArray.slice(0, indexToRemove),
+      ...dataArray.slice(indexToRemove + 1),
+    ];
+    setDataArray(updatedArray);
+    localStorage.setItem("data-hold", JSON.stringify(updatedArray));
+  };
+
   return (
     <>
       <div
@@ -165,7 +182,7 @@ export default function Cart({ className }) {
                             layout="fill"
                             src={`${
                               process.env.NEXT_PUBLIC_BASE_URL +
-                              item.product.thumb_image
+                              JSON.parse(item.product.thumb_image)?.image_1
                             }`}
                             alt=""
                             className="w-full h-full object-contain"
@@ -254,6 +271,87 @@ export default function Cart({ className }) {
               </p>
             </div>
           </div>
+        ) : prev_data && prev_data.length > 0 ? (
+          <>
+            <div className="product-items h-[350px] overflow-y-scroll">
+              <ul>
+                {dataArray &&
+                  dataArray.length > 0 &&
+                  dataArray.map((item, i) => (
+                    <li
+                      key={item.id}
+                      className="w-full h-full flex justify-between"
+                    >
+                      <div className="flex space-x-[6px] justify-center items-center px-4 my-[20px]">
+                        <div className="w-[65px] h-full relative">
+                          <Image
+                            layout="fill"
+                            src={`${
+                              process.env.NEXT_PUBLIC_BASE_URL +
+                              item.product.image?.image_1
+                            }`}
+                            alt=""
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <div className="flex-1 h-full flex flex-col justify-center ">
+                          <h3 className="title mb-2 text-[13px] font-600 text-qblack leading-4 line-clamp-2 hover:text-qpurple">
+                            {item.product.title}
+                          </h3>
+
+                          <p className="price">
+                            <span
+                              suppressHydrationWarning
+                              className="offer-price text-qred font-600 text-[15px] ml-2"
+                            >
+                              {
+                                <CheckProductIsExistsInFlashSale
+                                  id={item.product.id}
+                                  price={price(item)}
+                                />
+                              }
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                      <span
+                        onClick={() => handleRemoveItem(i)}
+                        className="mt-[20px] mr-[15px] inline-flex cursor-pointer"
+                      >
+                        <svg
+                          width="8"
+                          height="8"
+                          viewBox="0 0 8 8"
+                          fill="none"
+                          className="inline fill-current text-[#AAAAAA] hover:text-qred"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M7.76 0.24C7.44 -0.08 6.96 -0.08 6.64 0.24L4 2.88L1.36 0.24C1.04 -0.08 0.56 -0.08 0.24 0.24C-0.08 0.56 -0.08 1.04 0.24 1.36L2.88 4L0.24 6.64C-0.08 6.96 -0.08 7.44 0.24 7.76C0.56 8.08 1.04 8.08 1.36 7.76L4 5.12L6.64 7.76C6.96 8.08 7.44 8.08 7.76 7.76C8.08 7.44 8.08 6.96 7.76 6.64L5.12 4L7.76 1.36C8.08 1.04 8.08 0.56 7.76 0.24Z" />
+                        </svg>
+                      </span>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+            <div className="product-actions px-4 mb-[10px]">
+              <div className="product-action-btn">
+                <Link href="/cart">
+                  <div className="gray-btn w-full h-[50px] mb-[10px] cursor-pointer rounded">
+                    <span>{langCntnt && langCntnt.View_Cart}</span>
+                  </div>
+                </Link>
+                <Link href="/checkout">
+                  <div className="w-full h-[50px] cursor-pointer">
+                    <div className="transition-common bg-qpurple hover:bg-qpurplelow/10 hover:text-qpurple text-white flex justify-center items-center  w-full h-full rounded">
+                      <span className="text-sm">
+                        {langCntnt && langCntnt.Checkout_Now}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </>
         ) : (
           <div className="w-full">
             <div className="product-items my-10">

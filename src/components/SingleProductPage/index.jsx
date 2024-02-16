@@ -75,12 +75,26 @@ export default function SingleProductPage({ details }) {
         },
       }
     : null;
+
+  const isValidURL = (url) => {
+    const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlPattern.test(url);
+  };
+
+  const parseThumbImage = (thumbImage) => {
+    if (isValidURL(thumbImage)) {
+      return JSON.parse(thumbImage);
+    } else {
+      return JSON.parse(thumbImage);
+    }
+  };
+
   const relatedProducts = details.relatedProducts.map((item) => {
     return {
       id: item.id,
       title: item.name,
       slug: item.slug,
-      image: process.env.NEXT_PUBLIC_BASE_URL + item.thumb_image,
+      image: parseThumbImage(item.thumb_image),
       price: item.price,
       offer_price: item.offer_price,
       campaingn_product: null,
@@ -117,6 +131,8 @@ export default function SingleProductPage({ details }) {
     }
   };
 
+  console.log(relatedProducts, "details.relatedProducts");
+
   return (
     <>
       <Layout childrenClasses="pt-0 pb-0">
@@ -141,6 +157,7 @@ export default function SingleProductPage({ details }) {
                   {/*key name spelling not correct (gellery)*/}
                   <ProductView
                     product={details.product}
+                    newImages={details.product.thumb_image}
                     images={details.gellery}
                     reportHandler={ReportHandler}
                     ReadMoreHandler={ReadMoreHandler}
@@ -202,7 +219,7 @@ export default function SingleProductPage({ details }) {
                       </li>
                     )}
                   </ul>
-                  <div className="w-full h-[1px] bg-[#ae1c9a4f]"></div>
+                  <div className="w-full h-[1px] bg-qpurple"></div>
                 </div>
               </div>
               <div className="tab-contents w-full ">
@@ -286,7 +303,7 @@ export default function SingleProductPage({ details }) {
                       className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 xl:gap-[30px] gap-5"
                     >
                       <DataIteration
-                        datas={relatedProducts}
+                        datas={relatedProducts && relatedProducts}
                         startLength={0}
                         endLength={
                           relatedProducts.length > 4

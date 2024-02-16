@@ -18,6 +18,19 @@ export default function AllProductPage({ response, sellerInfo }) {
   const [categoryExistInRoute, setCategoryExistInRoute] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
 
+  const isValidURL = (url) => {
+    const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlPattern.test(url);
+  };
+
+  const parseThumbImage = (thumbImage) => {
+    if (isValidURL(thumbImage)) {
+      return JSON.parse(thumbImage);
+    } else {
+      return JSON.parse(thumbImage);
+    }
+  };
+
   useEffect(() => {
     if (response.data && response.data.products.data.length === 0) {
       if (router.query.search && router.query.category) {
@@ -25,8 +38,6 @@ export default function AllProductPage({ response, sellerInfo }) {
       }
     }
   }, [response]);
-
-  console.log(router.query.category, "router.query.category");
 
   useEffect(() => {
     if (categoryExistInRoute) {
@@ -42,7 +53,7 @@ export default function AllProductPage({ response, sellerInfo }) {
                   id: item.id,
                   title: item.name,
                   slug: item.slug,
-                  image: process.env.NEXT_PUBLIC_BASE_URL + item.thumb_image,
+                  image: parseThumbImage(item.thumb_image),
                   price: item.price,
                   offer_price: item.offer_price,
                   campaingn_product: null,
@@ -69,6 +80,7 @@ export default function AllProductPage({ response, sellerInfo }) {
   const [categoriesFilter, setCategoriesFilter] = useState(null);
   const [brands, setBrands] = useState(null);
   const [cardViewStyle, setCardViewStyle] = useState("col");
+
   const products =
     resProducts &&
     resProducts.length > 0 &&
@@ -77,7 +89,7 @@ export default function AllProductPage({ response, sellerInfo }) {
         id: item.id,
         title: item.name,
         slug: item.slug,
-        image: process.env.NEXT_PUBLIC_BASE_URL + item.thumb_image,
+        image: parseThumbImage(item.thumb_image),
         price: item.price,
         offer_price: item.offer_price,
         campaingn_product: null,

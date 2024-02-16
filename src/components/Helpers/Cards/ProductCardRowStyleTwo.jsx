@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import settings from "../../../../utils/settings";
 import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import auth from "../../../../utils/auth";
-import apiRequest from "../../../../utils/apiRequest";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import apiRequest from "../../../../utils/apiRequest";
+import auth from "../../../../utils/auth";
+import settings from "../../../../utils/settings";
 import { fetchCart } from "../../../store/Cart";
 import CheckProductIsExistsInFlashSale from "../../Shared/CheckProductIsExistsInFlashSale";
 import Star from "../icons/Star";
@@ -166,7 +166,10 @@ export default function ProductCardRowStyleTwo({ className, datas }) {
                   <Image
                     layout="fill"
                     objectFit="scale-down"
-                    src={`${datas.image}`}
+                    src={`${
+                      datas.imageprocess.env.NEXT_PUBLIC_BASE_URL +
+                      datas.image?.image_1
+                    }`}
                     alt=""
                     className="w-full h-full object-contain"
                   />

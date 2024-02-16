@@ -1,15 +1,20 @@
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import DateFormat from "../../../../../utils/DateFormat";
-import Link from "next/link";
 import languageModel from "../../../../../utils/languageModel";
 import settings from "../../../../../utils/settings";
 
 export default function OrderTab({ orders }) {
   const [langCntnt, setLangCntnt] = useState(null);
-  const {currency_icon}=settings();
+  const { currency_icon } = settings();
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
+
+  const exchangeRate = JSON.parse(localStorage.getItem("selectedRate")) || 0;
+  const convertAmount = (amount, rate) => {
+    return amount * rate;
+  };
   return (
     <>
       <div className="relative w-full overflow-x-auto sm:rounded-lg">
@@ -52,7 +57,13 @@ export default function OrderTab({ orders }) {
                   {/*</td>*/}
                   <td className="text-center py-4 px-2">
                     <span className="text-base text-qblack whitespace-nowrap px-2 ">
-                      {currency_icon + item.total_amount}
+                      {exchangeRate
+                        ? exchangeRate.code +
+                          convertAmount(
+                            item.total_amount,
+                            exchangeRate.rate
+                          ).toFixed(2)
+                        : currency_icon + item.total_amount}
                     </span>
                   </td>
                   <td className="py-4 flex justify-center">

@@ -5,14 +5,14 @@ import { toast } from "react-toastify";
 import isAuth from "../../../Middleware/isAuth";
 import apiRequest from "../../../utils/apiRequest";
 import auth from "../../../utils/auth";
+import languageModel from "../../../utils/languageModel";
 import settings from "../../../utils/settings";
 import BreadcrumbCom from "../BreadcrumbCom";
 import InputCom from "../Helpers/InputCom";
 import LoaderStyleOne from "../Helpers/Loaders/LoaderStyleOne";
-import StarRating from "../Helpers/StarRating";
-import languageModel from "../../../utils/languageModel";
-import Layout from "../Partials/Layout";
 import LoaderStyleTwo from "../Helpers/Loaders/LoaderStyleTwo";
+import StarRating from "../Helpers/StarRating";
+import Layout from "../Partials/Layout";
 function OrderCom() {
   const router = useRouter();
   const [loadingState, setLoadingState] = useState(true);
@@ -119,6 +119,11 @@ function OrderCom() {
       setLoading(true);
     }
   };
+
+  const exchangeRate = JSON.parse(localStorage.getItem("selectedRate")) || 0;
+  const convertAmount = (amount, rate) => {
+    return amount * rate;
+  };
   return (
     <>
       <Layout childrenClasses="pt-0 pb-0">
@@ -132,94 +137,101 @@ function OrderCom() {
             />
             {!loadingState ? (
               <>
-                {
-                    resData && (
-                        <div data-aos="fade-up" data-aos-duration="1000" className="w-full h-[168px]  bg-qpurplelow/10 rounded-2xl mb-10 relative print:hidden">
-                          <div className="w-full px-10 flex justify-between pt-3 mb-7">
-                            <div>
-                              {resData.order_delivered_date && (
-                                  <p className="text-base font-400">
-                                    {langCntnt && langCntnt.Delivered_on}{" "}
-                                    {resData.order_delivered_date}
-                                  </p>
-                              )}
-                            </div>
-                            <div>
-                              {orderStatus === "Declined" && (
-                                  <p className="text-base font-bold text-qred mr-10">
-                                    {langCntnt && langCntnt.Your_order_is_declined}!
-                                  </p>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex lg:space-x-[373px] space-x-[90px] w-full h-full justify-center">
-                            <div className="relative">
-                              <div className="w-[30px] h-[30px] border-[8px] rounded-full border-qpurple bg-white relative z-20"></div>
-                              <p className="absolute -left-4 top-10 sm:text-base text-sm font-400">
-                                {langCntnt && langCntnt.Pending}
-                              </p>
-                            </div>
-                            {/*orderStatus*/}
-                            <div className="relative">
-                              <div
-                                  className={`w-[30px] h-[30px] border-[8px] rounded-full  bg-white relative z-20 ${
-                                      orderStatus === "Progress" ||
-                                      orderStatus === "Delivered" ||
-                                      orderStatus === "Completed"
-                                          ? "border-qpurple"
-                                          : "border-qgray"
-                                  }`}
-                              ></div>
-                              <div
-                                  className={`lg:w-[400px] w-[100px] h-[8px] absolute lg:-left-[390px] -left-[92px] top-[10px] z-10  ${
-                                      orderStatus === "Progress" ||
-                                      orderStatus === "Delivered" ||
-                                      orderStatus === "Completed"
-                                          ? "bg-qpurple"
-                                          : "bg-white"
-                                  }`}
-                              ></div>
-                              <p className="absolute -left-4 top-10 sm:text-base text-sm font-400">
-                                {langCntnt && langCntnt.Progress}
-                              </p>
-                            </div>
-                            <div className="relative">
-                              <div
-                                  className={`w-[30px] h-[30px] border-[8px] rounded-full bg-white  relative z-20 ${
-                                      orderStatus === "Delivered" ||
-                                      orderStatus === "Completed"
-                                          ? "border-qpurple"
-                                          : "border-qgray"
-                                  }`}
-                              ></div>
-                              <div
-                                  className={`lg:w-[400px] w-[100px] h-[8px] absolute lg:-left-[390px] -left-[92px] top-[10px] z-10 ${
-                                      orderStatus === "Delivered" ||
-                                      orderStatus === "Completed"
-                                          ? "bg-qpurple"
-                                          : "bg-white"
-                                  }`}
-                              ></div>
-                              <p className="absolute -left-4 top-10 sm:text-base text-sm font-400">
-                                {langCntnt && langCntnt.Delivered}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                    )
-                }
-              </>
-            ):(
-                <div className="w-full min-h-screen">
-                  <div className="mt-20">
-                    <LoaderStyleTwo/>
+                {resData && (
+                  <div
+                    data-aos="fade-up"
+                    data-aos-duration="1000"
+                    className="w-full h-[168px]  bg-qpurplelow/10 rounded-2xl mb-10 relative print:hidden"
+                  >
+                    <div className="w-full px-10 flex justify-between pt-3 mb-7">
+                      <div>
+                        {resData.order_delivered_date && (
+                          <p className="text-base font-400">
+                            {langCntnt && langCntnt.Delivered_on}{" "}
+                            {resData.order_delivered_date}
+                          </p>
+                        )}
+                      </div>
+                      <div>
+                        {orderStatus === "Declined" && (
+                          <p className="text-base font-bold text-qred mr-10">
+                            {langCntnt && langCntnt.Your_order_is_declined}!
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex lg:space-x-[373px] space-x-[90px] w-full h-full justify-center">
+                      <div className="relative">
+                        <div className="w-[30px] h-[30px] border-[8px] rounded-full border-qpurple bg-white relative z-20"></div>
+                        <p className="absolute -left-4 top-10 sm:text-base text-sm font-400">
+                          {langCntnt && langCntnt.Pending}
+                        </p>
+                      </div>
+                      {/*orderStatus*/}
+                      <div className="relative">
+                        <div
+                          className={`w-[30px] h-[30px] border-[8px] rounded-full  bg-white relative z-20 ${
+                            orderStatus === "Progress" ||
+                            orderStatus === "Delivered" ||
+                            orderStatus === "Completed"
+                              ? "border-qpurple"
+                              : "border-qgray"
+                          }`}
+                        ></div>
+                        <div
+                          className={`lg:w-[400px] w-[100px] h-[8px] absolute lg:-left-[390px] -left-[92px] top-[10px] z-10  ${
+                            orderStatus === "Progress" ||
+                            orderStatus === "Delivered" ||
+                            orderStatus === "Completed"
+                              ? "bg-qpurple"
+                              : "bg-white"
+                          }`}
+                        ></div>
+                        <p className="absolute -left-4 top-10 sm:text-base text-sm font-400">
+                          {langCntnt && langCntnt.Progress}
+                        </p>
+                      </div>
+                      <div className="relative">
+                        <div
+                          className={`w-[30px] h-[30px] border-[8px] rounded-full bg-white  relative z-20 ${
+                            orderStatus === "Delivered" ||
+                            orderStatus === "Completed"
+                              ? "border-qpurple"
+                              : "border-qgray"
+                          }`}
+                        ></div>
+                        <div
+                          className={`lg:w-[400px] w-[100px] h-[8px] absolute lg:-left-[390px] -left-[92px] top-[10px] z-10 ${
+                            orderStatus === "Delivered" ||
+                            orderStatus === "Completed"
+                              ? "bg-qpurple"
+                              : "bg-white"
+                          }`}
+                        ></div>
+                        <p className="absolute -left-4 top-10 sm:text-base text-sm font-400">
+                          {langCntnt && langCntnt.Delivered}
+                        </p>
+                      </div>
+                    </div>
                   </div>
+                )}
+              </>
+            ) : (
+              <div className="w-full min-h-screen">
+                <div className="mt-20">
+                  <LoaderStyleTwo />
                 </div>
+              </div>
             )}
 
             <div className="bg-white lg:p-10 p-3 rounded-xl">
               {resData && (
-                <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="100" id="printSection">
+                <div
+                  data-aos="fade-up"
+                  data-aos-duration="1000"
+                  data-aos-delay="100"
+                  id="printSection"
+                >
                   <div className="sm:flex justify-between items-center mb-5">
                     <div>
                       <h1 className="text-[26px] font-semibold text-qblack mb-2.5">
@@ -343,17 +355,41 @@ function OrderCom() {
                               <td className="text-center py-4 px-2">
                                 <div className="flex space-x-1 items-center justify-center">
                                   <span className="text-[15px] font-medium text-qblack">
-                                    <span>{currency_icon}</span>
-                                    <span>{item.unit_price}</span>
+                                    <span>
+                                      {exchangeRate
+                                        ? exchangeRate.code
+                                        : currency_icon}
+                                    </span>
+                                    <span>
+                                      {exchangeRate
+                                        ? convertAmount(
+                                            item.unit_price,
+                                            exchangeRate.rate
+                                          )
+                                        : item.unit_price}
+                                    </span>
                                   </span>
                                 </div>
                               </td>
                               <td className="text-center py-4 px-2">
                                 <div className="flex space-x-1 items-center justify-center">
                                   <span className="text-[15px] font-medium text-qblack">
-                                    <span>{currency_icon}</span>
                                     <span>
-                                      {(item.unit_price * item.qty).toFixed(2)}
+                                      {exchangeRate
+                                        ? exchangeRate.code
+                                        : currency_icon}
+                                    </span>
+                                    <span>
+                                      {exchangeRate
+                                        ? (
+                                            convertAmount(
+                                              item.unit_price,
+                                              exchangeRate.rate
+                                            ) * item.qty
+                                          ).toFixed(2)
+                                        : (item.unit_price * item.qty).toFixed(
+                                            2
+                                          )}
                                     </span>
                                   </span>
                                 </div>
@@ -381,11 +417,28 @@ function OrderCom() {
                           {langCntnt && langCntnt.SUBTOTAL}
                         </p>
                         <p className="text-sm text-qblack">
-                          <span>{currency_icon}</span>
                           <span>
-                            {parseInt(resData.total_amount) -
-                              parseInt(resData.shipping_cost) +
-                              parseInt(resData.coupon_coast)}
+                            {exchangeRate ? exchangeRate.code : currency_icon}
+                          </span>
+                          <span>
+                            {exchangeRate
+                              ? (
+                                  convertAmount(
+                                    resData.total_amount,
+                                    exchangeRate.rate
+                                  ) -
+                                  convertAmount(
+                                    resData.shipping_cost,
+                                    exchangeRate.rate
+                                  ) +
+                                  convertAmount(
+                                    resData.coupon_coast,
+                                    exchangeRate.rate
+                                  )
+                                ).toFixed(2)
+                              : parseInt(resData.total_amount) -
+                                parseInt(resData.shipping_cost) +
+                                parseInt(resData.coupon_coast)}
                           </span>
 
                           {/*  $sub_total = $order->total_amount;
@@ -400,8 +453,18 @@ function OrderCom() {
                           (-) {langCntnt && langCntnt.Discount_coupon}
                         </p>
                         <p className="text-sm text-qred">
-                          -<span>{currency_icon}</span>
-                          <span>{resData.coupon_coast}</span>
+                          -
+                          <span>
+                            {exchangeRate ? exchangeRate.code : currency_icon}
+                          </span>
+                          <span>
+                            {exchangeRate
+                              ? convertAmount(
+                                  resData.coupon_coast,
+                                  exchangeRate.rate
+                                )
+                              : resData.coupon_coast}
+                          </span>
                         </p>
                       </div>
                       <div className="flex justify-between font-semibold w-[200px]">
@@ -409,8 +472,18 @@ function OrderCom() {
                           (+) {langCntnt && langCntnt.Shipping_Cost}
                         </p>
                         <p className="text-sm text-qblack">
-                          +<span>{currency_icon}</span>
-                          <span>{resData.shipping_cost}</span>
+                          +
+                          <span>
+                            {exchangeRate ? exchangeRate.code : currency_icon}
+                          </span>
+                          <span>
+                            {exchangeRate
+                              ? convertAmount(
+                                  resData.shipping_cost,
+                                  exchangeRate.rate
+                                ).toFixed(2)
+                              : resData.shipping_cost}
+                          </span>
                         </p>
                       </div>
 
@@ -420,8 +493,19 @@ function OrderCom() {
                           {langCntnt && langCntnt.Total_Paid}
                         </p>
                         <p className="text-lg text-qblack">
-                          <span>{currency_icon}</span>
-                          <span>{parseInt(resData.total_amount)}</span>
+                          <span>
+                            {exchangeRate ? exchangeRate.code : currency_icon}
+                          </span>
+                          <span>
+                            {exchangeRate
+                              ? parseInt(
+                                  convertAmount(
+                                    resData.total_amount,
+                                    exchangeRate.rate
+                                  )
+                                ).toFixed(2)
+                              : parseInt(resData.total_amount)}
+                          </span>
                         </p>
                       </div>
                     </div>

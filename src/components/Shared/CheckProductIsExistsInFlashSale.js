@@ -8,7 +8,6 @@ function CheckProductIsExistsInFlashSale({
   sign = true,
   className,
 }) {
-  console.log(price);
   const { websiteSetup } = useSelector((state) => state.websiteSetup);
   const [flashSale, setData] = useState(null);
   const [calPrice, setPrice] = useState(null);
