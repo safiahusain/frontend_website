@@ -279,7 +279,7 @@ export default function Navbar({ className }) {
                           <div
                             className="mega-menu-wrapper w-full bg-white rounded p-[30px] flex justify-between items-start"
                             style={{
-                              minHeight: "295px",
+                              minHeight: "100%",
                               boxShadow:
                                 "0px 15px 50px 0px rgba(0, 0, 0, 0.14)",
                             }}
