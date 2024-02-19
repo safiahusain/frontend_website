@@ -411,7 +411,7 @@ export default function ProductView({
                     process.env.NEXT_PUBLIC_BASE_URL + product.brand.logo
                   }`}
                   alt=""
-                  className="w-[70%]  object-cover"
+                  className="w-[80px] object-cover"
                 />
               </div>
             )}

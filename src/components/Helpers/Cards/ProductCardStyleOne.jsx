@@ -317,7 +317,7 @@ export default function ProductCardStyleOne({ datas }) {
   return (
     <>
       <div
-        className="product-card-one w-full h-[550px] transition-all duration-300 ease-in-out bg-white relative group border border-transparent overflow-hidden rounded-lg"
+        className="product-card-one w-full h-[570px] transition-all duration-300 ease-in-out bg-white relative group border border-transparent overflow-hidden rounded-lg"
         style={{
           boxShadow: "0px 15px 64px 0px rgba(0, 0, 0, 0.05)",
         }}

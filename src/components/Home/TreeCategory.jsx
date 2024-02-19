@@ -55,7 +55,6 @@ function TreeCategory({ categories = [], products = [] }) {
     });
 
   const handleTabClick = (tabNumber) => {
-    console.log(tabNumber, "tabNumber");
     setLoad(true);
     setTimeout(() => {
       setId(parseInt(tabNumber.category_id));
