@@ -32,7 +32,6 @@ function TreeCategory({ categories = [], products = [] }) {
       return JSON.parse(thumbImage);
     } else {
       return JSON.parse(thumbImage);
-      // return process.env.NEXT_PUBLIC_BASE_URL + thumbImage;
     }
   };
 
@@ -112,7 +111,7 @@ function TreeCategory({ categories = [], products = [] }) {
     <>
       <div className="tree-category mt-[45px] relative w-full">
         <div className="xl:w-[1350px] lg:w-[1350px] md:w-[1350px] sm:w-full xsm:w-full xxs:w-full xxxs:w-full mx-auto">
-          <div className="tree-box block">
+          <div className="tree-box block" data-aos="fade-up">
             <div className="tree-inner-box mb-10">
               <SimpleSlider settings={settings} selector={sliderRef}>
                 <div className="!flex items-start gap-3 w-full justify-center ">
@@ -205,7 +204,10 @@ function TreeCategory({ categories = [], products = [] }) {
             </div>
           </div>
 
-          <div className="tree-product-box xl:w-full lg:w-[70%] md:w-[50%] sm:w-[70%] xsm:w-[90%] xxs:w-[90%] xxxs:w-[95%] xl:mx-auto lg:mx-[40px] md:mx-[50px] sm:mx-[40px] xsm:mx-[20px] xxs:mx-[20px] xxxs:mx-[10px]  place-content-center	place-items-center grid gap-4 mb-20 xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xsm:grid-cols-2 xxs:grid-cols-2 xxxs:grid-cols-1">
+          <div
+            data-aos="fade-up"
+            className="tree-product-box xl:w-full lg:w-[70%] md:w-[50%] sm:w-[70%] xsm:w-[90%] xxs:w-[90%] xxxs:w-[95%] xl:mx-auto lg:mx-[40px] md:mx-[50px] sm:mx-[40px] xsm:mx-[20px] xxs:mx-[20px] xxxs:mx-[10px]  place-content-center	place-items-center grid gap-4 mb-20 xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 xsm:grid-cols-2 xxs:grid-cols-2 xxxs:grid-cols-1"
+          >
             {categoryList?.slice(0, 4).map((data, index) => (
               <div key={index} className="w-full">
                 <a
@@ -241,7 +243,7 @@ function TreeCategory({ categories = [], products = [] }) {
           </div>
         </div>
       </div>
-      <div>
+      <div data-aos="fade-up">
         <div className="flex justify-center">
           <h2 className="text-center mt-[10px] mb-[40px] w-full text-[35px] font-[700] text-[#1A3336]">
             OUR FAVOURITES

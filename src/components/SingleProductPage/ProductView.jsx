@@ -68,9 +68,9 @@ export default function ProductView({
   };
   const [quantity, setQuantity] = useState(1);
   const increment = () => {
-    setQuantity((prev) => prev + 1);
-    // if (product.qty > quantity) {
-    // }
+    if (product.qty > quantity) {
+      setQuantity((prev) => prev + 1);
+    }
   };
   const decrement = () => {
     if (quantity > 1) {

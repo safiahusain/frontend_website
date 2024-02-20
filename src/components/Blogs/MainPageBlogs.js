@@ -109,7 +109,7 @@ export default function MainPageBlogs({ className }) {
   return (
     <>
       <div className="w-full h-full main-blog-bg block">
-        <div className="container-x mx-auto py-20">
+        <div className="container-x mx-auto py-20" data-aos="fade-up">
           <div className="block text-start">
             <h4 className="text-[32px] mb-10 font-[700] mt-6 text-qblack">
               LATEST POSTS{" "}

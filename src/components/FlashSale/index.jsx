@@ -1,10 +1,22 @@
 import ProductCardStyleOne from "../Helpers/Cards/ProductCardStyleOne";
-import CountDown from "../Helpers/CountDown";
 import DataIteration from "../Helpers/DataIteration";
 import Layout from "../Partials/Layout";
 import CountDownWidget from "./CountDownWidget";
 
 export default function FlashSale({ fetchData }) {
+  const isValidURL = (url) => {
+    const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlPattern.test(url);
+  };
+
+  const parseThumbImage = (thumbImage) => {
+    if (isValidURL(thumbImage)) {
+      return JSON.parse(thumbImage);
+    } else {
+      return JSON.parse(thumbImage);
+    }
+  };
+
   const cp =
     fetchData.products &&
     fetchData.products.data.length > 0 &&
@@ -14,7 +26,7 @@ export default function FlashSale({ fetchData }) {
         category_id: item.category_id,
         title: item.name,
         slug: item.slug,
-        image: process.env.NEXT_PUBLIC_BASE_URL + item.thumb_image,
+        image: parseThumbImage(item.thumb_image),
         price: item.price,
         offer_price: item.offer_price,
         campaingn_product: null,
