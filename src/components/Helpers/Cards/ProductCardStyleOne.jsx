@@ -33,7 +33,7 @@ const Redirect = ({ message, linkTxt }) => {
   );
 };
 
-export default function ProductCardStyleOne({ datas }) {
+export default function ProductCardStyleOne({ datas, sliderData }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const { wishlistData } = useSelector((state) => state.wishlistData);
@@ -484,76 +484,82 @@ export default function ProductCardStyleOne({ datas }) {
           </div>
         </div>
         {/* quick-access-btns */}
-        <div className="quick-access-btn">
-          <button
-            className=" absolute left-[77px] top-[243px] transform scale-0 group-hover:scale-100  transition-all ease-in-out"
-            onClick={() => quickViewHandler(datas.slug)}
-            type="button"
-          >
-            <span className="w-10 h-10 block overflow-hidden  text-qblack hover:text-white  transition-all duration-300 ease-in-out hover:bg-qpurple bg-white  rounded-full">
-              <span className=" w-full h-full bg-qpurplelow/10 flex justify-center items-center">
-                <QuickViewIco className="fill-current" />
-              </span>
-            </span>
-          </button>
-          <button
-            className=" absolute left-[160px] top-[243px] transform scale-0 group-hover:scale-100  transition-all duration-500 ease-in-out"
-            type="button"
-            onClick={() => productCompare(datas.id)}
-          >
-            <span className="w-10 h-10 block  text-qblack hover:text-white transition-all overflow-hidden duration-300 ease-in-out items-center bg-white rounded-full">
-              <span className="w-full h-full flex justify-center items-center hover:bg-qpurple bg-qpurplelow/10 ">
-                <Compair />
-              </span>
-            </span>
-          </button>
-        </div>
-        {quickViewModal && quickViewData && (
-          <div className="quicke-view-wrapper w-full h-full flex fixed left-0 top-0 justify-center z-50 items-center ">
-            <div
-              onClick={() => setQuickView(!quickViewModal)}
-              className="w-full h-full fixed left-0 right-0 bg-black  bg-opacity-25"
-            ></div>
-            <div
-              data-aos="fade-up"
-              className="md:mx-10 xl:mt-[100px] rounded w-full bg-white relative lg:py-[40px] pt-[80px] pb-[40px] sm:px-[38px] px-3 relative md:mt-12 h-full overflow-y-scroll xl:overflow-hidden  xl:mt-0"
-              style={{ zIndex: "999" }}
-            >
-              <div className="w-full h-full overflow-y-scroll overflow-style-none">
-                <ProductView
-                  images={
-                    quickViewData.gellery.length > 0
-                      ? quickViewData.gellery
-                      : []
-                  }
-                  product={quickViewData.product}
-                />
-              </div>
-
+        {sliderData === "mainSlider" ? (
+          ""
+        ) : (
+          <>
+            <div className="quick-access-btn">
               <button
-                onClick={() => setQuickView(!quickViewModal)}
+                className=" absolute left-[77px] top-[243px] transform scale-0 group-hover:scale-100  transition-all ease-in-out"
+                onClick={() => quickViewHandler(datas.slug)}
                 type="button"
-                className="absolute right-3 top-3"
               >
-                <span className="text-red-500 w-12 h-12 flex justify-center items-center rounded border border-qred">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-10 h-10"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    ></path>
-                  </svg>
+                <span className="w-10 h-10 block overflow-hidden  text-qblack hover:text-white  transition-all duration-300 ease-in-out hover:bg-qpurple bg-white  rounded-full">
+                  <span className=" w-full h-full bg-qpurplelow/10 flex justify-center items-center">
+                    <QuickViewIco className="fill-current" />
+                  </span>
+                </span>
+              </button>
+              <button
+                className=" absolute left-[160px] top-[243px] transform scale-0 group-hover:scale-100  transition-all duration-500 ease-in-out"
+                type="button"
+                onClick={() => productCompare(datas.id)}
+              >
+                <span className="w-10 h-10 block  text-qblack hover:text-white transition-all overflow-hidden duration-300 ease-in-out items-center bg-white rounded-full">
+                  <span className="w-full h-full flex justify-center items-center hover:bg-qpurple bg-qpurplelow/10 ">
+                    <Compair />
+                  </span>
                 </span>
               </button>
             </div>
-          </div>
+            {quickViewModal && quickViewData && (
+              <div className="quicke-view-wrapper w-full h-full flex fixed left-0 top-0 justify-center z-50 items-center ">
+                <div
+                  onClick={() => setQuickView(!quickViewModal)}
+                  className="w-full h-full fixed left-0 right-0 bg-black  bg-opacity-25"
+                ></div>
+                <div
+                  data-aos="fade-up"
+                  className="md:mx-10 xl:mt-[100px] rounded w-full bg-white relative lg:py-[40px] pt-[80px] pb-[40px] sm:px-[38px] px-3 relative md:mt-12 h-full overflow-y-scroll xl:overflow-hidden  xl:mt-0"
+                  style={{ zIndex: "999" }}
+                >
+                  <div className="w-full h-full overflow-y-scroll overflow-style-none">
+                    <ProductView
+                      images={
+                        quickViewData.gellery.length > 0
+                          ? quickViewData.gellery
+                          : []
+                      }
+                      product={quickViewData.product}
+                    />
+                  </div>
+
+                  <button
+                    onClick={() => setQuickView(!quickViewModal)}
+                    type="button"
+                    className="absolute right-3 top-3"
+                  >
+                    <span className="text-red-500 w-12 h-12 flex justify-center items-center rounded border border-qred">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-10 h-10"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 18L18 6M6 6l12 12"
+                        ></path>
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </>

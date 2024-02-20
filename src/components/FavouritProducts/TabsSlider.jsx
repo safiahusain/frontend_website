@@ -101,7 +101,10 @@ export default function TabsSlider({ className, data }) {
                 data?.map((product, index) => (
                   <div key={index}>
                     <div style={{ margin: "0 5px" }}>
-                      <ProductCardStyleOne datas={product} />
+                      <ProductCardStyleOne
+                        datas={product}
+                        sliderData={"mainSlider"}
+                      />
                     </div>
                   </div>
                 ))}

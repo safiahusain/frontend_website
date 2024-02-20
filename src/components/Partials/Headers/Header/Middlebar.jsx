@@ -71,11 +71,9 @@ export default function Middlebar({ className, settings }) {
   };
   let prev_data = JSON.parse(localStorage.getItem("data-hold"));
   const [unCart, setUnCart] = useState(prev_data);
-  console.log(unCart, "unCart...");
 
   useEffect(() => {
     setUnCart(prev_data);
-    console.log(unCart, "middlebar....");
   }, [prev_data && prev_data.length]);
 
   return (
@@ -218,7 +216,7 @@ export default function Middlebar({ className, settings }) {
                       </button>
                       <span
                         style={{
-                          background: websiteSetup.payload.setting.theme_one,
+                          background: websiteSetup?.payload?.setting?.theme_one,
                         }}
                         className="w-[18px] h-[18px] rounded-full  absolute -top-1.5 left-6 flex justify-center items-center text-[10px] text-white"
                       >

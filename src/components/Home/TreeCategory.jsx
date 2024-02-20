@@ -143,14 +143,14 @@ function TreeCategory({ categories = [], products = [] }) {
                     src={world}
                     width="40"
                     height={"40"}
-                    alt="EUROPE'S LARGEST"
+                    alt="gcc countries LARGEST"
                   />
                   <div style={{ lineHeight: "20px" }}>
                     <span
                       className="text-[14px] font-[600]"
                       style={{ lineHeight: "0px" }}
                     >
-                      <b className="uppercase">EUROPE'S LARGEST</b>
+                      <b className="uppercase">gcc countries LARGEST</b>
                       <br />
                       <span className="text-[14px] font-[400]">
                         Gun & Accessories shop

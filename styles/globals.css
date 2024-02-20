@@ -1006,10 +1006,10 @@ h6 span {
 }
 
 .brand-logo-slider {
-    width: 80px !important;
+    width: 60px !important;
     object-fit: contain;
     aspect-ratio: 3 / 2;
-    height: 80px !important;
+    height: 60px !important;
 }
 
 .brand-slider-dots li button {

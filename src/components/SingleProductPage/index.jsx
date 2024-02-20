@@ -1,9 +1,14 @@
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import apiRequest from "../../../utils/apiRequest";
 import auth from "../../../utils/auth";
 import languageModel from "../../../utils/languageModel";
+import {
+  GetDeliveryAndReturns,
+  GetSecurityAndPayments,
+} from "../../store/Blogs";
 import BreadcrumbCom from "../BreadcrumbCom";
 import ProductCardStyleOne from "../Helpers/Cards/ProductCardStyleOne";
 import DataIteration from "../Helpers/DataIteration";
@@ -17,10 +22,22 @@ import SallerInfo from "./SallerInfo";
 
 export default function SingleProductPage({ details }) {
   const router = useRouter();
+  const deliverReturns = useSelector((state) => state.Blogs.deliverReturns);
+  const securityPayments = useSelector((state) => state.Blogs.securityPayments);
+  const dispatch = useDispatch();
   const [tab, setTab] = useState("des");
   const reviewElement = useRef(null);
   const [report, setReport] = useState(false);
   const [langCntnt, setLangCntnt] = useState(null);
+
+  useEffect(() => {
+    if (!securityPayments) {
+      dispatch(GetSecurityAndPayments());
+    }
+    if (!deliverReturns) {
+      dispatch(GetDeliveryAndReturns());
+    }
+  }, [securityPayments, deliverReturns]);
 
   useEffect(() => {
     setLangCntnt(languageModel());
@@ -131,8 +148,6 @@ export default function SingleProductPage({ details }) {
     }
   };
 
-  console.log(relatedProducts, "details.relatedProducts");
-
   return (
     <>
       <Layout childrenClasses="pt-0 pb-0">
@@ -187,6 +202,28 @@ export default function SingleProductPage({ details }) {
                         {langCntnt && langCntnt.Description}
                       </span>
                     </li>
+                    <li>
+                      <span
+                        style={{ borderRadius: "20px 20px 0px 0px" }}
+                        onClick={() => setTab("d&r")}
+                        className={`py-[15px] sm:text-[15px] text-sm block px-6 font-medium cursor-pointer relative z-10 capitalize ${
+                          tab === "d&r" ? "bg-qpurple text-white" : "text-qgray"
+                        }`}
+                      >
+                        {"Delivery & Returns"}
+                      </span>
+                    </li>
+                    <li>
+                      <span
+                        style={{ borderRadius: "20px 20px 0px 0px" }}
+                        onClick={() => setTab("s&p")}
+                        className={`py-[15px] sm:text-[15px] text-sm block px-6 font-medium cursor-pointer relative z-10 capitalize ${
+                          tab === "s&p" ? "bg-qpurple text-white" : "text-qgray"
+                        }`}
+                      >
+                        {"security & payments"}
+                      </span>
+                    </li>
                     {commnets && commnets.length > 0 && (
                       <li>
                         <span
@@ -226,9 +263,9 @@ export default function SingleProductPage({ details }) {
                 <div className="container-x mx-auto">
                   {tab === "des" && (
                     <>
-                      <h6 className="text-[18px] font-medium text-qblack mb-5">
+                      {/* <h6 className="text-[18px] font-medium text-qblack mb-5">
                         {langCntnt && langCntnt.Introduction}
-                      </h6>
+                      </h6> */}
                       <div
                         className="product-detail-des"
                         dangerouslySetInnerHTML={{
@@ -254,6 +291,26 @@ export default function SingleProductPage({ details }) {
                           </div>
                         )}
                       {/*</div>*/}
+                    </>
+                  )}
+                  {tab === "d&r" && (
+                    <>
+                      <div
+                        className="product-detail-des"
+                        dangerouslySetInnerHTML={{
+                          __html: deliverReturns?.delivery_and_returns,
+                        }}
+                      ></div>
+                    </>
+                  )}
+                  {tab === "s&p" && (
+                    <>
+                      <div
+                        className="product-detail-des"
+                        dangerouslySetInnerHTML={{
+                          __html: securityPayments?.security_and_payments,
+                        }}
+                      ></div>
                     </>
                   )}
                   {tab === "review" && commnets.length > 0 && (
