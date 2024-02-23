@@ -155,9 +155,11 @@ export default function ProductCardStyleOne({ datas, sliderData }) {
         getFirstVarients.map((v) => (v ? v.id : null)),
     };
 
-    if (!haveInCart(data, cart)) {
-      cart.push(data);
-      toast.success("Item added to cart!");
+    if (!auth()) {
+      if (!haveInCart(data, cart)) {
+        cart.push(data);
+        toast.success("Item added to cart!");
+      }
     }
 
     if (auth()) {
@@ -230,7 +232,7 @@ export default function ProductCardStyleOne({ datas, sliderData }) {
     if (cart.length > 0) {
       for (let x of cart) {
         if (x.id == data.id) {
-          toast.success("Item already added to cart!");
+          toast.warning("Item already added to cart!");
           return true;
         }
       }

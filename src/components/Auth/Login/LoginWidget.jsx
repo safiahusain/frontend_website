@@ -116,28 +116,29 @@ function LoginWidget({ redirect = true, loginActionPopup, notVerifyHandler }) {
       .catch((err) => {
         setLoading(false);
         if (err.response) {
-          if (
-            err.response.data.notification ===
-            "Please verify your acount. If you didn't get OTP, please resend your OTP and verify"
-          ) {
-            toast.warn(
-              <SEND
-                des={
-                  langCntnt &&
-                  langCntnt.Please_verify_your_account__If_you_didnt_get_OTP__please_resend_your_OTP_and_verify
-                }
-                action={sendOtpHandler}
-                btn={langCntnt && langCntnt.Send_OTP}
-              />,
-              {
-                autoClose: 5000,
-                icon: false,
-                theme: "colored",
-              }
-            );
-          } else {
-            toast.error(langCntnt && langCntnt.Invalid_Credentials);
-          }
+          toast.error(err.response.data.notification);
+          // if (
+          //   err.response.data.notification ===
+          //   "Please verify your acount. If you didn't get OTP, please resend your OTP and verify"
+          // ) {
+          //   toast.warn(
+          //     <SEND
+          //       des={
+          //         langCntnt &&
+          //         langCntnt.Please_verify_your_account__If_you_didnt_get_OTP__please_resend_your_OTP_and_verify
+          //       }
+          //       action={sendOtpHandler}
+          //       btn={langCntnt && langCntnt.Send_OTP}
+          //     />,
+          //     {
+          //       autoClose: 5000,
+          //       icon: false,
+          //       theme: "colored",
+          //     }
+          //   );
+          // } else {
+          //   toast.error(langCntnt && langCntnt.Invalid_Credentials);
+          // }
         } else {
           return false;
         }

@@ -170,9 +170,11 @@ export default function ProductView({
         getFirstVarients.map((v) => parseInt(v.product_variant_id)),
       variantItems: getFirstVarients && getFirstVarients.map((v) => v.id),
     };
-    if (!haveInCart(data, cart)) {
-      cart.push(data);
-      toast.success("Item added to cart!");
+    if (!auth()) {
+      if (!haveInCart(data, cart)) {
+        cart.push(data);
+        toast.success("Item added to cart!");
+      }
     }
     if (auth()) {
       if (varients) {
@@ -241,7 +243,7 @@ export default function ProductView({
     if (cart.length > 0) {
       for (let x of cart) {
         if (x.id == data.id) {
-          toast.success("Item already added to cart!");
+          toast.warning("Item already added to cart!");
           return true;
         }
       }

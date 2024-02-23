@@ -120,9 +120,11 @@ export default function ProductCardRowStyleOne({ className, datas }) {
         getFirstVarients.length > 0 &&
         getFirstVarients.map((v) => (v ? v.id : null)),
     };
-    if (!haveInCart(data, cart)) {
-      cart.push(data);
-      toast.success("Item added to cart!");
+    if (!auth()) {
+      if (!haveInCart(data, cart)) {
+        cart.push(data);
+        toast.success("Item added to cart!");
+      }
     }
 
     if (auth()) {
@@ -192,7 +194,7 @@ export default function ProductCardRowStyleOne({ className, datas }) {
     if (cart.length > 0) {
       for (let x of cart) {
         if (x.id == data.id) {
-          toast.success("Item already added to cart!");
+          toast.warning("Item already added to cart!");
           return true;
         }
       }

@@ -1,18 +1,19 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import isAuth from "../../../Middleware/isAuth";
 import apiRequest from "../../../utils/apiRequest";
 import auth from "../../../utils/auth";
 import languageModel from "../../../utils/languageModel";
 import { fetchCart } from "../../store/Cart";
 import BreadcrumbCom from "../BreadcrumbCom";
+import LoginContext from "../Contexts/LoginContexts";
 import EmptyCardError from "../EmptyCardError";
 import PageTitle from "../Helpers/PageTitle";
 import ProductsTable from "./ProductsTable";
 
 function CardPage() {
+  const loginPopupBoard = useContext(LoginContext);
   const dispatch = useDispatch();
   const { cart } = useSelector((state) => state.cart);
   const [getCarts, setGetCarts] = useState(null);
@@ -96,6 +97,12 @@ function CardPage() {
     }
   };
 
+  useEffect(() => {
+    if (!auth()) {
+      loginPopupBoard.handlerPopup(true);
+    }
+  }, [auth()]);
+
   return (
     <>
       {getCarts && getCarts.length === 0 ? (
@@ -163,4 +170,4 @@ function CardPage() {
     </>
   );
 }
-export default isAuth(CardPage);
+export default CardPage;
