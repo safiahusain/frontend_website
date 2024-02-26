@@ -15,7 +15,6 @@ import auth from "../../../utils/auth";
 import hexToRgb from "../../../utils/hexToRgb";
 import LoginWidget from "../Auth/Login/LoginWidget";
 import SignupWidget from "../Auth/Signup/SignupWidget";
-import VerifyWidget from "../Auth/Signup/VerifyWidget";
 import LoginContext from "../Contexts/LoginContexts";
 import WaButton from "../Helpers/Buttons/WaButton";
 import Consent from "../Helpers/Consent";
@@ -67,12 +66,18 @@ function DefaultLayout({ children }) {
     !websiteSetup ? apiFetch() : false;
     dispatch(fetchCart());
     dispatch(fetchCompareProducts());
-    const themeColor = JSON.parse(localStorage.getItem('settings'))
+    const themeColor = JSON.parse(localStorage.getItem("settings"));
     if (themeColor) {
-      const root = document.querySelector(':root');
+      const root = document.querySelector(":root");
       if (themeColor.theme_one && themeColor.theme_two) {
-        root.style.setProperty('--primary-color', `${hexToRgb(themeColor?.theme_one)}`);
-        root.style.setProperty('--secondary-color', `${hexToRgb(themeColor?.theme_two)}`);
+        root.style.setProperty(
+          "--primary-color",
+          `${hexToRgb(themeColor?.theme_one)}`
+        );
+        root.style.setProperty(
+          "--secondary-color",
+          `${hexToRgb(themeColor?.theme_two)}`
+        );
       }
     }
     if (languageModel()) {
@@ -117,6 +122,7 @@ function DefaultLayout({ children }) {
         });
     }
   }, [fbPixexl, router.events]);
+
   const loginActionPopup = () => {
     setPopupView("signup");
   };
@@ -127,7 +133,7 @@ function DefaultLayout({ children }) {
     setPopupView("login");
   };
   const singupActionHandle = () => {
-    setPopupView("verify");
+    setPopupView("login");
   };
   const verifyActionPopup = () => {
     setPopupView("login");
@@ -151,8 +157,9 @@ function DefaultLayout({ children }) {
             const itemQueryStr = itemsQuery
               .map((value) => value + "&")
               .join("");
-            const uri = `token=${auth().access_token}&product_id=${holdData.id
-              }&${variantString}${itemQueryStr}quantity=${holdData.quantity}`;
+            const uri = `token=${auth().access_token}&product_id=${
+              holdData.id
+            }&${variantString}${itemQueryStr}quantity=${holdData.quantity}`;
             apiRequest
               .addToCard(uri)
               .then((res) => {
@@ -164,14 +171,15 @@ function DefaultLayout({ children }) {
                 console.log(err);
                 toast.error(
                   err.response &&
-                  err.response.data.message &&
-                  err.response.data.message
+                    err.response.data.message &&
+                    err.response.data.message
                 );
               });
             dispatch(fetchCart());
           } else {
-            const uri = `token=${auth().access_token}&product_id=${holdData.id
-              }&quantity=${holdData.quantity}`;
+            const uri = `token=${auth().access_token}&product_id=${
+              holdData.id
+            }&quantity=${holdData.quantity}`;
             apiRequest
               .addToCard(uri)
               .then((res) => {
@@ -183,8 +191,8 @@ function DefaultLayout({ children }) {
                 console.log(err);
                 toast.error(
                   err.response &&
-                  err.response.data.message &&
-                  err.response.data.message
+                    err.response.data.message &&
+                    err.response.data.message
                 );
               });
             dispatch(fetchCart());
@@ -245,12 +253,12 @@ function DefaultLayout({ children }) {
                       signupActionPopup={signupActionPopup}
                       changeContent={singupActionHandle}
                     />
-                  ) : popupView === "verify" ? (
-                    <VerifyWidget
-                      redirect={false}
-                      verifyActionPopup={verifyActionPopup}
-                    />
                   ) : (
+                    // ) : popupView === "verify" ? (
+                    //   <VerifyWidget
+                    //     redirect={false}
+                    //     verifyActionPopup={verifyActionPopup}
+                    //   />
                     ""
                   )}
                 </div>

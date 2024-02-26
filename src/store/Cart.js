@@ -40,7 +40,6 @@ export const postCart = createAsyncThunk("CART/postCart", async (holddata) => {
           },
         })
         .then((res) => {
-          console.log(res, "cart data add");
           if (res.status == 200) {
             toast.success(res?.data?.message);
             localStorage.removeItem("data-hold");

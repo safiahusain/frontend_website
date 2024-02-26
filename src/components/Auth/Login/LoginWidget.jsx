@@ -110,6 +110,9 @@ function LoginWidget({ redirect = true, loginActionPopup, notVerifyHandler }) {
         } else {
           if (res.data) {
             loginPopupBoard.handlerPopup(false);
+            setTimeout(() => {
+              router.reload();
+            }, 400);
           }
         }
       })

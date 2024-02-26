@@ -280,7 +280,7 @@ export default function Middlebar({ className, settings }) {
                         )}
                       </>
                     ) : (
-                      <Link href="/login" passHref>
+                      <Link href={"/login"} passHref>
                         <a rel="noopener noreferrer" title="Login/Register">
                           <span className="cursor-pointer text-[#6E6D79]">
                             <RiUserLine size={35} />

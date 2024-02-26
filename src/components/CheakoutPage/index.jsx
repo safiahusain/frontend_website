@@ -1,9 +1,8 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import isAuth from "../../../Middleware/isAuth";
 import DateFormat from "../../../utils/DateFormat";
 import apiRequest from "../../../utils/apiRequest";
 import auth from "../../../utils/auth";
@@ -11,6 +10,7 @@ import languageModel from "../../../utils/languageModel";
 import settings from "../../../utils/settings";
 import wordCount from "../../../utils/wordCount";
 import { fetchCart } from "../../store/Cart";
+import LoginContext from "../Contexts/LoginContexts";
 import EmptyCardError from "../EmptyCardError";
 import InputCom from "../Helpers/InputCom";
 import LoaderStyleOne from "../Helpers/Loaders/LoaderStyleOne";
@@ -19,6 +19,7 @@ import Selectbox from "../Helpers/Selectbox";
 import CheckProductIsExistsInFlashSale from "../Shared/CheckProductIsExistsInFlashSale";
 
 function CheakoutPage() {
+  const loginPopupBoard = useContext(LoginContext);
   const { websiteSetup } = useSelector((state) => state.websiteSetup);
   const { currency_icon } = settings();
   const router = useRouter();
@@ -92,6 +93,21 @@ function CheakoutPage() {
   const [paypalStatus, setPaypalStatus] = useState(null);
   const [bankPaymentStatus, setBankPaymentStatus] = useState(null);
   const [sslStatus, setSslStatus] = useState(null);
+
+  useEffect(() => {
+    if (!auth()) {
+      loginPopupBoard.handlerPopup(true);
+    }
+  }, [auth()]);
+
+  // useEffect(() => {
+  //   if (auth()) {
+  //     if (cashOnDeliveryStatus == null) {
+  //       getAllAddress();
+  //     }
+  //   }
+  // }, [auth()]);
+
   const submitCoupon = () => {
     if (auth()) {
       apiRequest
@@ -220,8 +236,8 @@ function CheakoutPage() {
           return getShippingById;
         });
         res.data && setAddresses(res.data.addresses);
-        setShipping(res.data && res.data.addresses[0].id);
-        setBilling(res.data && res.data.addresses[0].id);
+        setShipping(res.data && res.data.addresses[0]?.id);
+        setBilling(res.data && res.data.addresses[0]?.id);
 
         const cp = localStorage.getItem("coupon");
         if (cp) {
@@ -533,6 +549,7 @@ function CheakoutPage() {
         });
     }
   };
+
   const placeOrderHandler = async () => {
     if (auth()) {
       if (selectedBilling && selectedShipping) {
@@ -795,16 +812,16 @@ function CheakoutPage() {
               localStorage.removeItem("coupon_set_date");
               localStorage.removeItem("coupon");
             } else {
-              toast.error(langCntnt && langCntnt.Select_your_payment_system);
+              alert("Select your payment system");
             }
           } else {
-            toast.error(
-              langCntnt && langCntnt.Please_Select_Your_Payment_Method
-            );
+            toast.error(langCntnt && langCntnt.Select_your_payment_system);
           }
         } else {
           toast.error(langCntnt && langCntnt.Please_Select_Shipping_Rule);
         }
+      } else {
+        toast.error("Please Add Shipping or Billing address");
       }
     }
   };
@@ -2622,4 +2639,4 @@ function CheakoutPage() {
     );
   }
 }
-export default isAuth(CheakoutPage);
+export default CheakoutPage;
