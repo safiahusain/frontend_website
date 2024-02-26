@@ -72,8 +72,6 @@ function LoginWidget({ redirect = true, loginActionPopup, notVerifyHandler }) {
         password: password,
       })
       .then((res) => {
-        console.log(res.data, "res.data");
-
         setLoading(false);
         toast.success(langCntnt && langCntnt.Login_Successfully);
         setEmail("");
