@@ -64,6 +64,7 @@ function CheakoutPage() {
   const [couponCode, setCouponCode] = useState(null);
   const [bankInfo, setBankInfo] = useState(null);
   const [discountCoupon, setDiscountCoupon] = useState(0);
+
   useEffect(() => {
     if (couponCode) {
       if (couponCode.offer_type === "2") {
@@ -94,9 +95,14 @@ function CheakoutPage() {
   const [bankPaymentStatus, setBankPaymentStatus] = useState(null);
   const [sslStatus, setSslStatus] = useState(null);
 
+  let fullUrl = window.location.href;
+  let pathWithoutHostname = fullUrl.replace(window.location.origin, "");
+
   useEffect(() => {
     if (!auth()) {
       loginPopupBoard.handlerPopup(true);
+    } else {
+      loginPopupBoard.handlerPopup(false);
     }
   }, [auth()]);
 
@@ -140,12 +146,14 @@ function CheakoutPage() {
       return false;
     }
   };
+
   const dateHandler = (e) => {
     setExpireDate({
       value: e.target.value,
       formated: DateFormat(e.target.value, false),
     });
   };
+
   const getAllAddress = () => {
     axios
       .get(
@@ -275,6 +283,7 @@ function CheakoutPage() {
         });
     }
   }, []);
+
   const getState = (value) => {
     if (auth() && value) {
       setCountry(value.id);
@@ -314,6 +323,7 @@ function CheakoutPage() {
       return false;
     }
   };
+
   const selectCity = (value) => {
     if (auth() && value) {
       setcity(value.id);
@@ -386,6 +396,7 @@ function CheakoutPage() {
       tqList.reduce((prev, curr) => parseInt(prev) + parseInt(curr), 0);
     setQty(tq && tq);
   }, [cart]);
+
   const checkProductExistsInFlashSale = (id, price) => {
     if (websiteSetup) {
       const flashSaleOffer =
@@ -405,6 +416,7 @@ function CheakoutPage() {
       }
     }
   };
+
   const totalPrice = subTotal && subTotal.reduce((prev, curr) => prev + curr);
   useEffect(() => {
     if (carts && carts.length > 0) {
@@ -880,10 +892,10 @@ function CheakoutPage() {
                       <button
                         onClick={() => setNewAddress(!newAddress)}
                         type="button"
-                        className="w-[100px] h-[40px] mt-2 sm:mt-0 border rounded-full text-qblack hover:bg-qblack hover:text-white bg-qyellow transition-all duration-300 ease-in-out"
+                        className="w-[120px] h-[40px] mt-2 sm:mt-0 border rounded-lg text-qblack hover:bg-qblack hover:text-white bg-qyellow transition-all duration-300 ease-in-out"
                       >
-                        <span className="text-sm font-semibold ">
-                          {langCntnt && langCntnt.Add_New}
+                        <span className="text-sm font-semibold capitalize">
+                          {"add address"}
                         </span>
                       </button>
                     </div>

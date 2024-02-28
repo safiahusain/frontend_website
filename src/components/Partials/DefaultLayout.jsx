@@ -138,6 +138,10 @@ function DefaultLayout({ children }) {
   const verifyActionPopup = () => {
     setPopupView("login");
   };
+  const gustpopup = () => {
+    setPopupView("login");
+  };
+
   useEffect(() => {
     if (getLoginContexts.loginPopup === false) {
       setPopupView("login");
@@ -246,6 +250,7 @@ function DefaultLayout({ children }) {
                       redirect={false}
                       loginActionPopup={loginActionPopup}
                       notVerifyHandler={notVerifyHandler}
+                      CheckoutGust={gustpopup}
                     />
                   ) : popupView === "signup" ? (
                     <SignupWidget

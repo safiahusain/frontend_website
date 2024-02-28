@@ -1,15 +1,15 @@
+import { useRouter } from "next/dist/client/router";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import apiRequest from "../../../utils/apiRequest";
 import auth from "../../../utils/auth";
+import languageModel from "../../../utils/languageModel";
 import settings from "../../../utils/settings";
 import { fetchWishlist } from "../../store/wishlistData";
 import CheckProductIsExistsInFlashSale from "../Shared/CheckProductIsExistsInFlashSale";
-import { useRouter } from "next/dist/client/router";
-import languageModel from "../../../utils/languageModel";
-import {toast} from "react-toastify";
 
 export default function ProductsTable({ className, products }) {
   const router = useRouter();
@@ -71,6 +71,7 @@ export default function ProductsTable({ className, products }) {
             return {
               ...item,
               totalPrice: item.product.price,
+              Image: JSON.parse(item.product.thumb_image),
             };
           })
       );
@@ -81,19 +82,35 @@ export default function ProductsTable({ className, products }) {
 
   const removeToWishlist = (id) => {
     if (auth()) {
-      apiRequest.removeToWishlist({ id: id, token: auth().access_token }).then((res)=>{
-        console.log(res);
-      }).catch((err)=>{
-        if(err.response){
-          toast.error(err.response.data?.message)
-        }
-      });
+      apiRequest
+        .removeToWishlist({ id: id, token: auth().access_token })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          if (err.response) {
+            toast.error(err.response.data?.message);
+          }
+        });
       dispatch(fetchWishlist());
     } else {
       router.push("/login");
     }
   };
   const { currency_icon } = settings();
+
+  const isValidURL = (url) => {
+    const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlPattern.test(url);
+  };
+
+  const parseThumbImage = (thumbImage) => {
+    if (isValidURL(thumbImage)) {
+      return JSON.parse(thumbImage);
+    } else {
+      return JSON.parse(thumbImage);
+    }
+  };
   return (
     <div className={`w-full ${className || ""}`}>
       <div className="relative w-full overflow-x-auto rounded overflow-hidden border border-qpurplelow/10">
@@ -127,7 +144,7 @@ export default function ProductsTable({ className, products }) {
                           layout="fill"
                           src={`${
                             process.env.NEXT_PUBLIC_BASE_URL +
-                            item.product.thumb_image
+                            item.Image.image_1
                           }`}
                           alt="product"
                           className="w-full h-full object-contain"

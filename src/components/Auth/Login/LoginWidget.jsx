@@ -1,3 +1,4 @@
+import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
@@ -76,6 +77,7 @@ function LoginWidget({ redirect = true, loginActionPopup, notVerifyHandler }) {
         toast.success(langCntnt && langCntnt.Login_Successfully);
         setEmail("");
         setPassword("");
+        localStorage.setItem("gust_user", false);
         localStorage.removeItem("auth");
         localStorage.setItem("auth", JSON.stringify(res.data));
         const activeUser = res.data && {
@@ -112,7 +114,7 @@ function LoginWidget({ redirect = true, loginActionPopup, notVerifyHandler }) {
             loginPopupBoard.handlerPopup(false);
             setTimeout(() => {
               router.reload();
-            }, 500);
+            }, 700);
           }
         }
       })
@@ -148,6 +150,59 @@ function LoginWidget({ redirect = true, loginActionPopup, notVerifyHandler }) {
         console.log(err);
       });
   };
+
+  let fullUrl = window.location.href;
+  let pathWithoutHostname = fullUrl.replace(window.location.origin, "");
+
+  const Gustlogin = async () => {
+    let prev_data = JSON.parse(localStorage.getItem("data-hold"));
+    setLoading(true);
+    await axios
+      .post(`${process.env.NEXT_PUBLIC_BASE_URL}api/store-guest`)
+      .then((res) => {
+        if (res.data) {
+          localStorage.setItem("auth", JSON.stringify(res.data));
+          if (prev_data) {
+            let data_hold = [];
+            prev_data?.forEach((item) => {
+              data_hold.push({
+                id: item?.id,
+                type: item?.type,
+                product_id: item?.product?.id,
+                token: item.token,
+                quantity: item.quantity,
+                variants: item?.variants,
+                items: item?.variantItems,
+              });
+            });
+            dispatch(postCart(data_hold));
+          }
+          if (pathWithoutHostname == "/checkout") {
+            localStorage.setItem("gust_user", true);
+            loginPopupBoard.handlerPopup(false);
+            setTimeout(() => {
+              router.reload();
+            }, 400);
+          } else {
+            router.push({
+              pathname: `/checkout`,
+              query: "gust",
+            });
+            loginPopupBoard.handlerPopup(false);
+            localStorage.setItem("gust_user", true);
+          }
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const CheckoutGust = () => {
+    Gustlogin();
+  };
+
   return (
     <div className="w-full">
       <div className="title-area flex flex-col justify-center items-center relative text-center mb-7">
@@ -229,7 +284,7 @@ function LoginWidget({ redirect = true, loginActionPopup, notVerifyHandler }) {
           </div>
         </div>
         <div className="signup-area flex justify-center">
-          <p className="text-base text-qgray font-normal">
+          <p className="text-base text-center text-qgray font-normal">
             {langCntnt && langCntnt.Dontt_have_an_account} ?
             {redirect ? (
               <Link href="/signup" passhref>
@@ -240,11 +295,30 @@ function LoginWidget({ redirect = true, loginActionPopup, notVerifyHandler }) {
                 </a>
               </Link>
             ) : (
-              <button onClick={loginActionPopup} type="button">
-                <span className="ml-2 text-qblack cursor-pointer capitalize">
-                  {langCntnt && langCntnt.sign_up_free}
-                </span>
-              </button>
+              <>
+                <button onClick={loginActionPopup} type="button">
+                  <span className="ml-2 text-qblack cursor-pointer capitalize">
+                    {langCntnt && langCntnt.sign_up_free}
+                  </span>
+                </button>
+                <div class="inline-flex items-center justify-center w-full relative">
+                  <hr class="w-64 h-px my-6 bg-[#e5e7eb] border-0 rounded dark:bg-gray-700" />
+                  <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900">
+                    or
+                  </span>
+                </div>
+                <div className="flex justify-center items-center">
+                  <button
+                    onClick={CheckoutGust}
+                    type="button"
+                    className=" text-center bg-qpurple rounded-full text-sm text-white w-1/2 h-[50px] font-semibold bg-purple"
+                  >
+                    <span className="ml-2 text-white cursor-pointer uppercase">
+                      checkout as gust
+                    </span>
+                  </button>
+                </div>
+              </>
             )}
           </p>
         </div>

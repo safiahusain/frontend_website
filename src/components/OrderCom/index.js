@@ -24,6 +24,7 @@ function OrderCom() {
     setLangCntnt(languageModel());
   }, []);
   useEffect(() => {
+    const g_user = JSON.parse(localStorage.getItem("gust_user"));
     if (auth()) {
       if (!resData) {
         axios

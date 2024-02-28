@@ -491,7 +491,7 @@ export default function ProductView({
                 >
                   <span className="uppercase text-white text-[12px]">
                     {parseInt(product.qty) !== 0 && parseInt(product.qty) > 0
-                      ? `${product.qty} ${langCntnt && "in stock"} `
+                      ? `${langCntnt && "in stock"} `
                       : `${langCntnt && "out of stock"}`}
                   </span>
                 </span>

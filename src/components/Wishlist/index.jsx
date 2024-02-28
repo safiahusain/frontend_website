@@ -1,16 +1,16 @@
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import isAuth from "../../../Middleware/isAuth";
+import apiRequest from "../../../utils/apiRequest";
+import auth from "../../../utils/auth";
+import languageModel from "../../../utils/languageModel";
+import { fetchWishlist } from "../../store/wishlistData";
 import BreadcrumbCom from "../BreadcrumbCom";
 import EmptyWishlistError from "../EmptyWishlistError";
 import PageTitle from "../Helpers/PageTitle";
 import ProductsTable from "./ProductsTable";
-import { useDispatch, useSelector } from "react-redux";
-import Link from "next/link";
-import auth from "../../../utils/auth";
-import apiRequest from "../../../utils/apiRequest";
-import { toast } from "react-toastify";
-import { fetchWishlist } from "../../store/wishlistData";
-import isAuth from "../../../Middleware/isAuth";
-import { useEffect, useState } from "react";
-import languageModel from "../../../utils/languageModel";
 
 function Wishlist() {
   const dispatch = useDispatch();
@@ -33,6 +33,7 @@ function Wishlist() {
     }
     return false;
   };
+
   return (
     <>
       {!wishlists || (wishlists && wishlists.data.length === 0) ? (

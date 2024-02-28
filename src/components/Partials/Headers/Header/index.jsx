@@ -11,11 +11,20 @@ import TopBar from "./TopBar";
 
 export default function Header({ drawerAction, settings, contact }) {
   const { cart } = useSelector((state) => state.cart);
+  const { websiteSetup } = useSelector((state) => state.websiteSetup);
   const [cartItems, setCartItem] = useState(null);
   const [auth, setAuth] = useState(null);
   const [user, setUser] = useState(null);
   const value = useContext(DefaultUser);
+  const [defaultImage, setDefaultImage] = useState(null);
 
+  useEffect(() => {
+    if (websiteSetup) {
+      if (!defaultImage) {
+        setDefaultImage(websiteSetup.payload?.defaultProfile?.image);
+      }
+    }
+  }, [websiteSetup, defaultImage]);
   useEffect(() => {
     setUser(value.user);
   }, [value]);

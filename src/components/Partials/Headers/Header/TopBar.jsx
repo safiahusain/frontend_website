@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { SlLocationPin } from "react-icons/sl";
 import { useDispatch, useSelector } from "react-redux";
 import languageModel from "../../../../../utils/languageModel";
 import { GetAllCurrencies } from "../../../../store/Currencies";
+import LoginContext from "../../../Contexts/LoginContexts";
+
 export default function TopBar({ className, contact }) {
   const dispatch = useDispatch();
   const { Currencies } = useSelector((state) => state.Currencies);
@@ -13,9 +15,16 @@ export default function TopBar({ className, contact }) {
   const [auth, setAuth] = useState(null);
   const [langCntnt, setLangCntnt] = useState(null);
   const { isFallback, events } = useRouter();
+  const [guestUser, setGuestUser] = useState(null);
+  const loginPopupBoard = useContext(LoginContext);
+
   useEffect(() => {
     setAuth(JSON.parse(localStorage.getItem("auth")));
     setLangCntnt(languageModel());
+  }, []);
+
+  useEffect(() => {
+    setGuestUser(JSON.parse(localStorage.getItem("gust_user")));
   }, []);
 
   const savedSelectedOption =
@@ -121,13 +130,23 @@ export default function TopBar({ className, contact }) {
                 </li>
                 <li className="xl:block lg:block md:block sm:hidden xsm:hidden xxs:hidden xxxs:hidden">
                   {auth ? (
-                    <Link href="/profile#dashboard" passHref>
-                      <a rel="noopener noreferrer">
-                        <span className="text-sm leading-6 text-qblack font-500 cursor-pointer">
-                          {langCntnt && langCntnt.Account}
-                        </span>
-                      </a>
-                    </Link>
+                    guestUser === false ? (
+                      <Link href="/profile#dashboard" passHref>
+                        <a rel="noopener noreferrer">
+                          <span className="text-sm leading-6 text-qblack font-500 cursor-pointer">
+                            {langCntnt && langCntnt.Account}
+                          </span>
+                        </a>
+                      </Link>
+                    ) : (
+                      <Link href="/login" passHref>
+                        <a rel="noopener noreferrer">
+                          <span className="text-[13px] font-[400] leading-6 text-qblack font-500 cursor-pointer">
+                            {langCntnt && langCntnt.Account}
+                          </span>
+                        </a>
+                      </Link>
+                    )
                   ) : (
                     <Link href="/login" passHref>
                       <a rel="noopener noreferrer">
