@@ -314,7 +314,7 @@ function LoginWidget({ redirect = true, loginActionPopup, notVerifyHandler }) {
                     className=" text-center bg-qpurple rounded-full text-sm text-white w-1/2 h-[50px] font-semibold bg-purple"
                   >
                     <span className="ml-2 text-white cursor-pointer uppercase">
-                      checkout as gust
+                      checkout as guest
                     </span>
                   </button>
                 </div>
