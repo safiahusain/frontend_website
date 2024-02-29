@@ -593,22 +593,20 @@ function CheakoutPage() {
                 });
             } else if (selectPayment && selectPayment === "stripe") {
               setStrpLoading(true);
+              const data = {
+                agree_terms_condition: 1,
+                card_number: strpeNumber,
+                year: expireDate && expireDate.formated.year,
+                month: expireDate && expireDate.formated.month,
+                cvv: cvv,
+                card_holder_name: cardHolderName,
+                shipping_address_id: selectedShipping,
+                billing_address_id: selectedBilling,
+                shipping_method_id: parseInt(selectedRule),
+                coupon: couponCode && couponCode.code,
+              };
               await apiRequest
-                .stipePay(
-                  {
-                    agree_terms_condition: 1,
-                    card_number: strpeNumber,
-                    year: expireDate && expireDate.formated.year,
-                    month: expireDate && expireDate.formated.month,
-                    cvv: cvv,
-                    card_holder_name: cardHolderName,
-                    shipping_address_id: selectedShipping,
-                    billing_address_id: selectedBilling,
-                    shipping_method_id: parseInt(selectedRule),
-                    coupon: couponCode && couponCode.code,
-                  },
-                  auth().access_token
-                )
+                .stipePay(data, auth().access_token)
                 .then((res) => {
                   toast.success(res.data && res.data.message);
                   router.push(`/order/${res.data.order_id}`);
@@ -627,6 +625,7 @@ function CheakoutPage() {
                 .catch((err) => {
                   setStrpLoading(false);
                   setStrpError(err.response && err.response.data.errors);
+                  toast.error(err.response && err.response.data.error);
                   console.error(err);
                 });
             } else if (selectPayment && selectPayment === "paypal") {
