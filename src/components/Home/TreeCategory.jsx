@@ -15,11 +15,11 @@ function TreeCategory({ categories = [], products = [] }) {
   const [load, setLoad] = useState(false);
 
   const [selectedTab, setSelectedTab] = useState(
-    categories.length > 0 && parseInt(categories[0].category_id)
+    categories.length > 0 && parseInt(categories[0]?.category_id)
   );
 
   const [selectedId, setId] = useState(
-    categories.length > 0 && parseInt(categories[0].category_id)
+    categories.length > 0 && parseInt(categories[0]?.category_id)
   );
 
   const isValidURL = (url) => {
@@ -31,7 +31,11 @@ function TreeCategory({ categories = [], products = [] }) {
     if (isValidURL(thumbImage)) {
       return JSON.parse(thumbImage);
     } else {
-      return JSON.parse(thumbImage);
+      try {
+        return JSON.parse(thumbImage);
+      } catch {
+        return thumbImage;
+      }
     }
   };
 
@@ -54,6 +58,7 @@ function TreeCategory({ categories = [], products = [] }) {
     });
 
   const handleTabClick = (tabNumber) => {
+    console.log(tabNumber, "tabNumber");
     setLoad(true);
     setTimeout(() => {
       setId(parseInt(tabNumber.category_id));
@@ -252,11 +257,11 @@ function TreeCategory({ categories = [], products = [] }) {
         <div className="block">
           <div className="mt-4">
             <div className="flex justify-center mb-8">
-              {categories?.slice(0, 3).map((data) => (
+              {categories?.slice(0, 3).map((data, index) => (
                 <button
-                  key={data.id}
+                  key={index}
                   className={`px-4 py-2 font-[700] text-[18px] text-opacity-40 text-black border-b-[3px] border-transparent ${
-                    selectedTab == data.category_id
+                    selectedTab == data?.category_id
                       ? "border-b-[3px] !border-qpurple font-[700] text-[18px] !text-opacity-100 text-[#072426]"
                       : ""
                   }`}

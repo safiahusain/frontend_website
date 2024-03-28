@@ -296,7 +296,11 @@ export default function ProductCardRowStyleOne({ className, datas }) {
             <Image
               layout="fill"
               objectFit="scale-down"
-              src={`${process.env.NEXT_PUBLIC_BASE_URL + datas.image?.image_1}`}
+              src={`${
+                datas.image?.image_1
+                  ? process.env.NEXT_PUBLIC_BASE_URL + datas.image?.image_1
+                  : process.env.NEXT_PUBLIC_BASE_URL + datas.image
+              }`}
               alt=""
               className="w-full h-full object-contain"
             />

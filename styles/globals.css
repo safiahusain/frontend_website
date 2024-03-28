@@ -117,7 +117,7 @@
     :root {
         --primary-color: blue;
         --secondary-color: red;
-        --primary-btn: #fcc73a;
+        --primary-btn: rgb(152, 134, 67);
     }
 }
 
@@ -931,15 +931,15 @@ h6 span {
     width: 200px;
     padding: 12px 48px;
     text-align: center;
-    color: black;
+    color: #fff;
     border: solid 2px var(--primary-btn);
     background-color: var(--primary-btn);
     z-index: 1;
 }
 
 .shop-button a:hover {
-    background-color: #e3b125f6;
-    border: solid 2px #e3b125f6;
+    background-color: rgb(130 114 53);
+    border: solid 2px rgb(130 114 53);
 }
 
 .tree-pro-container:hover .shop-button {

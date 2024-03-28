@@ -157,6 +157,23 @@ export default function Cart({ className }) {
     toast.warning("Item removed from cart!");
   };
 
+  const isValidURL = (url) => {
+    const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlPattern.test(url);
+  };
+
+  const parseThumbImage = (thumbImage) => {
+    if (isValidURL(thumbImage)) {
+      return JSON.parse(thumbImage);
+    } else {
+      try {
+        return JSON.parse(thumbImage)?.image_1;
+      } catch {
+        return thumbImage;
+      }
+    }
+  };
+
   return (
     <>
       <div
@@ -182,7 +199,7 @@ export default function Cart({ className }) {
                             layout="fill"
                             src={`${
                               process.env.NEXT_PUBLIC_BASE_URL +
-                              JSON.parse(item.product.thumb_image)?.image_1
+                              parseThumbImage(item.product.thumb_image)
                             }`}
                             alt=""
                             className="w-full h-full object-contain"
@@ -231,7 +248,7 @@ export default function Cart({ className }) {
               <div className="h-[1px] bg-[#F0F1F3]"></div>
             </div>
             <div className="product-actions px-4 mb-[30px]">
-              <div className="total-equation flex justify-between items-center mb-[28px]">
+              {/* <div className="total-equation flex justify-between items-center mb-[28px]">
                 <span className="text-[15px] font-500 text-qblack capitalize">
                   {langCntnt && langCntnt.SUBTOTAL}
                 </span>
@@ -244,7 +261,7 @@ export default function Cart({ className }) {
                       convertAmount(totalPrice, exchangeRate.rate).toFixed(2)
                     : currency_icon + (totalPrice ? totalPrice.toFixed(2) : 0)}
                 </span>
-              </div>
+              </div> */}
               <div className="product-action-btn">
                 <Link href="/cart">
                   <div className="gray-btn w-full h-[50px] mb-[10px] cursor-pointer rounded">
@@ -288,9 +305,7 @@ export default function Cart({ className }) {
                             layout="fill"
                             src={`${
                               process.env.NEXT_PUBLIC_BASE_URL +
-                              (item.product.image
-                                ? item.product.image?.image_1
-                                : JSON.parse(item.product.thumb_image)?.image_1)
+                              parseThumbImage(item.product.image)
                             }`}
                             alt=""
                             className="w-full h-full object-contain"

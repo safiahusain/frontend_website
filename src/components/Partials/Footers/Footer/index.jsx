@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import FontAwesomeCom from "../../../Helpers/icons/FontAwesomeCom";
 import languageModel from "../../../../../utils/languageModel";
+import FontAwesomeCom from "../../../Helpers/icons/FontAwesomeCom";
 import Services from "../../../Home/Services";
 export default function Footer({ settings, contact }) {
   const { websiteSetup } = useSelector((state) => state.websiteSetup);
@@ -17,6 +17,7 @@ export default function Footer({ settings, contact }) {
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
+
   useEffect(() => {
     if (!services) {
       setServices(

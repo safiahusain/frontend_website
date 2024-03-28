@@ -13,7 +13,11 @@ export default function FlashSale({ fetchData }) {
     if (isValidURL(thumbImage)) {
       return JSON.parse(thumbImage);
     } else {
-      return JSON.parse(thumbImage);
+      try {
+        return JSON.parse(thumbImage);
+      } catch {
+        return thumbImage;
+      }
     }
   };
 

@@ -33,6 +33,8 @@ export default function Home({ homepageData }) {
       setIsMultivendor(enable_multivendor && parseInt(enable_multivendor));
     }
   }, [isMultivendor]);
+
+  console.log(homepageData, "homepageData");
   return (
     <>
       <Layout childrenClasses="pt-0">

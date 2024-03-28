@@ -40,6 +40,7 @@ export default function MainPageBlogs({ className }) {
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
+
   useEffect(() => {
     if (Blogs_list) {
       setBlogData(Blogs_list.blogs.data);
@@ -55,7 +56,14 @@ export default function MainPageBlogs({ className }) {
     autoplaySpeed: 6000,
     arrows: true,
     dots: true,
-    slidesToShow: 4,
+    slidesToShow:
+      blogdata?.length <= 1
+        ? 1
+        : blogdata?.length <= 2
+        ? 2
+        : blogdata?.length <= 3
+        ? 3
+        : 4,
     slidesToScroll: 1,
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
@@ -241,11 +249,4 @@ export default function MainPageBlogs({ className }) {
       </div>
     </>
   );
-}
-export async function getServerSideProps() {
-  // Fetch data from external API
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}api/blog`);
-  const data = await res.json();
-  console.log(data, "ssr");
-  return { props: { data } };
 }

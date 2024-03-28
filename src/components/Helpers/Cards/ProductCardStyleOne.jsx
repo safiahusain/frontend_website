@@ -15,7 +15,6 @@ import { fetchWishlist } from "../../../store/wishlistData";
 import LoginContext from "../../Contexts/LoginContexts";
 import CheckProductIsExistsInFlashSale from "../../Shared/CheckProductIsExistsInFlashSale";
 import ProductView from "../../SingleProductPage/ProductView";
-import Compair from "../icons/Compair";
 import QuickViewIco from "../icons/QuickViewIco";
 import Star from "../icons/Star";
 import ThinLove from "../icons/ThinLove";
@@ -118,7 +117,7 @@ export default function ProductCardStyleOne({ datas, sliderData }) {
     }
   };
   // cart
-  const varients = datas && datas.variants.length > 0 && datas.variants;
+  const varients = datas && datas.variants?.length > 0 && datas.variants;
   const [getFirstVarients, setFirstVarients] = useState(
     varients && varients.map((v) => v.active_variant_items[0])
   );
@@ -294,7 +293,11 @@ export default function ProductCardStyleOne({ datas, sliderData }) {
   const [imgSrc, setImgSrc] = useState(null);
 
   const loadImg = (value) => {
-    setImgSrc(process.env.NEXT_PUBLIC_BASE_URL + value?.image_1);
+    setImgSrc(
+      value?.image_1
+        ? process.env.NEXT_PUBLIC_BASE_URL + value?.image_1
+        : process.env.NEXT_PUBLIC_BASE_URL + value
+    );
   };
 
   const [amount, setAmount] = useState(null);
@@ -492,7 +495,7 @@ export default function ProductCardStyleOne({ datas, sliderData }) {
           <>
             <div className="quick-access-btn">
               <button
-                className=" absolute left-[77px] top-[243px] transform scale-0 group-hover:scale-100  transition-all ease-in-out"
+                className=" absolute left-[50%] -translate-x-[50%]	 top-[243px] transform scale-0 group-hover:scale-100  transition-all ease-in-out"
                 onClick={() => quickViewHandler(datas.slug)}
                 type="button"
               >
@@ -502,7 +505,7 @@ export default function ProductCardStyleOne({ datas, sliderData }) {
                   </span>
                 </span>
               </button>
-              <button
+              {/* <button
                 className=" absolute left-[160px] top-[243px] transform scale-0 group-hover:scale-100  transition-all duration-500 ease-in-out"
                 type="button"
                 onClick={() => productCompare(datas.id)}
@@ -512,7 +515,7 @@ export default function ProductCardStyleOne({ datas, sliderData }) {
                     <Compair />
                   </span>
                 </span>
-              </button>
+              </button> */}
             </div>
             {quickViewModal && quickViewData && (
               <div className="quicke-view-wrapper w-full h-full flex fixed left-0 top-0 justify-center z-50 items-center ">

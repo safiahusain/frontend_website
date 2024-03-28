@@ -22,7 +22,11 @@ export default function SallerInfo({ products, sellerInfo }) {
     if (isValidURL(thumbImage)) {
       return JSON.parse(thumbImage);
     } else {
-      return JSON.parse(thumbImage);
+      try {
+        return JSON.parse(thumbImage);
+      } catch {
+        return thumbImage;
+      }
       // return process.env.NEXT_PUBLIC_BASE_URL + thumbImage;
     }
   };

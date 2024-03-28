@@ -292,9 +292,10 @@ export default function Navbar({ className }) {
                                       <Link
                                         href={{
                                           pathname: "/products",
-                                          query: {
-                                            child_category: item.slug,
-                                          },
+                                          query: { sub_category: item.slug },
+                                          // query: {
+                                          //   active_sub_categories: item.slug,
+                                          // },
                                         }}
                                         passHref
                                       >

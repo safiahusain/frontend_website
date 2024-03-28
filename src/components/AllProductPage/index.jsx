@@ -14,6 +14,8 @@ import Layout from "../Partials/Layout";
 import ProductsFilter from "./ProductsFilter";
 
 export default function AllProductPage({ response, sellerInfo }) {
+  console.log(response, "response");
+
   const router = useRouter();
   const [categoryExistInRoute, setCategoryExistInRoute] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -27,7 +29,11 @@ export default function AllProductPage({ response, sellerInfo }) {
     if (isValidURL(thumbImage)) {
       return JSON.parse(thumbImage);
     } else {
-      return JSON.parse(thumbImage);
+      try {
+        return JSON.parse(thumbImage);
+      } catch {
+        return thumbImage;
+      }
     }
   };
 
@@ -80,23 +86,6 @@ export default function AllProductPage({ response, sellerInfo }) {
   const [categoriesFilter, setCategoriesFilter] = useState(null);
   const [brands, setBrands] = useState(null);
   const [cardViewStyle, setCardViewStyle] = useState("col");
-
-  const products =
-    resProducts &&
-    resProducts.length > 0 &&
-    resProducts.map((item) => {
-      return {
-        id: item.id,
-        title: item.name,
-        slug: item.slug,
-        image: parseThumbImage(item.thumb_image),
-        price: item.price,
-        offer_price: item.offer_price,
-        campaingn_product: null,
-        review: parseInt(item.averageRating),
-        variants: item.active_variants ? item.active_variants : [],
-      };
-    });
 
   const [selectedVarientFilterItem, setSelectedVarientFilterItem] = useState(
     []
@@ -197,61 +186,64 @@ export default function AllProductPage({ response, sellerInfo }) {
   const [filterToggle, setToggle] = useState(false);
 
   useEffect(() => {
-    setProducts(response.data && response.data.products.data);
-    setNxtPage(response.data && response.data.products.next_page_url);
-    setCategoriesFilter(
-      response.data &&
-        response.data.categories.length > 0 &&
-        response.data.categories.map((item) => {
-          return {
-            ...item,
-            selected: false,
-          };
-        })
-    );
-    setVariantsFilter(
-      response.data &&
-        response.data.activeVariants.length > 0 &&
-        response.data.activeVariants.map((varient) => {
-          return {
-            ...varient,
-            active_variant_items:
-              varient.active_variant_items &&
-              varient.active_variant_items.length > 0 &&
-              varient.active_variant_items.map((variant_item) => {
-                return {
-                  ...variant_item,
-                  selected: false,
-                };
-              }),
-          };
-        })
-    );
-    setBrands(
-      response.data &&
-        response.data.brands.length > 0 &&
-        response.data.brands.map((item) => {
-          return {
-            ...item,
-            selected: false,
-          };
-        })
-    );
-    const min =
-      response.data &&
-      response.data.products.data &&
-      Math.min(
-        ...response.data.products.data.map((item) => parseInt(item.price))
+    if (response.data) {
+      setProducts(response.data && response.data.products.data);
+      setNxtPage(response.data && response.data.products.next_page_url);
+      setCategoriesFilter(
+        response.data &&
+          response.data.categories.length > 0 &&
+          response.data.categories.map((item) => {
+            return {
+              ...item,
+              selected: false,
+            };
+          })
       );
-    const max =
-      response.data &&
-      response.data.products.data &&
-      Math.max(
-        ...response.data.products.data.map((item) => parseInt(item.price))
+      setVariantsFilter(
+        response.data &&
+          response.data.activeVariants.length > 0 &&
+          response.data.activeVariants.map((varient) => {
+            return {
+              ...varient,
+              active_variant_items:
+                varient.active_variant_items &&
+                varient.active_variant_items.length > 0 &&
+                varient.active_variant_items.map((variant_item) => {
+                  return {
+                    ...variant_item,
+                    selected: false,
+                  };
+                }),
+            };
+          })
       );
-    const volumeArr = [min, max];
-    setVolume(volumeArr);
-  }, [response.data]);
+      setBrands(
+        response.data &&
+          response.data.brands.length > 0 &&
+          response.data.brands.map((item) => {
+            return {
+              ...item,
+              selected: false,
+            };
+          })
+      );
+      const min =
+        response.data &&
+        response.data.products.data &&
+        Math.min(
+          ...response.data.products.data.map((item) => parseInt(item.price))
+        );
+      const max =
+        response.data &&
+        response.data.products.data &&
+        Math.max(
+          ...response.data.products.data.map((item) => parseInt(item.price))
+        );
+      const volumeArr = [min, max];
+      setVolume(volumeArr);
+    }
+  }, [products, response.data]);
+
   useEffect(() => {
     if (response.data) {
       const min =
@@ -334,8 +326,10 @@ export default function AllProductPage({ response, sellerInfo }) {
     selectedCategoryFilterItem,
     selectedBrandsFilterItem,
     volume,
-    response.data,
+    // response.data,
+    products,
   ]);
+
   const nextPageHandler = async () => {
     setLoading(true);
     if (nxtPage) {
@@ -368,6 +362,23 @@ export default function AllProductPage({ response, sellerInfo }) {
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
+
+  const products =
+    resProducts &&
+    resProducts.length > 0 &&
+    resProducts.map((item) => {
+      return {
+        id: item.id,
+        title: item.name,
+        slug: item.slug,
+        image: parseThumbImage(item?.thumb_image),
+        price: item.price,
+        offer_price: item.offer_price,
+        campaingn_product: null,
+        review: parseInt(item.averageRating),
+        variants: item.active_variants ? item.active_variants : [],
+      };
+    });
 
   return (
     <>
@@ -718,8 +729,9 @@ export default function AllProductPage({ response, sellerInfo }) {
                           datas={products && products}
                           startLength={0}
                           endLength={
-                            products && products.length >= 6
-                              ? 6
+                            products &&
+                            products.length >= response.data.products.total
+                              ? response.data.products.total
                               : products && products.length
                           }
                         >
@@ -737,8 +749,9 @@ export default function AllProductPage({ response, sellerInfo }) {
                           datas={products && products}
                           startLength={0}
                           endLength={
-                            products && products.length >= 6
-                              ? 6
+                            products &&
+                            products.length >= response.data.products.total
+                              ? response.data.products.total
                               : products && products.length
                           }
                         >
@@ -761,7 +774,7 @@ export default function AllProductPage({ response, sellerInfo }) {
                         </div>
                       )}
 
-                    {products && cardViewStyle === "col" && (
+                    {/* {products && cardViewStyle === "col" && (
                       <div className="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 xl:gap-[30px] gap-5">
                         <DataIteration
                           datas={products && products}
@@ -798,7 +811,7 @@ export default function AllProductPage({ response, sellerInfo }) {
                           )}
                         </DataIteration>
                       </div>
-                    )}
+                    )} */}
                     {nxtPage && nxtPage !== "null" && (
                       <div className="flex justify-center">
                         <button

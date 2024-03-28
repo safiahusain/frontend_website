@@ -16,6 +16,24 @@ export default function ProductsTable({ className, products }) {
   const dispatch = useDispatch();
   const [mainProduct, setMainProducts] = useState(null);
   const [langCntnt, setLangCntnt] = useState(null);
+
+  const isValidURL = (url) => {
+    const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlPattern.test(url);
+  };
+
+  const parseThumbImage = (thumbImage) => {
+    if (isValidURL(thumbImage)) {
+      return JSON.parse(thumbImage);
+    } else {
+      try {
+        return JSON.parse(thumbImage);
+      } catch {
+        return thumbImage;
+      }
+    }
+  };
+
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
@@ -71,7 +89,7 @@ export default function ProductsTable({ className, products }) {
             return {
               ...item,
               totalPrice: item.product.price,
-              Image: JSON.parse(item.product.thumb_image),
+              Image: parseThumbImage(item.product.thumb_image),
             };
           })
       );
@@ -99,18 +117,6 @@ export default function ProductsTable({ className, products }) {
   };
   const { currency_icon } = settings();
 
-  const isValidURL = (url) => {
-    const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
-    return urlPattern.test(url);
-  };
-
-  const parseThumbImage = (thumbImage) => {
-    if (isValidURL(thumbImage)) {
-      return JSON.parse(thumbImage);
-    } else {
-      return JSON.parse(thumbImage);
-    }
-  };
   return (
     <div className={`w-full ${className || ""}`}>
       <div className="relative w-full overflow-x-auto rounded overflow-hidden border border-qpurplelow/10">
@@ -143,8 +149,10 @@ export default function ProductsTable({ className, products }) {
                         <Image
                           layout="fill"
                           src={`${
-                            process.env.NEXT_PUBLIC_BASE_URL +
                             item.Image.image_1
+                              ? process.env.NEXT_PUBLIC_BASE_URL +
+                                item.Image.image_1
+                              : process.env.NEXT_PUBLIC_BASE_URL + item.Image
                           }`}
                           alt="product"
                           className="w-full h-full object-contain"

@@ -42,7 +42,17 @@ export default function ProductView({
   const tags = product.tags && JSON.parse(product.tags);
   const [more, setMore] = useState(false);
   // const productsImg = images && images.length > 0 && images;
-  const productsImg = product && JSON.parse(product.thumb_image);
+
+  let productsImg;
+  if (product) {
+    try {
+      productsImg = JSON.parse(product.thumb_image);
+    } catch {
+      productsImg = product.thumb_image;
+    }
+  }
+
+  // const productsImg = product && JSON.parse(product.thumb_image);
 
   const varients =
     product && product.active_variants.length > 0 && product.active_variants;
@@ -58,9 +68,11 @@ export default function ProductView({
   }, []);
   const [price, setPrice] = useState(null);
   const [offerPrice, setOffer] = useState(null);
-  const [src, setSrc] = useState(productsImg?.image_1);
+  const [src, setSrc] = useState(
+    productsImg?.image_1 ? productsImg?.image_1 : productsImg
+  );
   useEffect(() => {
-    setSrc(productsImg?.image_1);
+    setSrc(productsImg?.image_1 ? productsImg?.image_1 : productsImg);
   }, [product]);
 
   const changeImgHandler = (current) => {
@@ -370,7 +382,10 @@ export default function ProductView({
                     layout="fill"
                     objectFit="scale-down"
                     src={`${
-                      process.env.NEXT_PUBLIC_BASE_URL + productsImg?.image_1
+                      productsImg?.image_1
+                        ? process.env.NEXT_PUBLIC_BASE_URL +
+                          productsImg?.image_1
+                        : process.env.NEXT_PUBLIC_BASE_URL + productsImg
                     }`}
                     alt=""
                     className={`w-full h-full object-contain transform scale-110 ${
@@ -380,8 +395,9 @@ export default function ProductView({
                 </div>
               )}
 
-              {productsImg && Object.entries(productsImg).length > 0
-                ? Object.keys(productsImg).map((img, i) => (
+              {productsImg && productsImg?.length > 0
+                ? ""
+                : Object.keys(productsImg).map((img, i) => (
                     <div
                       onClick={() => changeImgHandler(productsImg[img])}
                       key={i}
@@ -399,8 +415,7 @@ export default function ProductView({
                         } `}
                       />
                     </div>
-                  ))
-                : ""}
+                  ))}
             </div>
           </div>
         </div>

@@ -2,14 +2,14 @@ require("dotenv").config();
 /** @type {import('next').NextConfig} */
 const runtimeCaching = require("next-pwa/cache");
 const withPWA = require("next-pwa");
-// const { hostname } = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}`);
-const baseUrl = "https://admin.bynunastore.com/";
+const { hostname } = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}`);
+// const baseUrl = "https://admin.bynunastore.com/";
 
-if (!baseUrl) {
-  throw new Error("NEXT_PUBLIC_BASE_URL environment variable is not defined");
-}
+// if (!baseUrl) {
+//   throw new Error("NEXT_PUBLIC_BASE_URL environment variable is not defined");
+// }
 
-const { hostname } = require("url").parse(baseUrl);
+// const { hostname } = require("url").parse(baseUrl);
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,

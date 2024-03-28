@@ -66,6 +66,24 @@ export default function ProductsTable({
     setItems(cartItems);
   });
   const { currency_icon } = settings();
+
+  const isValidURL = (url) => {
+    const urlPattern = /^(ftp|http|https):\/\/[^ "]+$/;
+    return urlPattern.test(url);
+  };
+
+  const parseThumbImage = (thumbImage) => {
+    if (isValidURL(thumbImage)) {
+      return JSON.parse(thumbImage);
+    } else {
+      try {
+        return JSON.parse(thumbImage)?.image_1;
+      } catch {
+        return thumbImage;
+      }
+    }
+  };
+
   return (
     <div className={`w-full ${className || ""}`}>
       <div className="relative w-full overflow-x-auto rounded overflow-hidden border border-qpurplelow/10">
@@ -102,7 +120,7 @@ export default function ProductsTable({
                           layout="fill"
                           src={`${
                             process.env.NEXT_PUBLIC_BASE_URL +
-                            JSON.parse(item.product.thumb_image)?.image_1
+                            parseThumbImage(item.product.thumb_image)
                           }`}
                           alt="product"
                           className="w-full h-full object-contain"

@@ -40,7 +40,7 @@ export default function TabsSlider({ className, data }) {
     dots: true,
     slidesToShow:
       data?.length <= 1 ? 1 : data?.length <= 2 ? 2 : data?.length <= 3 ? 3 : 4,
-    slidesToScroll: 1,
+    slidesToScroll: 2,
     prevArrow: <PrevArrow />,
     nextArrow: <NextArrow />,
     appendDots: (dots) => (
@@ -61,7 +61,7 @@ export default function TabsSlider({ className, data }) {
             listStyle: "none",
           }}
         >
-          {dots}
+          {dots.slice(0, 4)}
         </ul>
       </div>
     ),
