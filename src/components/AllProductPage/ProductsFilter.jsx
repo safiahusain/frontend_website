@@ -1,9 +1,11 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
 import languageModel from "../../../utils/languageModel";
 import settings from "../../../utils/settings";
 import Checkbox from "../Helpers/Checkbox";
+
 export default function ProductsFilter({
   categories,
   categoryHandler,
@@ -29,6 +31,17 @@ export default function ProductsFilter({
   const convertAmount = (amount, rate) => {
     return amount * rate;
   };
+
+  const [showCategories, setShowCategories] = useState(false);
+  const [showBrands, setShowBrands] = useState(false);
+
+  const toggleCategory = () => {
+    setShowCategories(!showCategories);
+  };
+  const toggleBrands = () => {
+    setShowBrands(!showBrands);
+  };
+
   return (
     <>
       <div
@@ -39,38 +52,56 @@ export default function ProductsFilter({
       >
         <div className="filter-subject-item pb-10 border-b border-qpurplelow/10">
           <div className="subject-title mb-[30px]">
-            <h1 className="text-qblack text-base font-500 capitalize">
-              {langCntnt && langCntnt.Product_categories}
-            </h1>
+            <div
+              className="flex items-center justify-between w-full cursor-pointer "
+              onClick={toggleCategory}
+            >
+              <h1 className="text-qblack text-base font-500 capitalize">
+                {langCntnt && langCntnt.Categories}
+              </h1>
+              {showCategories ? (
+                <FontAwesomeIcon
+                  icon="fa-solid fa-minus"
+                  className="text-qblack"
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon="fa-solid fa-plus"
+                  className="text-qblack"
+                />
+              )}
+            </div>
           </div>
-          <div className="filter-items">
-            <ul>
-              {categories &&
-                categories.length > 0 &&
-                categories.map((item, i) => (
-                  <li key={i} className="item mb-5">
-                    <div className="flex justify-between items-center">
-                      <div className="flex space-x-[14px] items-center">
-                        <div>
-                          <Checkbox
-                            className="accent-qpurple"
-                            id={item.slug}
-                            name={item.id}
-                            handleChange={(e) => categoryHandler(e)}
-                            checked={item.selected}
-                          />
+          <div className="filter-container flex flex-col gap-7 items-start  ">
+            {showCategories && (
+              <div className="filter-items w-full  ">
+                <ul className="max-h-52 overflow-y-auto overflow-scroll-hidden ">
+                  {categories &&
+                    categories.length > 0 &&
+                    categories.map((item, i) => (
+                      <li key={i} className="item mb-5 ">
+                        <div className="flex space-x-[14px] items-center">
+                          <div>
+                            <Checkbox
+                              className="accent-qpurple"
+                              id={item.slug}
+                              name={item.id}
+                              handleChange={(e) => categoryHandler(e)}
+                              checked={item.selected}
+                            />
+                          </div>
+                          <label
+                            htmlFor={item.slug}
+                            className="text-sm font-black font-400 capitalize"
+                          >
+                            {item.name}
+                          </label>
                         </div>
-                        <label
-                          htmlFor={item.slug}
-                          className="text-sm font-black font-400 capitalize"
-                        >
-                          {item.name}
-                        </label>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-            </ul>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            )}
           </div>
         </div>
         <div className="filter-subject-item pb-10 border-b border-qpurplelow/10 mt-10">
@@ -118,39 +149,55 @@ export default function ProductsFilter({
         </div>
         <div className="filter-subject-item pb-10 border-b border-qpurplelow/10 mt-10">
           <div className="subject-title mb-[30px]">
-            <h1 className="text-qblack text-base font-500 capitalize">
-              {langCntnt && langCntnt.Brands}
-            </h1>
+            <div
+              className="flex items-center justify-between w-full cursor-pointer "
+              onClick={toggleBrands}
+            >
+              <h1 className="text-qblack text-base font-500 capitalize">
+                {langCntnt && langCntnt.Brands}
+              </h1>
+              {showCategories ? (
+                <FontAwesomeIcon
+                  icon="fa-solid fa-minus"
+                  className="text-qblack"
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon="fa-solid fa-plus"
+                  className="text-qblack"
+                />
+              )}
+            </div>
           </div>
-          <div className="filter-items">
-            <ul>
-              {brands &&
-                brands.length > 0 &&
-                brands.map((brand, i) => (
-                  <li
-                    key={i}
-                    className="item flex justify-between items-center mb-5"
-                  >
-                    <div className="flex space-x-[14px] items-center">
-                      <div>
-                        <Checkbox
-                          className="accent-qpurple"
-                          id={brand.name}
-                          name={brand.id}
-                          handleChange={(e) => brandsHandler(e)}
-                          checked={brand.selected}
-                        />
+          <div className="filter-container flex flex-col gap-7 items-start  ">
+            <div className="filter-items w-full  ">
+              <ul className="max-h-52 overflow-y-auto overflow-scroll-hidden ">
+                {showBrands &&
+                  brands &&
+                  brands.length > 0 &&
+                  brands.map((brand, i) => (
+                    <li key={i} className="item mb-5 ">
+                      <div className="flex space-x-[14px] items-center">
+                        <div>
+                          <Checkbox
+                            className="accent-qpurple"
+                            id={brand.name}
+                            name={brand.id}
+                            handleChange={(e) => brandsHandler(e)}
+                            checked={brand.selected}
+                          />
+                        </div>
+                        <label
+                          htmlFor={brand.name}
+                          className="text-sm font-black font-400 capitalize"
+                        >
+                          {brand.name}
+                        </label>
                       </div>
-                      <label
-                        htmlFor={brand.name}
-                        className="text-sm font-black font-400 capitalize"
-                      >
-                        {brand.name}
-                      </label>
-                    </div>
-                  </li>
-                ))}
-            </ul>
+                    </li>
+                  ))}
+              </ul>
+            </div>
           </div>
         </div>
         {variantsFilter &&

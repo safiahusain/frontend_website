@@ -1,14 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
+import { IoFlashOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";
-import Finnance from "../../../public/assets/images/finnance.svg";
 import Phone from "../../../public/assets/images/phone.svg";
 import Stocksvg from "../../../public/assets/images/stock.svg";
 import world from "../../../public/assets/images/world.svg";
 import TabSlider from "../FavouritProducts/TabsSlider";
 import LoaderStyleTwo from "../Helpers/Loaders/LoaderStyleTwo";
 import SimpleSlider from "../Helpers/SliderCom";
+
 function TreeCategory({ categories = [], products = [] }) {
   const { websiteSetup } = useSelector((state) => state.websiteSetup);
   const categoryList = websiteSetup && websiteSetup.payload.productCategories;
@@ -162,25 +163,23 @@ function TreeCategory({ categories = [], products = [] }) {
                     </span>
                   </div>
                 </div>
-                <div className="!flex items-start gap-3 w-full justify-center ">
-                  <Image
+                <div className="!flex items-center gap-3 w-full justify-center ">
+                  {/* <Image
                     src={Finnance}
                     width="40"
                     height={"40"}
                     alt="PRICE MATCH"
-                  />
+                  /> */}
+                  <IoFlashOutline size={35} color="#007957" />
+
                   <div style={{ lineHeight: "20px" }}>
-                    <Link href="/pages?custom=price-match-endeavor" passHref>
+                    <Link href="/flash-sale" passHref>
                       <a
                         rel="noopener noreferrer"
                         className="text-[14px] font-[600] hover:underline underline-offset-2"
                         style={{ lineHeight: "0px" }}
                       >
-                        <b className="uppercase">PRICE MATCH ENDEAVOR</b>
-                        <br />
-                        <span className="text-[14px] font-[400]">
-                          For Big Savings
-                        </span>
+                        <b className="uppercase">FLASH SALE</b>
                       </a>
                     </Link>
                   </div>
