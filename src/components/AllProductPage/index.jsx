@@ -192,12 +192,14 @@ export default function AllProductPage({ response, sellerInfo }) {
       setCategoriesFilter(
         response.data &&
           response.data.categories.length > 0 &&
-          response.data.categories.map((item) => {
-            return {
-              ...item,
-              selected: false,
-            };
-          })
+          response.data.categories
+            .map((item) => {
+              return {
+                ...item,
+                selected: false,
+              };
+            })
+            .sort((a, b) => a.name.localeCompare(b.name))
       );
       setVariantsFilter(
         response.data &&
@@ -220,12 +222,14 @@ export default function AllProductPage({ response, sellerInfo }) {
       setBrands(
         response.data &&
           response.data.brands.length > 0 &&
-          response.data.brands.map((item) => {
-            return {
-              ...item,
-              selected: false,
-            };
-          })
+          response.data.brands
+            .map((item) => {
+              return {
+                ...item,
+                selected: false,
+              };
+            })
+            .sort((a, b) => a.name.localeCompare(b.name))
       );
       const min =
         response.data &&

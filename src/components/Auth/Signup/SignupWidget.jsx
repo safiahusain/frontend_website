@@ -285,7 +285,7 @@ function SignupWidget({ redirect = true, signupActionPopup, changeContent }) {
               )}
             </button>
             {redirect ? (
-              <Link href="/seller-terms-condition">
+              <Link href="/terms-condition">
                 <span className="text-base text-qblack cursor-pointer">
                   {langCntnt &&
                     langCntnt.I_agree_all_terms_and_condition_in_ecoShop}

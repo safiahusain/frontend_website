@@ -1,14 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import languageModel from "../../../utils/languageModel";
 import BlogCard from "../Helpers/Cards/BlogCard";
-import DataIteration from "../Helpers/DataIteration";
-import FontAwesomeCom from "../Helpers/icons/FontAwesomeCom";
-import Star from "../Helpers/icons/Star";
 import PageTitle from "../Helpers/PageTitle";
 import SimpleSlider from "../Helpers/SliderCom";
+import FontAwesomeCom from "../Helpers/icons/FontAwesomeCom";
+import Star from "../Helpers/icons/Star";
 import Layout from "../Partials/Layout";
-import languageModel from "../../../utils/languageModel";
 export default function About({ aboutData }) {
   const hww = [
     {
@@ -85,6 +84,7 @@ export default function About({ aboutData }) {
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
+
   return (
     <Layout childrenClasses="pt-0 pb-0">
       <div className="about-page-wrapper w-full">
@@ -336,8 +336,8 @@ export default function About({ aboutData }) {
 
             <div className="blogs-wrapper w-full">
               <div className="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 lg:gap-[30px] gap-5">
-                <DataIteration datas={rs} startLength={0} endLength={3}>
-                  {({ datas }) => (
+                {rs?.slice(0, 3)?.map((datas, info) => {
+                  return (
                     <div
                       data-aos="fade-up"
                       key={datas.id}
@@ -345,8 +345,8 @@ export default function About({ aboutData }) {
                     >
                       <BlogCard datas={datas} />
                     </div>
-                  )}
-                </DataIteration>
+                  );
+                })}
               </div>
             </div>
           </div>

@@ -7,6 +7,8 @@ export default function BlogCard({ className, datas }) {
   useEffect(() => {
     setLangCntnt(languageModel());
   }, []);
+
+  console.log(datas, "datas....");
   return (
     <div className={`blog-card-wrapper w-full group ${className || ""}`}>
       <div className="img w-full h-[290px] rounded-t overflow-hidden">
