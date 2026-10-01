@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "node server.js",
+    "dev": "node api.js && next dev",
+    "build": "node api.js && next build",
+    "start": "node api.js && node server.js",
     "lint": "next lint",
     "pload": "npm install --force"
   },
